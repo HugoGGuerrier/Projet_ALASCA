@@ -56,6 +56,7 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 public class HairDryerOutboundPort
         extends AbstractOutboundPort
         implements HairDryerCI {
+
     private static final long serialVersionUID = 1L;
 
     public HairDryerOutboundPort(ComponentI owner)

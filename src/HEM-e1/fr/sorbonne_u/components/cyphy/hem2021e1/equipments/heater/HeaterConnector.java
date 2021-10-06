@@ -109,4 +109,5 @@ implements	HeaterCI
 		return ((HeaterCI)this.offering).getCurrentTemperature();
 	}
 }
+
 // -----------------------------------------------------------------------------
