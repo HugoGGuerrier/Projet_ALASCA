@@ -36,57 +36,54 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
 // -----------------------------------------------------------------------------
+
 /**
  * The class <code>CVMUnitTest</code> performs unit tests on the hair dryer
  * component.
  *
  * <p><strong>Description</strong></p>
- * 
+ *
  * <p><strong>Invariant</strong></p>
- * 
+ *
  * <pre>
  * invariant	true
  * </pre>
- * 
+ *
  * <p>Created on : 2021-09-09</p>
- * 
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ *
+ * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class			CVMUnitTest
-extends		AbstractCVM
-{
-	public				CVMUnitTest() throws Exception
-	{
-		
-	}
+public class CVMUnitTest
+        extends AbstractCVM {
+    public CVMUnitTest() throws Exception {
 
-	/**
-	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#deploy()
-	 */
-	@Override
-	public void			deploy() throws Exception
-	{
-		AbstractComponent.createComponent(
-					HairDryer.class.getCanonicalName(),
-					new Object[]{});
+    }
 
-		AbstractComponent.createComponent(
-					HairDryerUnitTester.class.getCanonicalName(),
-					new Object[]{});
+    public static void main(String[] args) {
+        try {
+            CVMUnitTest cvm = new CVMUnitTest();
+            cvm.startStandardLifeCycle(1000L);
+            Thread.sleep(10000L);
+            System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		super.deploy();
-	}
+    /**
+     * @see fr.sorbonne_u.components.cvm.AbstractCVM#deploy()
+     */
+    @Override
+    public void deploy() throws Exception {
+        AbstractComponent.createComponent(
+                HairDryer.class.getCanonicalName(),
+                new Object[]{});
 
-	public static void		main(String[] args)
-	{
-		try {
-			CVMUnitTest cvm = new CVMUnitTest();
-			cvm.startStandardLifeCycle(1000L);
-			Thread.sleep(10000L);
-			System.exit(0);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        AbstractComponent.createComponent(
+                HairDryerUnitTester.class.getCanonicalName(),
+                new Object[]{});
+
+        super.deploy();
+    }
 }
 // -----------------------------------------------------------------------------

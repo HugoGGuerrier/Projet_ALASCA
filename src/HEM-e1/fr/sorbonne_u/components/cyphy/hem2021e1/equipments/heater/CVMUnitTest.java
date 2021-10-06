@@ -67,7 +67,7 @@ extends		AbstractCVM
 	public void			deploy() throws Exception
 	{
 		AbstractComponent.createComponent(
-				ThermostatedHeater.class.getCanonicalName(),
+				fr.sorbonne_u.components.cyphy.hem2021e1.equipments.heater.ThermostatedHeater.class.getCanonicalName(),
 				new Object[]{});
 
 		AbstractComponent.createComponent(

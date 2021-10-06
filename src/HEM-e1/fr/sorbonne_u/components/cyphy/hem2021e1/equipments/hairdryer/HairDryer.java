@@ -58,7 +58,7 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  *
  * <p>Created on : 2021-09-09</p>
  *
- * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ * @author <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
 @OfferedInterfaces(offered = {HairDryerCI.class})
 public class HairDryer

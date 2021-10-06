@@ -40,6 +40,7 @@ import fr.sorbonne_u.components.registry.ConnectionType;
 import fr.sorbonne_u.components.registry.exceptions.BadConnectionDataException;
 import fr.sorbonne_u.components.registry.exceptions.GlobalRegistryResponseException;
 import fr.sorbonne_u.exceptions.PreconditionException;
+import org.junit.jupiter.api.Test;
 
 // -----------------------------------------------------------------------------
 /**

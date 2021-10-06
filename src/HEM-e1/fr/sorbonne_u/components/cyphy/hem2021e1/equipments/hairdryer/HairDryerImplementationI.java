@@ -33,160 +33,166 @@ package fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer;
 // knowledge of the CeCILL-C license and that you accept its terms.
 
 // -----------------------------------------------------------------------------
+
 /**
  * The interface <code>HairDryerImplementationI</code> defines the signatures
  * of services service implemented by the hair dryer component.
  *
  * <p><strong>Description</strong></p>
- * 
+ *
  * <p><strong>Invariant</strong></p>
- * 
+ *
  * <pre>
  * invariant	true
  * </pre>
- * 
+ *
  * <p>Created on : 2021-09-09</p>
- * 
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ *
+ * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public interface		HairDryerImplementationI
-{
-	// -------------------------------------------------------------------------
-	// Inner interfaces and types
-	// -------------------------------------------------------------------------
+public interface HairDryerImplementationI {
+    // -------------------------------------------------------------------------
+    // Inner interfaces and types
+    // -------------------------------------------------------------------------
 
-	/**
-	 * The enumeration <code>HairDryerState</code> describes the operation
-	 * states of the hair dryer.
-	 *
-	 * <p><strong>Description</strong></p>
-	 * 
-	 * <p>Created on : 2021-09-09</p>
-	 * 
-	 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-	 */
-	public static enum	HairDryerState
-	{
-		/** hair dryer is on.												*/
-		ON,
-		/** hair dryer is off.												*/
-		OFF
-	}
+    /**
+     * return the current state of the hair dryer.
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	true		// no precondition.
+     * post	true		// no postcondition.
+     * </pre>
+     *
+     * @throws Exception <i>to do</i>.
+     * @return the current state of the hair dryer.
+     */
+    HairDryerState getState() throws Exception;
 
-	/**
-	 * The enumeration <code>HairDryerMode</code> describes the operation
-	 * modes of the hair dryer.
-	 *
-	 * <p><strong>Description</strong></p>
-	 * 
-	 * <p>
-	 * The hair dryer can be either in <code>LOW</code> mode (warm and slow) or
-	 * in <code>HIGH</code> mode (hot and fast).
-	 * </p>
-	 * 
-	 * <p>Created on : 2021-09-09</p>
-	 * 
-	 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-	 */
-	public static enum	HairDryerMode
-	{
-		/** low mode is just warm and the fan is slower.					*/
-		LOW,			
-		/** high mode is hot and the fan turns faster.						*/
-		HIGH
-	}
+    /**
+     * return the current operation mode of the hair dryer.
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	true		// no precondition.
+     * post	true		// no postcondition.
+     * </pre>
+     *
+     * @throws Exception <i>to do</i>.
+     * @return the current state of the hair dryer.
+     */
+    HairDryerMode getMode() throws Exception;
 
-	// -------------------------------------------------------------------------
-	// Component services signatures
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Component services signatures
+    // -------------------------------------------------------------------------
 
-	/**
-	 * return the current state of the hair dryer.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true		// no precondition.
-	 * post	true		// no postcondition.
-	 * </pre>
-	 *
-	 * @return				the current state of the hair dryer.
-	 * @throws Exception 	<i>to do</i>.
-	 */
-	public HairDryerState	getState() throws Exception;
+    /**
+     * turn on the hair dryer, put in the low temperature and slow fan mode.
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	{@code getState() == HairDryerState.OFF}
+     * post	{@code getMode() == HairDryerMode.LOW}
+     * post	{@code getState() == HairDryerState.ON}
+     * </pre>
+     *
+     * @throws Exception <i>to do</i>.
+     */
+    void turnOn() throws Exception;
 
-	/**
-	 * return the current operation mode of the hair dryer.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true		// no precondition.
-	 * post	true		// no postcondition.
-	 * </pre>
-	 *
-	 * @return				the current state of the hair dryer.
-	 * @throws Exception 	<i>to do</i>.
-	 */
-	public HairDryerMode	getMode() throws Exception;
+    /**
+     * turn off the hair dryer.
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	true		// no precondition.
+     * post	{@code getState() == HairDryerState.OFF}
+     * </pre>
+     *
+     * @throws Exception <i>to do</i>.
+     */
+    void turnOff() throws Exception;
 
-	/**
-	 * turn on the hair dryer, put in the low temperature and slow fan mode.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	{@code getState() == HairDryerState.OFF}
-	 * post	{@code getMode() == HairDryerMode.LOW}
-	 * post	{@code getState() == HairDryerState.ON}
-	 * </pre>
-	 *
-	 * @throws Exception	<i>to do</i>.
-	 */
-	public void			turnOn() throws Exception;
+    /**
+     * set the hair dryer in high mode.
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	{@code getState() == HairDryerState.ON}
+     * pre	{@code getMode() == HairDryerMode.LOW}
+     * post	{@code getMode() == HairDryerMode.HIGH}
+     * </pre>
+     *
+     * @throws Exception <i>to do</i>.
+     */
+    void setHigh() throws Exception;
 
-	/**
-	 * turn off the hair dryer.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true		// no precondition.
-	 * post	{@code getState() == HairDryerState.OFF}
-	 * </pre>
-	 *
-	 * @throws Exception	<i>to do</i>.
-	 */
-	public void			turnOff() throws Exception;
+    /**
+     * set the hair dryer in low mode.
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	{@code getState() == HairDryerState.ON}
+     * pre	{@code getMode() == HairDryerMode.HIGH}
+     * post	{@code getMode() == HairDryerMode.LOW}
+     * </pre>
+     *
+     * @throws Exception <i>to do</i>.
+     */
+    void setLow() throws Exception;
 
-	/**
-	 * set the hair dryer in high mode.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	{@code getState() == HairDryerState.ON}
-	 * pre	{@code getMode() == HairDryerMode.LOW}
-	 * post	{@code getMode() == HairDryerMode.HIGH}
-	 * </pre>
-	 *
-	 * @throws Exception	<i>to do</i>.
-	 */
-	public void			setHigh() throws Exception;
+    /**
+     * The enumeration <code>HairDryerState</code> describes the operation
+     * states of the hair dryer.
+     *
+     * <p><strong>Description</strong></p>
+     *
+     * <p>Created on : 2021-09-09</p>
+     *
+     * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+     */
+    enum HairDryerState {
+        /**
+         * hair dryer is on.
+         */
+        ON,
+        /**
+         * hair dryer is off.
+         */
+        OFF
+    }
 
-	/**
-	 * set the hair dryer in low mode.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	{@code getState() == HairDryerState.ON}
-	 * pre	{@code getMode() == HairDryerMode.HIGH}
-	 * post	{@code getMode() == HairDryerMode.LOW}
-	 * </pre>
-	 *
-	 * @throws Exception	<i>to do</i>.
-	 */
-	public void			setLow() throws Exception;
+    /**
+     * The enumeration <code>HairDryerMode</code> describes the operation
+     * modes of the hair dryer.
+     *
+     * <p><strong>Description</strong></p>
+     *
+     * <p>
+     * The hair dryer can be either in <code>LOW</code> mode (warm and slow) or
+     * in <code>HIGH</code> mode (hot and fast).
+     * </p>
+     *
+     * <p>Created on : 2021-09-09</p>
+     *
+     * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+     */
+    enum HairDryerMode {
+        /**
+         * low mode is just warm and the fan is slower.
+         */
+        LOW,
+        /**
+         * high mode is hot and the fan turns faster.
+         */
+        HIGH
+    }
 }
 // -----------------------------------------------------------------------------

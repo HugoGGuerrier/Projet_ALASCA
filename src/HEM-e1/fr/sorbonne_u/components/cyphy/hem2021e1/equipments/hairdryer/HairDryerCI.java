@@ -36,61 +36,61 @@ import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 
 // -----------------------------------------------------------------------------
+
 /**
  * The component interface <code>HairDryerCI</code> defines the services a
  * hair dryer component offers and that can be required from it.
  *
  * <p><strong>Description</strong></p>
- * 
+ *
  * <p><strong>Invariant</strong></p>
- * 
+ *
  * <pre>
  * invariant		true
  * </pre>
- * 
+ *
  * <p>Created on : 2021-09-09</p>
- * 
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ *
+ * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public interface		HairDryerCI
-extends		OfferedCI,
-			RequiredCI,
-			HairDryerImplementationI
-{
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#getState()
-	 */
-	@Override
-	public HairDryerState	getState() throws Exception;
+public interface HairDryerCI
+        extends OfferedCI,
+        RequiredCI,
+        HairDryerImplementationI {
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#getState()
+     */
+    @Override
+    HairDryerState getState() throws Exception;
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#getMode()
-	 */
-	@Override
-	public HairDryerMode	getMode() throws Exception;
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#getMode()
+     */
+    @Override
+    HairDryerMode getMode() throws Exception;
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#turnOn()
-	 */
-	@Override
-	public void			turnOn() throws Exception;
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#turnOn()
+     */
+    @Override
+    void turnOn() throws Exception;
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#turnOff()
-	 */
-	@Override
-	public void			turnOff() throws Exception;
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#turnOff()
+     */
+    @Override
+    void turnOff() throws Exception;
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#setHigh()
-	 */
-	@Override
-	public void			setHigh() throws Exception;
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#setHigh()
+     */
+    @Override
+    void setHigh() throws Exception;
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#setLow()
-	 */
-	@Override
-	public void			setLow() throws Exception;
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI#setLow()
+     */
+    @Override
+    void setLow() throws Exception;
 }
 // -----------------------------------------------------------------------------

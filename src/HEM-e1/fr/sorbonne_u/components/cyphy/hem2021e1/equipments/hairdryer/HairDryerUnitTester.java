@@ -38,236 +38,224 @@ import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerIm
 import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI.HairDryerState;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.ExecutionException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 // -----------------------------------------------------------------------------
+
 /**
  * The class <code>HairDryerUnitTester</code> implements a component performing
  * unit tests for the class <code>HairDryer</code> as a BCM component.
  *
  * <p><strong>Description</strong></p>
- * 
+ *
  * <p><strong>Invariant</strong></p>
- * 
+ *
  * <pre>
  * invariant	true
  * </pre>
- * 
+ *
  * <p>Created on : 2021-09-09</p>
- * 
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ *
+ * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-@RequiredInterfaces(required= {HairDryerCI.class})
-public class			HairDryerUnitTester
-extends		AbstractComponent
-{
-	// -------------------------------------------------------------------------
-	// Constants and variables
-	// -------------------------------------------------------------------------
+@RequiredInterfaces(required = {HairDryerCI.class})
+public class HairDryerUnitTester
+        extends AbstractComponent {
+    // -------------------------------------------------------------------------
+    // Constants and variables
+    // -------------------------------------------------------------------------
 
-	protected HairDryerOutboundPort	hdop;
-	protected String				hairDryerInboundPortURI;
+    protected HairDryerOutboundPort hdop;
+    protected String hairDryerInboundPortURI;
 
-	// -------------------------------------------------------------------------
-	// Constructors
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
 
-	protected			HairDryerUnitTester() throws Exception
-	{
-		this(HairDryer.INBOUND_PORT_URI);
-	}
+    protected HairDryerUnitTester() throws Exception {
+        this(HairDryer.INBOUND_PORT_URI);
+    }
 
-	protected			HairDryerUnitTester(String hairDryerInboundPortURI)
-	throws Exception
-	{
-		super(1, 0);
+    protected HairDryerUnitTester(String hairDryerInboundPortURI)
+            throws Exception {
+        super(1, 0);
 
-		this.initialise(hairDryerInboundPortURI);
-	}
+        this.initialise(hairDryerInboundPortURI);
+    }
 
-	protected			HairDryerUnitTester(
-		String hairDryerInboundPortURI,
-		String reflectionInboundPortURI
-		) throws Exception
-	{
-		super(reflectionInboundPortURI, 1, 0);
+    protected HairDryerUnitTester(
+            String hairDryerInboundPortURI,
+            String reflectionInboundPortURI
+    ) throws Exception {
+        super(reflectionInboundPortURI, 1, 0);
 
-		this.initialise(hairDryerInboundPortURI);
-	}
+        this.initialise(hairDryerInboundPortURI);
+    }
 
-	protected void		initialise(String hairDryerInboundPortURI)
-	throws Exception
-	{
-		this.hairDryerInboundPortURI = hairDryerInboundPortURI;
-		this.hdop = new HairDryerOutboundPort(this);
-		this.hdop.publishPort();
+    protected void initialise(String hairDryerInboundPortURI)
+            throws Exception {
+        this.hairDryerInboundPortURI = hairDryerInboundPortURI;
+        this.hdop = new HairDryerOutboundPort(this);
+        this.hdop.publishPort();
 
-		this.tracer.get().setTitle("Hair dryer tester component");
-		this.tracer.get().setRelativePosition(2, 0);
-		this.toggleTracing();		
-	}
+        this.tracer.get().setTitle("Hair dryer tester component");
+        this.tracer.get().setRelativePosition(2, 0);
+        this.toggleTracing();
+    }
 
-	// -------------------------------------------------------------------------
-	// Component internal methods
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Component internal methods
+    // -------------------------------------------------------------------------
 
-	public void			testGetState()
-	{
-		this.logMessage("testGetState()... ");
-		try {
-			assertEquals(HairDryerState.OFF, this.hdop.getState());
-		} catch (Exception e) {
-			this.logMessage("...KO.");
-			assertTrue(false);
-		}
-		this.logMessage("...done.");
-	}
+    public void testGetState() {
+        this.logMessage("testGetState()... ");
+        try {
+            assertEquals(HairDryerState.OFF, this.hdop.getState());
+        } catch (Exception e) {
+            this.logMessage("...KO.");
+            assertTrue(false);
+        }
+        this.logMessage("...done.");
+    }
 
-	public void			testGetMode()
-	{
-		this.logMessage("testGetMode()... ");
-		try {
-			assertEquals(HairDryerMode.LOW, this.hdop.getMode());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		this.logMessage("...done.");
-	}
+    public void testGetMode() {
+        this.logMessage("testGetMode()... ");
+        try {
+            assertEquals(HairDryerMode.LOW, this.hdop.getMode());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        this.logMessage("...done.");
+    }
 
-	public void			testTurnOnOff()
-	{
-		this.logMessage("testTurnOnOff()... ");
-		try {
-			this.hdop.turnOn();
-			assertEquals(HairDryerState.ON, this.hdop.getState());
-			assertEquals(HairDryerMode.LOW, this.hdop.getMode());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		try {
-			assertThrows(ExecutionException.class,
-						 () -> this.hdop.turnOn());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		try {
-			this.hdop.turnOff();
-			assertEquals(HairDryerState.OFF, this.hdop.getState());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		try {
-			assertThrows(ExecutionException.class,
-						 () -> this.hdop.turnOff());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		this.logMessage("...done.");
-	}
+    public void testTurnOnOff() {
+        this.logMessage("testTurnOnOff()... ");
+        try {
+            this.hdop.turnOn();
+            assertEquals(HairDryerState.ON, this.hdop.getState());
+            assertEquals(HairDryerMode.LOW, this.hdop.getMode());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        try {
+            assertThrows(ExecutionException.class,
+                    () -> this.hdop.turnOn());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        try {
+            this.hdop.turnOff();
+            assertEquals(HairDryerState.OFF, this.hdop.getState());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        try {
+            assertThrows(ExecutionException.class,
+                    () -> this.hdop.turnOff());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        this.logMessage("...done.");
+    }
 
-	public void			testSetLowHigh()
-	{
-		this.logMessage("testSetLowHigh()... ");
-		try {
-			this.hdop.turnOn();
-			this.hdop.setHigh();
-			assertEquals(HairDryerState.ON, this.hdop.getState());
-			assertEquals(HairDryerMode.HIGH, this.hdop.getMode());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		try {
-			assertThrows(ExecutionException.class,
-						 () -> this.hdop.setHigh());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		try {
-			this.hdop.setLow();
-			assertEquals(HairDryerState.ON, this.hdop.getState());
-			assertEquals(HairDryerMode.LOW, this.hdop.getMode());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		try {
-			assertThrows(ExecutionException.class,
-						 () -> this.hdop.setLow());
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		try {
-			this.hdop.turnOff();
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		this.logMessage("...done.");
-	}
+    public void testSetLowHigh() {
+        this.logMessage("testSetLowHigh()... ");
+        try {
+            this.hdop.turnOn();
+            this.hdop.setHigh();
+            assertEquals(HairDryerState.ON, this.hdop.getState());
+            assertEquals(HairDryerMode.HIGH, this.hdop.getMode());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        try {
+            assertThrows(ExecutionException.class,
+                    () -> this.hdop.setHigh());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        try {
+            this.hdop.setLow();
+            assertEquals(HairDryerState.ON, this.hdop.getState());
+            assertEquals(HairDryerMode.LOW, this.hdop.getMode());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        try {
+            assertThrows(ExecutionException.class,
+                    () -> this.hdop.setLow());
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        try {
+            this.hdop.turnOff();
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+        this.logMessage("...done.");
+    }
 
-	protected void			runAllTests()
-	{
-		this.testGetState();
-		this.testGetMode();
-		this.testTurnOnOff();
-		this.testSetLowHigh();
-	}
+    protected void runAllTests() {
+        this.testGetState();
+        this.testGetMode();
+        this.testTurnOnOff();
+        this.testSetLowHigh();
+    }
 
-	// -------------------------------------------------------------------------
-	// Component life-cycle
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Component life-cycle
+    // -------------------------------------------------------------------------
 
-	/**
-	 * @see fr.sorbonne_u.components.AbstractComponent#start()
-	 */
-	@Override
-	public synchronized void	start()
-	throws ComponentStartException
-	{
-		super.start();
+    /**
+     * @see fr.sorbonne_u.components.AbstractComponent#start()
+     */
+    @Override
+    public synchronized void start()
+            throws ComponentStartException {
+        super.start();
 
-		try {
-			this.doPortConnection(
-							this.hdop.getPortURI(),
-							hairDryerInboundPortURI,
-							HairDryerConnector.class.getCanonicalName());
-		} catch (Exception e) {
-			throw new ComponentStartException(e) ;
-		}
-	}
+        try {
+            this.doPortConnection(
+                    this.hdop.getPortURI(),
+                    hairDryerInboundPortURI,
+                    HairDryerConnector.class.getCanonicalName());
+        } catch (Exception e) {
+            throw new ComponentStartException(e);
+        }
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.AbstractComponent#execute()
-	 */
-	@Override
-	public synchronized void execute() throws Exception
-	{
-		this.runAllTests();
-	}
+    /**
+     * @see fr.sorbonne_u.components.AbstractComponent#execute()
+     */
+    @Override
+    public synchronized void execute() throws Exception {
+        this.runAllTests();
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.AbstractComponent#finalise()
-	 */
-	@Override
-	public synchronized void	finalise() throws Exception
-	{
-		this.doPortDisconnection(this.hdop.getPortURI());
-		super.finalise();
-	}
+    /**
+     * @see fr.sorbonne_u.components.AbstractComponent#finalise()
+     */
+    @Override
+    public synchronized void finalise() throws Exception {
+        this.doPortDisconnection(this.hdop.getPortURI());
+        super.finalise();
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.AbstractComponent#shutdown()
-	 */
-	@Override
-	public synchronized void	shutdown() throws ComponentShutdownException
-	{
-		try {
-			this.hdop.unpublishPort();
-		} catch (Exception e) {
-			throw new ComponentShutdownException(e) ;
-		}
-		super.shutdown();
-	}
+    /**
+     * @see fr.sorbonne_u.components.AbstractComponent#shutdown()
+     */
+    @Override
+    public synchronized void shutdown() throws ComponentShutdownException {
+        try {
+            this.hdop.unpublishPort();
+        } catch (Exception e) {
+            throw new ComponentShutdownException(e);
+        }
+        super.shutdown();
+    }
 }
 // -----------------------------------------------------------------------------

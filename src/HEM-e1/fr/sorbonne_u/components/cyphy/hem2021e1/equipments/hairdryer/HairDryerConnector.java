@@ -35,78 +35,72 @@ package fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
 // -----------------------------------------------------------------------------
+
 /**
  * The class <code>HairDryerConnector</code> implements a connector for
  * the <code>HairDryerCI</code> component interface.
  *
  * <p><strong>Description</strong></p>
- * 
+ *
  * <p><strong>Invariant</strong></p>
- * 
+ *
  * <pre>
  * invariant		true
  * </pre>
- * 
+ *
  * <p>Created on : 2020-10-02</p>
- * 
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ *
+ * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class			HairDryerConnector
-extends		AbstractConnector
-implements	HairDryerCI
-{
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#getState()
-	 */
-	@Override
-	public HairDryerState	getState() throws Exception
-	{
-		return ((HairDryerCI)this.offering).getState();
-	}
+public class HairDryerConnector
+        extends AbstractConnector
+        implements HairDryerCI {
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#getState()
+     */
+    @Override
+    public HairDryerState getState() throws Exception {
+        return ((HairDryerCI) this.offering).getState();
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#getMode()
-	 */
-	@Override
-	public	HairDryerMode	getMode() throws Exception
-	{
-		return ((HairDryerCI)this.offering).getMode();
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#getMode()
+     */
+    @Override
+    public HairDryerMode getMode() throws Exception {
+        return ((HairDryerCI) this.offering).getMode();
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#turnOn()
-	 */
-	@Override
-	public void			turnOn() throws Exception
-	{
-		((HairDryerCI)this.offering).turnOn();
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#turnOn()
+     */
+    @Override
+    public void turnOn() throws Exception {
+        ((HairDryerCI) this.offering).turnOn();
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#turnOff()
-	 */
-	@Override
-	public void			turnOff() throws Exception
-	{
-		((HairDryerCI)this.offering).turnOff();
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#turnOff()
+     */
+    @Override
+    public void turnOff() throws Exception {
+        ((HairDryerCI) this.offering).turnOff();
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#setHigh()
-	 */
-	@Override
-	public void			setHigh() throws Exception
-	{
-		((HairDryerCI)this.offering).setHigh();
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#setHigh()
+     */
+    @Override
+    public void setHigh() throws Exception {
+        ((HairDryerCI) this.offering).setHigh();
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#setLow()
-	 */
-	@Override
-	public void			setLow() throws Exception
-	{
-		((HairDryerCI)this.offering).setLow();
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#setLow()
+     */
+    @Override
+    public void setLow() throws Exception {
+        ((HairDryerCI) this.offering).setLow();
+    }
 }
 // -----------------------------------------------------------------------------

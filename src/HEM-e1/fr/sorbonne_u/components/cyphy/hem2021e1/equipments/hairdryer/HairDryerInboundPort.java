@@ -37,139 +37,131 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
 // -----------------------------------------------------------------------------
+
 /**
  * The class <code>HairDryerInboundPort</code> implements an inbound port for
  * the <code>HairDryerCI</code> component interface.
  *
  * <p><strong>Description</strong></p>
- * 
+ *
  * <p><strong>Invariant</strong></p>
- * 
+ *
  * <pre>
  * invariant		true
  * </pre>
- * 
+ *
  * <p>Created on : 2021-09-09</p>
- * 
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ *
+ * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class			HairDryerInboundPort
-extends		AbstractInboundPort
-implements	HairDryerCI
-{
-	private static final long serialVersionUID = 1L;
+public class HairDryerInboundPort
+        extends AbstractInboundPort
+        implements HairDryerCI {
+    private static final long serialVersionUID = 1L;
 
-	public				HairDryerInboundPort(ComponentI owner) throws Exception
-	{
-		super(HairDryerCI.class, owner);
-	}
+    public HairDryerInboundPort(ComponentI owner) throws Exception {
+        super(HairDryerCI.class, owner);
+    }
 
-	public				HairDryerInboundPort(
-		String uri,
-		ComponentI owner
-		) throws Exception
-	{
-		super(uri, HairDryerCI.class, owner);
-	}
+    public HairDryerInboundPort(
+            String uri,
+            ComponentI owner
+    ) throws Exception {
+        super(uri, HairDryerCI.class, owner);
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#getState()
-	 */
-	@Override
-	public HairDryerState	getState() throws Exception
-	{
-		return this.getOwner().handleRequest(
-				new AbstractComponent.AbstractService<HairDryerState>() {
-					@Override
-					public HairDryerState call() throws Exception {
-						return ((HairDryerImplementationI)
-											this.getServiceOwner()).getState();
-					}
-				});
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#getState()
+     */
+    @Override
+    public HairDryerState getState() throws Exception {
+        return this.getOwner().handleRequest(
+                new AbstractComponent.AbstractService<HairDryerState>() {
+                    @Override
+                    public HairDryerState call() throws Exception {
+                        return ((HairDryerImplementationI)
+                                this.getServiceOwner()).getState();
+                    }
+                });
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#getMode()
-	 */
-	@Override
-	public HairDryerMode	getMode() throws Exception
-	{
-		return this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<HairDryerMode>() {
-				@Override
-				public HairDryerMode call() throws Exception {
-					return ((HairDryerImplementationI)
-											this.getServiceOwner()).getMode();
-				}
-			});
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#getMode()
+     */
+    @Override
+    public HairDryerMode getMode() throws Exception {
+        return this.getOwner().handleRequest(
+                new AbstractComponent.AbstractService<HairDryerMode>() {
+                    @Override
+                    public HairDryerMode call() throws Exception {
+                        return ((HairDryerImplementationI)
+                                this.getServiceOwner()).getMode();
+                    }
+                });
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#turnOn()
-	 */
-	@Override
-	public void			turnOn() throws Exception
-	{
-		this.getOwner().handleRequest(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((HairDryerImplementationI)
-											this.getServiceOwner()).turnOn();
-						return null;
-					}
-				});
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#turnOn()
+     */
+    @Override
+    public void turnOn() throws Exception {
+        this.getOwner().handleRequest(
+                new AbstractComponent.AbstractService<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        ((HairDryerImplementationI)
+                                this.getServiceOwner()).turnOn();
+                        return null;
+                    }
+                });
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#turnOff()
-	 */
-	@Override
-	public void			turnOff() throws Exception
-	{
-		this.getOwner().handleRequest(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((HairDryerImplementationI)
-											this.getServiceOwner()).turnOff();
-						return null;
-					}
-				});
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#turnOff()
+     */
+    @Override
+    public void turnOff() throws Exception {
+        this.getOwner().handleRequest(
+                new AbstractComponent.AbstractService<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        ((HairDryerImplementationI)
+                                this.getServiceOwner()).turnOff();
+                        return null;
+                    }
+                });
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#setHigh()
-	 */
-	@Override
-	public void			setHigh() throws Exception
-	{
-		this.getOwner().handleRequest(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((HairDryerImplementationI)
-											this.getServiceOwner()).setHigh();
-						return null;
-					}
-				});
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#setHigh()
+     */
+    @Override
+    public void setHigh() throws Exception {
+        this.getOwner().handleRequest(
+                new AbstractComponent.AbstractService<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        ((HairDryerImplementationI)
+                                this.getServiceOwner()).setHigh();
+                        return null;
+                    }
+                });
+    }
 
-	/**
-	 * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#setLow()
-	 */
-	@Override
-	public void			setLow() throws Exception
-	{
-		this.getOwner().handleRequest(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((HairDryerImplementationI)
-											this.getServiceOwner()).setLow();
-						return null;
-					}
-				});
-	}
+    /**
+     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI#setLow()
+     */
+    @Override
+    public void setLow() throws Exception {
+        this.getOwner().handleRequest(
+                new AbstractComponent.AbstractService<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        ((HairDryerImplementationI)
+                                this.getServiceOwner()).setLow();
+                        return null;
+                    }
+                });
+    }
 }
 // -----------------------------------------------------------------------------
