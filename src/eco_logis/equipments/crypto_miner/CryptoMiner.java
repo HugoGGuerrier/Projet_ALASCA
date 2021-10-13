@@ -1,6 +1,7 @@
 package equipments.crypto_miner;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.exceptions.PreconditionException;
 
 /**
  * This class represent a crypto-currency miner which can be powered on and off.
@@ -10,13 +11,13 @@ import fr.sorbonne_u.components.AbstractComponent;
  * @author Hugo Guerrier
  */
 public class CryptoMiner
-        extends AbstractComponent
-        implements CryptoMinerImplementationI
+    extends AbstractComponent
+    implements CryptoMinerImplementationI
 {
 
     // ========== Macros ==========
 
-    public static final String CRYPTO_MINER_PORT_URI = "CRYPTO-INBOUND-PORT-URI";
+    public static final String INBOUND_PORT_URI = "CRYPTO-INBOUND-PORT-URI";
     public static final boolean VERBOSE = true;
 
     // ========== Attributes ==========
@@ -40,7 +41,7 @@ public class CryptoMiner
      * @throws Exception TODO
      */
     protected CryptoMiner() throws Exception {
-        this(CRYPTO_MINER_PORT_URI);
+        this(INBOUND_PORT_URI);
     }
 
     /**
@@ -103,8 +104,10 @@ public class CryptoMiner
      */
     protected void initialise(String cryptoMinerInboundPortURI) throws Exception {
         // Assert the URI consistence
-        assert cryptoMinerInboundPortURI != null;
-        assert !cryptoMinerInboundPortURI.isEmpty();
+        assert cryptoMinerInboundPortURI != null : new PreconditionException(
+                "cryptoMinerInboundPortURI != null");
+        assert !cryptoMinerInboundPortURI.isEmpty() : new PreconditionException(
+                "!cryptoMinerInboundPortURI.isEmpty()");
 
         // Initialise the component
         isMining = false;
@@ -123,9 +126,7 @@ public class CryptoMiner
 
     // ========== Override methods ==========
 
-    /**
-     * @see CryptoMinerImplementationI#isMining()
-     */
+    /** @see CryptoMinerImplementationI#isMining() */
     @Override
     public boolean isMining() throws Exception {
         if(CryptoMiner.VERBOSE) {
@@ -135,9 +136,7 @@ public class CryptoMiner
         return isMining;
     }
 
-    /**
-     * @see CryptoMinerImplementationI#startMiner()
-     */
+    /** @see CryptoMinerImplementationI#startMiner() */
     @Override
     public void startMiner() throws Exception {
         if(CryptoMiner.VERBOSE) {
@@ -147,9 +146,7 @@ public class CryptoMiner
         isMining = true;
     }
 
-    /**
-     * @see CryptoMinerImplementationI#stopMiner()
-     */
+    /** @see CryptoMinerImplementationI#stopMiner() */
     @Override
     public void stopMiner() throws Exception {
         if(CryptoMiner.VERBOSE) {
