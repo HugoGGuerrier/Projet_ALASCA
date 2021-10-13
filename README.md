@@ -17,3 +17,13 @@ Emilie SIAU 3700323
 - Batterie
 
 ### Brouillon de rapport
+
+
+
+### Audit
+15min max
+états ON OFF : non, booléens -> faire dans Oven
+5 composants consommateurs, 2 générateurs
+présentation du code et des choix
+démo exécution
+questions du prof

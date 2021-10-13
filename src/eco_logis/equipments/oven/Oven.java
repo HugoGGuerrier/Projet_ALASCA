@@ -43,20 +43,19 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
 
-    /** Initial state of the oven. See <code>OvenImplementationI</code> interface */
-    public static final OvenState INITIAL_STATE = OvenState.OFF;
+    /** Initial state of the oven (false -> OFF) */
+    public static final boolean INITIAL_STATE = false;
 
     // ========== Attributes ==========
 
     /** Temperature of the oven, celsius degrees (°C) */
     private double temperature;
 
-    /** Current state of the oven. See <code>OvenImplementationI</code> interface */
-    private OvenState currentState;
-
     /** Inbound port offering the <code>OvenCI</code> interface */
     private OvenInboundPort ovenInboundPort;
 
+    /** State of the oven : ON or OFF */
+    private boolean isBaking;
 
     // ========== Constructors ==========
 
@@ -93,13 +92,13 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     // ========== Class methods ==========
 
     @Override
-    public void turnOn() throws Exception {
-        // TODO
+    public void startBaking() throws Exception {
+        isBaking = true;
     }
 
     @Override
-    public void turnOff() throws Exception {
-        // TODO
+    public void stopBaking() throws Exception {
+        isBaking = false;
     }
 
     protected void initialise(String ovenInboundPortURI) throws Exception {
@@ -107,7 +106,7 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
         assert !ovenInboundPortURI.isEmpty() : new PreconditionException("!hairDryerInboundPortURI.isEmpty()");
 
         this.temperature = 0.0;
-        this.currentState = INITIAL_STATE;
+        this.isBaking = INITIAL_STATE;
         // TODO
         //this.ovenInboundPort = new OvenInboundPort(ovenInboundPortURI, this);
         //this.ovenInboundPort.publishPort();
@@ -122,8 +121,8 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     // ========== Getters ==========
 
     @Override
-    public OvenState getState() throws Exception {
-        return currentState;
+    public boolean isBaking() throws Exception {
+        return isBaking;
     }
 
     @Override

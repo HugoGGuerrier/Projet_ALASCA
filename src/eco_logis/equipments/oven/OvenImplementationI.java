@@ -15,73 +15,50 @@ package equipments.oven;
  *
  * <p>Created on : 2021-10-05</p>
  *
- *
  * @author Emilie Siau
  * @author Hugo Guerrier
  */
 public interface OvenImplementationI {
 
     /**
-     * The enumeration <code>OvenState</code> describes the operation
-     * states of the oven.
-     *
-     * <p><strong>Description</strong></p>
-     *
-     * <p>Created on : 2021-10-05</p>
-     *
-     * @author Emilie Siau
-     * @author Hugo Guerrier
-     */
-    enum OvenState {
-        /** Oven is on */
-        ON,
-
-        /** Oven is off */
-        OFF
-    }
-
-    /**
-     * Turn on the oven
+     * Turn on the oven, start baking
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
-     * pre	{@code getState() == OvenState.OFF}
-     * post	{@code getState() == OvenState.ON}
+     * pre	{@code !isBaking()}
+     * post	{@code isBaking()}
      * </pre>
      *
      * @throws Exception TODO
      */
-    void turnOn() throws Exception;
+    void startBaking() throws Exception;
 
     /**
-     * Turn off the oven
+     * Turn off the oven, stop baking
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
-     * pre	true		// no precondition.
-     * post	{@code getState() == OvenState.OFF}
+     * pre	true // no precondition.
+     * post	{@code !isBaking()}
      * </pre>
      *
      * @throws Exception TODO
      */
-    void turnOff() throws Exception;
+    void stopBaking() throws Exception;
 
     /**
-     * Get the current state of the oven
+     * Get the current state of the oven (baking or not)
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
      * pre	true		// no precondition.
      * post	true		// no postcondition.
      * </pre>
      *
      * @throws Exception TODO
-     * @return the current state of the oven
+     * @return true if the oven is on/baking, false otherwise
      */
-    OvenState getState() throws Exception;
+    boolean isBaking() throws Exception;
 
     /**
      * Get the oven temperature
@@ -96,6 +73,4 @@ public interface OvenImplementationI {
      * @throws Exception
      */
     void setTemperature(double temp) throws Exception;
-
-
 }
