@@ -1,6 +1,7 @@
 package equipments.crypto_miner;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
 /**
@@ -10,6 +11,7 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  * @author Emilie Siau
  * @author Hugo Guerrier
  */
+@OfferedInterfaces(offered = {CryptoMinerCI.class})
 public class CryptoMiner
     extends AbstractComponent
     implements CryptoMinerImplementationI
