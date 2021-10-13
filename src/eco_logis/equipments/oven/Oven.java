@@ -2,8 +2,11 @@ package equipments.oven;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryer;
 import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI;
 import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI;
+import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerInboundPort;
+import fr.sorbonne_u.exceptions.PreconditionException;
 
 /**
  * The class <code>Oven</code> implements the oven component.
@@ -34,19 +37,26 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
 
     // ========== Macros ==========
 
-    /**
-     * URI of the oven inbound port used in tests
-     */
+    /** URI of the oven inbound port used in tests */
     public static final String INBOUND_PORT_URI = "OVEN-INBOUND-PORT-URI";
-    /**
-     * When true, methods trace their actions
-     */
+
+    /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
+
+    /** Initial state of the oven. See <code>OvenImplementationI</code> interface */
     public static final OvenState INITIAL_STATE = OvenState.OFF;
 
     // ========== Attributes ==========
 
+    /** Temperature of the oven, celsius degrees (°C) */
     private double temperature;
+
+    /** Current state of the oven. See <code>OvenImplementationI</code> interface */
+    private OvenState currentState;
+
+    /** Inbound port offering the <code>OvenCI</code> interface */
+    private OvenInboundPort ovenInboundPort;
+
 
     // ========== Constructors ==========
 
@@ -84,30 +94,47 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
 
     @Override
     public void turnOn() throws Exception {
-
+        // TODO
     }
 
     @Override
     public void turnOff() throws Exception {
+        // TODO
+    }
 
+    protected void initialise(String ovenInboundPortURI) throws Exception {
+        assert ovenInboundPortURI != null : new PreconditionException("hairDryerInboundPortURI != null");
+        assert !ovenInboundPortURI.isEmpty() : new PreconditionException("!hairDryerInboundPortURI.isEmpty()");
+
+        this.temperature = 0.0;
+        this.currentState = INITIAL_STATE;
+        // TODO
+        //this.ovenInboundPort = new OvenInboundPort(ovenInboundPortURI, this);
+        //this.ovenInboundPort.publishPort();
+
+        if (Oven.VERBOSE) {
+            this.tracer.get().setTitle("Oven component");
+            this.tracer.get().setRelativePosition(1, 0);
+            this.toggleTracing();
+        }
     }
 
     // ========== Getters ==========
 
     @Override
     public OvenState getState() throws Exception {
-        return null;
+        return currentState;
     }
 
     @Override
     public double getTemperature() throws Exception {
-        return 0;
+        return temperature;
     }
 
     // ========== Setters ==========
 
     @Override
     public void setTemperature(double temp) throws Exception {
-
+        this.temperature = temp;
     }
 }

@@ -33,13 +33,10 @@ public interface OvenImplementationI {
      * @author Hugo Guerrier
      */
     enum OvenState {
-        /**
-         * Oven is on
-         */
+        /** Oven is on */
         ON,
-        /**
-         * Oven is off
-         */
+
+        /** Oven is off */
         OFF
     }
 
