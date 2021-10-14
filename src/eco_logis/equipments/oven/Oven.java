@@ -1,7 +1,7 @@
 package equipments.oven;
 
-import equipments.crypto_miner.CryptoMinerImplementationI;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
 /**
@@ -28,7 +28,7 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  * @author Hugo GUERRIER
  */
 
-//@OfferedInterfaces(offered = {OvenCI.class})
+@OfferedInterfaces(offered = {OvenCI.class})
 public class Oven extends AbstractComponent implements OvenImplementationI {
 
     // ========== Macros ==========
@@ -67,7 +67,7 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     * post	{@code getTemperature() == 0.0}
     * </pre>
     *
-    * @throws Exception TODO
+    * @throws Exception
     */
     protected Oven() throws Exception {
         super(1, 0);
@@ -94,9 +94,8 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
 
         this.temperature = 0.0;
         this.isBaking = INITIAL_STATE;
-        // TODO
-        //this.ovenInboundPort = new OvenInboundPort(ovenInboundPortURI, this);
-        //this.ovenInboundPort.publishPort();
+        this.ovenInboundPort = new OvenInboundPort(ovenInboundPortURI, this);
+        this.ovenInboundPort.publishPort();
 
         if (Oven.VERBOSE) {
             this.tracer.get().setTitle("Oven component");
@@ -111,7 +110,7 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     @Override
     public boolean isBaking() {
         if(Oven.VERBOSE) {
-            traceMessage("Oven returns if it is baking : " + this.isBaking + ".\n");
+            logMessage("Oven is baking : " + isBaking);
         }
         return isBaking;
     }
@@ -120,8 +119,9 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     @Override
     public void startBaking() throws Exception {
         if(Oven.VERBOSE) {
-            traceMessage("");
+            logMessage("Oven is turned on, starts baking");
         }
+        assert !isBaking;
         isBaking = true;
     }
 
@@ -129,8 +129,9 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     @Override
     public void stopBaking() throws Exception {
         if(Oven.VERBOSE) {
-            traceMessage("");
+            logMessage("Oven is turned off, stops baking. The cake is ready !");
         }
+        assert isBaking;
         isBaking = false;
     }
 
@@ -138,8 +139,9 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     @Override
     public double getTemperature() {
         if(Oven.VERBOSE) {
-            traceMessage("");
+            logMessage("Oven temperature is : " + temperature + "°C");
         }
+        assert isBaking;
         return temperature;
     }
 
@@ -147,8 +149,9 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
     @Override
     public void setTemperature(double temp) {
         if(Oven.VERBOSE) {
-            traceMessage("");
+            logMessage("Oven temperature is set to " + temp + "°C");
         }
+        assert isBaking;
         this.temperature = temp;
     }
 }

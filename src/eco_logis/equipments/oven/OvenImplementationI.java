@@ -38,7 +38,7 @@ public interface OvenImplementationI {
      *
      * <p><strong>Contract</strong></p>
      * <pre>
-     * pre	true // no precondition.
+     * pre	{@code isBaking()}
      * post	{@code !isBaking()}
      * </pre>
      *
@@ -62,6 +62,13 @@ public interface OvenImplementationI {
 
     /**
      * Get the oven temperature (Celsius degrees °C)
+     *
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	{@code isBaking()}
+     * post	true		// no postcondition.
+     * </pre>
+     *
      * @return the temperature (°C)
      * @throws Exception
      */
@@ -69,6 +76,13 @@ public interface OvenImplementationI {
 
     /**
      * Set the oven temperature to the given temperature (Celsius degrees °C)
+     *
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	{@code isBaking()}
+     * post	true		// no postcondition.
+     * </pre>
+     *
      * @param temp the temperature (°C)
      * @throws Exception
      */
