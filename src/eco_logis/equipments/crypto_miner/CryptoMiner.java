@@ -35,8 +35,8 @@ public class CryptoMiner
      * <p><strong>Contract</strong></p>
      *
      * <pre>
-     * pre	{@code CRYPTO_MINER_PORT_URI != null}
-     * pre	{@code !CRYPTO_MINER_PORT_URI.isEmpty()}
+     * pre	{@code INBOUND_PORT_URI != null}
+     * pre	{@code !INBOUND_PORT_URI.isEmpty()}
      * post	true
      * </pre>
      *
@@ -121,7 +121,7 @@ public class CryptoMiner
         // Create the trace
         if(CryptoMiner.VERBOSE) {
             tracer.get().setTitle("Crypto miner component");
-            tracer.get().setRelativePosition(1, 1);
+            tracer.get().setRelativePosition(0, 0);
             toggleTracing();
         }
     }

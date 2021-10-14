@@ -23,14 +23,14 @@ public class CryptoMinerUnitTester
         this(CryptoMiner.INBOUND_PORT_URI);
     }
 
-    protected CryptoMinerUnitTester(String cryptoMinerInboundPortUri) throws Exception {
+    protected CryptoMinerUnitTester(String cryptoMinerInboundPortURI) throws Exception {
         super(1, 0);
-        initialise(cryptoMinerInboundPortUri);
+        initialise(cryptoMinerInboundPortURI);
     }
 
-    protected CryptoMinerUnitTester(String reflectionInboundPortURI, String cryptoMinerInboundPortUri) throws Exception {
+    protected CryptoMinerUnitTester(String reflectionInboundPortURI, String cryptoMinerInboundPortURI) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
-        initialise(cryptoMinerInboundPortUri);
+        initialise(cryptoMinerInboundPortURI);
     }
 
     // ===== Class methods =====
