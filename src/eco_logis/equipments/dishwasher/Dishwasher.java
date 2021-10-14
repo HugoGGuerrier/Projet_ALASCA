@@ -124,7 +124,7 @@ public class Dishwasher
     @Override
     public boolean isWashing() throws Exception {
         if(VERBOSE) {
-            traceMessage("Dishwasher get washing : " + isWashing);
+            logMessage("Dishwasher get washing : " + isWashing);
         }
 
         return isWashing;
@@ -134,7 +134,7 @@ public class Dishwasher
     @Override
     public void startWasherFull() throws Exception {
         if(VERBOSE) {
-            traceMessage("Start the washer in full program");
+            logMessage("Start the washer in full program");
         }
 
         assert !isWashing;
@@ -148,7 +148,7 @@ public class Dishwasher
     @Override
     public void startWasherEco() throws Exception {
         if(VERBOSE) {
-            traceMessage("Start the washer in eco program");
+            logMessage("Start the washer in eco program");
         }
 
         assert !isWashing;
@@ -162,7 +162,7 @@ public class Dishwasher
     @Override
     public void startWasherFast() throws Exception {
         if(VERBOSE) {
-            traceMessage("Start the washer in fast program");
+            logMessage("Start the washer in fast program");
         }
 
         assert !isWashing;
@@ -176,7 +176,7 @@ public class Dishwasher
     @Override
     public void stopWashing() throws Exception {
         if(VERBOSE) {
-            traceMessage("Dishwasher stop washing");
+            logMessage("Dishwasher stop washing");
         }
 
         assert isWashing;
@@ -189,7 +189,7 @@ public class Dishwasher
     @Override
     public DishwasherProgram getProgram() throws Exception {
         if(VERBOSE) {
-            traceMessage("Dishwasher get program : " + program);
+            logMessage("Dishwasher get program : " + program);
         }
 
         assert isWashing;

@@ -52,18 +52,18 @@ public class CryptoMinerUnitTester
     // ========== Test methods ==========
 
     protected void testIsMining() {
-        traceMessage("Test isMining()...");
+        logMessage("Test isMining()...");
         try {
             assertFalse(cmop.isMining());
         } catch (Exception e) {
-            traceMessage("... FAILED!");
+            logMessage("... FAILED!");
             fail(e);
         }
-        traceMessage("... Done!");
+        logMessage("... Done!");
     }
 
     protected void testStartStopMiner() {
-        traceMessage("Test startMiner() and stopMiner()...");
+        logMessage("Test startMiner() and stopMiner()...");
         try {
             assertFalse(cmop.isMining());
             cmop.startMiner();
@@ -71,15 +71,17 @@ public class CryptoMinerUnitTester
             cmop.stopMiner();
             assertFalse(cmop.isMining());
         } catch (Exception e) {
-            traceMessage("... FAILED!");
+            logMessage("... FAILED!");
             fail(e);
         }
-        traceMessage("...Done!");
+        logMessage("...Done!");
     }
 
     protected void runAllTests() {
+        logMessage("Starting test suite...");
         testIsMining();
         testStartStopMiner();
+        logMessage("All tests passed !");
     }
 
     // ========== Lifecycle methods ==========

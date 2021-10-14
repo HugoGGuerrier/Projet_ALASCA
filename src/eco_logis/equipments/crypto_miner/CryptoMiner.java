@@ -132,8 +132,9 @@ public class CryptoMiner
     @Override
     public boolean isMining() throws Exception {
         if(CryptoMiner.VERBOSE) {
-            traceMessage("Crypto miner get mining : " + isMining);
+            logMessage("Crypto miner get mining : " + isMining);
         }
+
         return isMining;
     }
 
@@ -141,9 +142,11 @@ public class CryptoMiner
     @Override
     public void startMiner() throws Exception {
         if(CryptoMiner.VERBOSE) {
-            traceMessage("Start the crypto mining");
+            logMessage("Start the crypto mining");
         }
+
         assert !isMining;
+
         isMining = true;
     }
 
@@ -151,9 +154,11 @@ public class CryptoMiner
     @Override
     public void stopMiner() throws Exception {
         if(CryptoMiner.VERBOSE) {
-            traceMessage("Stop the crypto mining");
+            logMessage("Stop the crypto mining");
         }
+
         assert isMining;
+
         isMining = false;
     }
 

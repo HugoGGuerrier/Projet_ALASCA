@@ -103,7 +103,7 @@ extends		AbstractCVM
 		try {
 			CVMIntegrationTest cvm = new CVMIntegrationTest();
 			cvm.startStandardLifeCycle(1000L);
-			Thread.sleep(10000L);
+			Thread.sleep(100000L);
 			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();

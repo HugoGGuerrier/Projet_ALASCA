@@ -50,18 +50,18 @@ public class DishwasherUnitTester
     // ========== Test methods ==========
 
     protected void testIsWashing() {
-        traceMessage("Test isWashing()...");
+        logMessage("Test isWashing()...");
         try {
             assertFalse(dwop.isWashing());
         } catch(Exception e) {
-            traceMessage("... FAILED!");
+            logMessage("... FAILED!");
             fail(e);
         }
-        traceMessage("... Done!");
+        logMessage("... Done!");
     }
 
     protected void testStartingFull() {
-        traceMessage("Test startWasherFull()...");
+        logMessage("Test startWasherFull()...");
         try {
             assertFalse(dwop.isWashing());
             dwop.startWasherFull();
@@ -70,14 +70,14 @@ public class DishwasherUnitTester
             dwop.stopWashing();
             assertFalse(dwop.isWashing());
         } catch(Exception e) {
-            traceMessage("... FAILED!");
+            logMessage("... FAILED!");
             fail(e);
         }
-        traceMessage("... Done!");
+        logMessage("... Done!");
     }
 
     protected void testStartingEco() {
-        traceMessage("Test startWasherEco()...");
+        logMessage("Test startWasherEco()...");
         try {
             assertFalse(dwop.isWashing());
             dwop.startWasherEco();
@@ -86,14 +86,14 @@ public class DishwasherUnitTester
             dwop.stopWashing();
             assertFalse(dwop.isWashing());
         } catch(Exception e) {
-            traceMessage("... FAILED!");
+            logMessage("... FAILED!");
             fail(e);
         }
-        traceMessage("... Done!");
+        logMessage("... Done!");
     }
 
     protected void testStartingFast() {
-        traceMessage("Test startWasherFast()...");
+        logMessage("Test startWasherFast()...");
         try {
             assertFalse(dwop.isWashing());
             dwop.startWasherFast();
@@ -102,17 +102,19 @@ public class DishwasherUnitTester
             dwop.stopWashing();
             assertFalse(dwop.isWashing());
         } catch(Exception e) {
-            traceMessage("... FAILED!");
+            logMessage("... FAILED!");
             fail(e);
         }
-        traceMessage("... Done!");
+        logMessage("... Done!");
     }
 
     protected void runAllTests() {
+        logMessage("Starting test suite...");
         testIsWashing();
         testStartingFull();
         testStartingEco();
         testStartingFast();
+        logMessage("All tests passed!");
     }
 
     // ========== Lifecycle methods ==========
