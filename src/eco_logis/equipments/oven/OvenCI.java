@@ -1,5 +1,6 @@
 package equipments.oven;
 
+import equipments.crypto_miner.CryptoMinerImplementationI;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 
@@ -17,6 +18,26 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public interface OvenCI extends OfferedCI, RequiredCI, OvenImplementationI {
-    // TODO
+public interface OvenCI
+        extends OfferedCI, RequiredCI, OvenImplementationI {
+
+    /** @see OvenImplementationI#isBaking() */
+    @Override
+    boolean isBaking() throws Exception;
+
+    /** @see OvenImplementationI#startBaking() */
+    @Override
+    void startBaking() throws Exception;
+
+    /** @see OvenImplementationI#stopBaking() */
+    @Override
+    void stopBaking() throws Exception;
+
+    /** @see OvenImplementationI#getTemperature() */
+    @Override
+    double getTemperature() throws Exception;
+
+    /** @see OvenImplementationI#setTemperature(double) */
+    @Override
+    void setTemperature(double temp) throws Exception;
 }

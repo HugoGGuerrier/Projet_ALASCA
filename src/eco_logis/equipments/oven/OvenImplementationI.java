@@ -15,8 +15,8 @@ package equipments.oven;
  *
  * <p>Created on : 2021-10-05</p>
  *
- * @author Emilie Siau
- * @author Hugo Guerrier
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
  */
 public interface OvenImplementationI {
 
@@ -29,7 +29,7 @@ public interface OvenImplementationI {
      * post	{@code isBaking()}
      * </pre>
      *
-     * @throws Exception TODO
+     * @throws Exception
      */
     void startBaking() throws Exception;
 
@@ -42,7 +42,7 @@ public interface OvenImplementationI {
      * post	{@code !isBaking()}
      * </pre>
      *
-     * @throws Exception TODO
+     * @throws Exception
      */
     void stopBaking() throws Exception;
 
@@ -55,21 +55,21 @@ public interface OvenImplementationI {
      * post	true		// no postcondition.
      * </pre>
      *
-     * @throws Exception TODO
      * @return true if the oven is on/baking, false otherwise
+     * @throws Exception
      */
     boolean isBaking() throws Exception;
 
     /**
-     * Get the oven temperature
-     * @return the temperature (Celsius °C)
+     * Get the oven temperature (Celsius degrees °C)
+     * @return the temperature (°C)
      * @throws Exception
      */
     double getTemperature() throws Exception;
 
     /**
-     * Set the oven temperature to the given temperature
-     * @param temp the temperature (Celsius °C)
+     * Set the oven temperature to the given temperature (Celsius degrees °C)
+     * @param temp the temperature (°C)
      * @throws Exception
      */
     void setTemperature(double temp) throws Exception;

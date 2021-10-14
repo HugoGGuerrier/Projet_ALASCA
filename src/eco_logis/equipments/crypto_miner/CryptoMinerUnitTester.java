@@ -12,12 +12,12 @@ public class CryptoMinerUnitTester
     extends AbstractComponent
 {
 
-    // ===== Attributes =====
+    // ========== Attributes ==========
 
     private String cryptoMinerInboundPortUri;
     private CryptoMinerOutboundPort cmop;
 
-    // ===== Constructors =====
+    // ========== Constructors ==========
 
     protected CryptoMinerUnitTester() throws Exception {
         this(CryptoMiner.INBOUND_PORT_URI);
@@ -33,7 +33,7 @@ public class CryptoMinerUnitTester
         initialise(cryptoMinerInboundPortURI);
     }
 
-    // ===== Class methods =====
+    // ========== Class methods ==========
 
     protected void initialise(String cryptoMinerInboundPortUri) throws Exception {
         // Set the inbound port uri
@@ -49,7 +49,7 @@ public class CryptoMinerUnitTester
         toggleTracing();
     }
 
-    // ===== Test methods =====
+    // ========== Test methods ==========
 
     protected void testIsMining() {
         traceMessage("Test isMining()...");
@@ -82,7 +82,7 @@ public class CryptoMinerUnitTester
         testStartStopMiner();
     }
 
-    // ===== Lifecycle methods =====
+    // ========== Lifecycle methods ==========
 
 
     /** @see fr.sorbonne_u.components.AbstractComponent#start() */
