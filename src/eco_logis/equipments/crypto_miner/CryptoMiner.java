@@ -134,7 +134,6 @@ public class CryptoMiner
         if(CryptoMiner.VERBOSE) {
             traceMessage("Crypto miner get mining : " + isMining);
         }
-
         return isMining;
     }
 

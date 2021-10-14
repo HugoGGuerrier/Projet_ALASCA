@@ -14,7 +14,7 @@ public class CryptoMinerInboundPort
     implements CryptoMinerCI
 {
 
-    // ===== Constructors =====
+    // ========== Constructors ==========
 
     /**
      * Create a new crypto miner inbound port with its owner
@@ -37,7 +37,7 @@ public class CryptoMinerInboundPort
         super(uri, CryptoMinerCI.class, owner);
     }
 
-    // ===== Override methods =====
+    // ========== Override methods ==========
 
     /** @see CryptoMinerImplementationI#isMining() */
     @Override

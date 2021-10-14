@@ -1,11 +1,7 @@
 package equipments.oven;
 
+import equipments.crypto_miner.CryptoMinerImplementationI;
 import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.annotations.OfferedInterfaces;
-import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryer;
-import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerCI;
-import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerImplementationI;
-import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.hairdryer.HairDryerInboundPort;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
 /**
@@ -28,8 +24,8 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  *
  * <p>Created on : 2021-10-05</p>
  *
- * @author Emilie Siau
- * @author Hugo Guerrier
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
  */
 
 //@OfferedInterfaces(offered = {OvenCI.class})
@@ -91,15 +87,6 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
 
     // ========== Class methods ==========
 
-    @Override
-    public void startBaking() throws Exception {
-        isBaking = true;
-    }
-
-    @Override
-    public void stopBaking() throws Exception {
-        isBaking = false;
-    }
 
     protected void initialise(String ovenInboundPortURI) throws Exception {
         assert ovenInboundPortURI != null : new PreconditionException("hairDryerInboundPortURI != null");
@@ -118,22 +105,50 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
         }
     }
 
-    // ========== Getters ==========
+    // ========== Override methods ==========
 
+    /** @see OvenImplementationI#isBaking() */
     @Override
-    public boolean isBaking() throws Exception {
+    public boolean isBaking() {
+        if(Oven.VERBOSE) {
+            traceMessage("Oven returns if it is baking : " + this.isBaking + ".\n");
+        }
         return isBaking;
     }
 
+    /** @see OvenImplementationI#startBaking() */
     @Override
-    public double getTemperature() throws Exception {
+    public void startBaking() throws Exception {
+        if(Oven.VERBOSE) {
+            traceMessage("");
+        }
+        isBaking = true;
+    }
+
+    /** @see OvenImplementationI#stopBaking() */
+    @Override
+    public void stopBaking() throws Exception {
+        if(Oven.VERBOSE) {
+            traceMessage("");
+        }
+        isBaking = false;
+    }
+
+    /** @see OvenImplementationI#getTemperature() */
+    @Override
+    public double getTemperature() {
+        if(Oven.VERBOSE) {
+            traceMessage("");
+        }
         return temperature;
     }
 
-    // ========== Setters ==========
-
+    /** @see OvenImplementationI#setTemperature(double) */
     @Override
-    public void setTemperature(double temp) throws Exception {
+    public void setTemperature(double temp) {
+        if(Oven.VERBOSE) {
+            traceMessage("");
+        }
         this.temperature = temp;
     }
 }
