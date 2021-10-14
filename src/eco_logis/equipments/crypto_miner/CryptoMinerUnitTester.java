@@ -44,7 +44,7 @@ public class CryptoMinerUnitTester
         cmop.publishPort();
 
         // Trace the execution
-        tracer.get().setTitle("Heater tester component");
+        tracer.get().setTitle("Crypto miner tester component");
         tracer.get().setRelativePosition(0, 1);
         toggleTracing();
     }

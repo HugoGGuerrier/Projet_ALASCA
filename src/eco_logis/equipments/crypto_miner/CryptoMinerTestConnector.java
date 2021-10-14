@@ -16,19 +16,19 @@ public class CryptoMinerTestConnector
     /** @see CryptoMinerImplementationI#isMining() */
     @Override
     public boolean isMining() throws Exception {
-        return ((CryptoMinerCI) this.offering).isMining();
+        return ((CryptoMinerCI) offering).isMining();
     }
 
     /** @see CryptoMinerImplementationI#startMiner() */
     @Override
     public void startMiner() throws Exception {
-        ((CryptoMinerCI) this.offering).startMiner();
+        ((CryptoMinerCI) offering).startMiner();
     }
 
     /** @see CryptoMinerImplementationI#stopMiner() */
     @Override
     public void stopMiner() throws Exception {
-        ((CryptoMinerCI) this.offering).stopMiner();
+        ((CryptoMinerCI) offering).stopMiner();
     }
 
 }

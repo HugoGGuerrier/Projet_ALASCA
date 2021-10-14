@@ -3,6 +3,12 @@ package equipments.dishwasher;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
+/**
+ * This class represent an outbound port for the dishwasher services
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRRIER
+ */
 public class DishwasherOutboundPort
     extends AbstractOutboundPort
     implements DishwasherCI
@@ -46,31 +52,31 @@ public class DishwasherOutboundPort
     /** @see DishwasherImplementationI#startWasherFull() */
     @Override
     public void startWasherFull() throws Exception {
-
+        ((DishwasherCI) getConnector()).startWasherFull();
     }
 
     /** @see DishwasherImplementationI#startWasherEco() */
     @Override
     public void startWasherEco() throws Exception {
-
+        ((DishwasherCI) getConnector()).startWasherEco();
     }
 
     /** @see DishwasherImplementationI#startWasherFast() */
     @Override
     public void startWasherFast() throws Exception {
-
+        ((DishwasherCI) getConnector()).startWasherFast();
     }
 
     /** @see DishwasherImplementationI#stopWashing() */
     @Override
     public void stopWashing() throws Exception {
-
+        ((DishwasherCI) getConnector()).stopWashing();
     }
 
     /** @see DishwasherImplementationI#getProgram() */
     @Override
     public DishwasherProgram getProgram() throws Exception {
-        return null;
+        return ((DishwasherCI) getConnector()).getProgram();
     }
 
 }

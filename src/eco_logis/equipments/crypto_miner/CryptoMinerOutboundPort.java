@@ -19,6 +19,8 @@ public class CryptoMinerOutboundPort
     /**
      * Create a new crypto miner outbound port with its owner
      *
+     * @see AbstractOutboundPort#AbstractOutboundPort(Class, ComponentI)
+     *
      * @param owner The port owner
      * @throws Exception TODO
      */
@@ -28,6 +30,8 @@ public class CryptoMinerOutboundPort
 
     /**
      * Create a new crypto miner outbound port with its uri and owner
+     *
+     * @see AbstractOutboundPort#AbstractOutboundPort(String, Class, ComponentI)
      *
      * @param uri The port uri
      * @param owner The port owner
@@ -42,19 +46,19 @@ public class CryptoMinerOutboundPort
     /** @see CryptoMinerImplementationI#isMining() */
     @Override
     public boolean isMining() throws Exception {
-        return ((CryptoMinerCI) this.getConnector()).isMining();
+        return ((CryptoMinerCI) getConnector()).isMining();
     }
 
     /** @see CryptoMinerImplementationI#startMiner() */
     @Override
     public void startMiner() throws Exception {
-        ((CryptoMinerCI) this.getConnector()).startMiner();
+        ((CryptoMinerCI) getConnector()).startMiner();
     }
 
     /** @see CryptoMinerImplementationI#stopMiner() */
     @Override
     public void stopMiner() throws Exception {
-        ((CryptoMinerCI) this.getConnector()).stopMiner();
+        ((CryptoMinerCI) getConnector()).stopMiner();
     }
 
 }

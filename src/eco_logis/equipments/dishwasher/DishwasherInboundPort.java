@@ -46,7 +46,7 @@ public class DishwasherInboundPort
     /** @see DishwasherImplementationI#isWashing() */
     @Override
     public boolean isWashing() throws Exception {
-        return this.getOwner().handleRequest(
+        return getOwner().handleRequest(
                 o -> ((Dishwasher) o).isWashing()
         );
     }
@@ -54,7 +54,7 @@ public class DishwasherInboundPort
     /** @see DishwasherImplementationI#startWasherFull() */
     @Override
     public void startWasherFull() throws Exception {
-        this.getOwner().handleRequest(
+        getOwner().handleRequest(
                 o -> {
                     ((Dishwasher) o).startWasherFull();
                     return null;
@@ -65,7 +65,7 @@ public class DishwasherInboundPort
     /** @see DishwasherImplementationI#startWasherEco() */
     @Override
     public void startWasherEco() throws Exception {
-        this.getOwner().handleRequest(
+        getOwner().handleRequest(
                 o -> {
                     ((Dishwasher) o).startWasherEco();
                     return null;
@@ -76,7 +76,7 @@ public class DishwasherInboundPort
     /** @see DishwasherImplementationI#startWasherFast() */
     @Override
     public void startWasherFast() throws Exception {
-        this.getOwner().handleRequest(
+        getOwner().handleRequest(
                 o -> {
                     ((Dishwasher) o).startWasherFast();
                     return null;
@@ -87,7 +87,7 @@ public class DishwasherInboundPort
     /** @see DishwasherImplementationI#stopWashing() */
     @Override
     public void stopWashing() throws Exception {
-        this.getOwner().handleRequest(
+        getOwner().handleRequest(
                 o -> {
                     ((Dishwasher) o).stopWashing();
                     return null;
@@ -98,7 +98,7 @@ public class DishwasherInboundPort
     /** @see DishwasherImplementationI#getProgram() */
     @Override
     public DishwasherProgram getProgram() throws Exception {
-        return this.getOwner().handleRequest(
+        return getOwner().handleRequest(
                 o -> ((Dishwasher) o).getProgram()
         );
     }

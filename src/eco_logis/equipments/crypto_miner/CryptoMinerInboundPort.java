@@ -19,6 +19,8 @@ public class CryptoMinerInboundPort
     /**
      * Create a new crypto miner inbound port with its owner
      *
+     * @see AbstractInboundPort#AbstractInboundPort(Class, ComponentI)
+     *
      * @param owner The port owner
      * @throws Exception TODO
      */
@@ -28,6 +30,8 @@ public class CryptoMinerInboundPort
 
     /**
      * Create a new crypto miner inbound port with its uri and owner
+     *
+     * @see AbstractInboundPort#AbstractInboundPort(String, Class, ComponentI)
      *
      * @param uri The port URI
      * @param owner The port owner
@@ -42,7 +46,7 @@ public class CryptoMinerInboundPort
     /** @see CryptoMinerImplementationI#isMining() */
     @Override
     public boolean isMining() throws Exception {
-        return this.getOwner().handleRequest(
+        return getOwner().handleRequest(
                 o -> ((CryptoMiner) o).isMining()
         );
     }
@@ -50,7 +54,7 @@ public class CryptoMinerInboundPort
     /** @see CryptoMinerImplementationI#startMiner() */
     @Override
     public void startMiner() throws Exception {
-        this.getOwner().handleRequest(
+        getOwner().handleRequest(
                 o -> {
                     ((CryptoMiner) o).startMiner();
                     return null;
@@ -61,7 +65,7 @@ public class CryptoMinerInboundPort
     /** @see CryptoMinerImplementationI#stopMiner() */
     @Override
     public void stopMiner() throws Exception {
-        this.getOwner().handleRequest(
+        getOwner().handleRequest(
                 o -> {
                     ((CryptoMiner) o).stopMiner();
                     return null;
