@@ -34,15 +34,15 @@
     <suspended><body>return isSuspended;</body></suspended>
     <suspend>
       <body equipmentRef="heater">
-	heater.stopHeater();
-	isSuspended = true;
+        heater.stopHeater();
+        isSuspended = true;
         return true;
       </body>
     </suspend>
     <resume>
       <body equipmentRef="heater">
-	heater.startHeater();
-	isSuspended = false;
+        heater.startHeater();
+        isSuspended = false;
         return true;
       </body>
     </resume>
