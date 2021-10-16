@@ -7,11 +7,11 @@ public class CVMUnitTest
     extends AbstractCVM
 {
 
-    // ===== Constructors =====
+    // ========== Constructors ==========
 
     public CVMUnitTest() throws Exception {}
 
-    // ===== Class methods =====
+    // ========== Class methods ==========
 
 
     @Override

@@ -8,7 +8,6 @@ package equipments.oven;
  * <p><strong>Description</strong></p>
  *
  * <p><strong>Invariant</strong></p>
- *
  * <pre>
  * invariant	true
  * </pre>

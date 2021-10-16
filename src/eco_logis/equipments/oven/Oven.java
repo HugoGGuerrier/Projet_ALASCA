@@ -8,19 +8,12 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  * The class <code>Oven</code> implements the oven component.
  *
  * <p><strong>Description</strong></p>
- *
  * <p>
  * The oven is an uncontrollable appliance, hence it does not connect
  * with the household energy manager (we don't want any control over the oven).
  * However, it will connect later to the electric panel to take its (simulated)
  * electricity consumption into account.
  * </p>
- *
- * <p><strong>Invariant</strong></p>
- *
- * <pre>
- * invariant	true
- * </pre>
  *
  * <p>Created on : 2021-10-05</p>
  *
@@ -29,7 +22,9 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  */
 
 @OfferedInterfaces(offered = {OvenCI.class})
-public class Oven extends AbstractComponent implements OvenImplementationI {
+public class Oven
+    extends AbstractComponent
+    implements OvenImplementationI {
 
     // ========== Macros ==========
 
@@ -44,59 +39,103 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
 
     // ========== Attributes ==========
 
-    /** Temperature of the oven, celsius degrees (°C) */
+    /** Temperature of the oven, Celsius degrees (°C) */
     private double temperature;
 
     /** Inbound port offering the <code>OvenCI</code> interface */
     private OvenInboundPort ovenInboundPort;
 
-    /** State of the oven : ON or OFF */
+    /** State of the oven : baking (on) or not (off) */
     private boolean isBaking;
 
     // ========== Constructors ==========
 
     /**
-    * Create an oven component
+     * Create an oven component
      *
-    * <p><strong>Contract</strong></p>
-    *
-    * <pre>
-    * pre	{@code INBOUND_PORT_URI != null}
-    * pre	{@code !INBOUND_PORT_URI.isEmpty()}
-    * post	{@code getState() == OvenState.OFF}
-    * post	{@code getTemperature() == 0.0}
-    * </pre>
-    *
-    * @throws Exception
-    */
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	{@code INBOUND_PORT_URI != null}
+     * pre	{@code !INBOUND_PORT_URI.isEmpty()}
+     * post true
+     * </pre>
+     *
+     * @throws Exception
+     */
     protected Oven() throws Exception {
-        super(1, 0);
-        this.initialise(INBOUND_PORT_URI);
+        this(INBOUND_PORT_URI);
     }
 
     /**
-     * Create an oven component.
+     * Create an oven component
      *
-     * @param ovenInboundPortURI URI of the hair dryer inbound port.
-     * @throws Exception <i>to do</i>.
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	{@code ovenInboundPortURI != null}
+     * pre	{@code !ovenInboundPortURI.isEmpty()}
+     * post	true
+     * </pre>
+     *
+     * @param ovenInboundPortURI URI of the oven inbound port.
+     * @throws Exception
      */
     protected Oven(String ovenInboundPortURI) throws Exception {
         super(1, 0);
         this.initialise(ovenInboundPortURI);
     }
 
+    /**
+     * Create a new oven with the wanted inbound port URI and the reflection inbound port URI
+     *
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	{@code ovenInboundPortURI != null}
+     * pre	{@code !ovenInboundPortURI.isEmpty()}
+     * pre	{@code reflectionInboundPortURI != null}
+     * pre	{@code !reflectionInboundPortURI.isEmpty()}
+     * post	true
+     * </pre>
+     *
+     * @param reflectionInboundPortURI  The reflection inbound port URI
+     * @param ovenInboundPortURI The inbound port URI
+     * @throws Exception
+     */
+    protected Oven(String reflectionInboundPortURI, String ovenInboundPortURI) throws Exception {
+        super(reflectionInboundPortURI, 1, 0);
+        initialise(ovenInboundPortURI);
+    }
+
     // ========== Class methods ==========
 
-
+    /**
+     * Initialise the newly created oven
+     *
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	{@code ovenInboundPortURI != null}
+     * pre	{@code !ovenInboundPortURI.isEmpty()}
+     * post {@code !isBaking}
+     * post {@code temperature == 0.0}
+     * post	{@code ovenInboundPort.isPublished()}
+     * </pre>
+     *
+     * @param ovenInboundPortURI The oven inbound port URI
+     * @throws Exception
+     */
     protected void initialise(String ovenInboundPortURI) throws Exception {
-        assert ovenInboundPortURI != null : new PreconditionException("hairDryerInboundPortURI != null");
-        assert !ovenInboundPortURI.isEmpty() : new PreconditionException("!hairDryerInboundPortURI.isEmpty()");
+        // Assert the URI consistence
+        assert ovenInboundPortURI != null : new PreconditionException("ovenInboundPortURI != null");
+        assert !ovenInboundPortURI.isEmpty() : new PreconditionException("!ovenInboundPortURI.isEmpty()");
 
+        // Initialise the component
         this.temperature = 0.0;
         this.isBaking = INITIAL_STATE;
+
+        // Create the inbound port
         this.ovenInboundPort = new OvenInboundPort(ovenInboundPortURI, this);
         this.ovenInboundPort.publishPort();
 
+        // Create the trace
         if (Oven.VERBOSE) {
             this.tracer.get().setTitle("Oven component");
             this.tracer.get().setRelativePosition(1, 0);
@@ -108,7 +147,7 @@ public class Oven extends AbstractComponent implements OvenImplementationI {
 
     /** @see OvenImplementationI#isBaking() */
     @Override
-    public boolean isBaking() {
+    public boolean isBaking() throws Exception {
         if(Oven.VERBOSE) {
             logMessage("Oven is baking : " + isBaking);
         }

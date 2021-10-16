@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @RequiredInterfaces(required = {OvenCI.class})
 public class OvenUnitTester
-        extends AbstractComponent {
+    extends AbstractComponent {
 
     // ========== Attributes ==========
 

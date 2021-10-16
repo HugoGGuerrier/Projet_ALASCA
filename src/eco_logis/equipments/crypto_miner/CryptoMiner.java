@@ -19,7 +19,10 @@ public class CryptoMiner
 
     // ========== Macros ==========
 
+    /** URI of the oven inbound port used in tests */
     public static final String INBOUND_PORT_URI = "CRYPTO-INBOUND-PORT-URI";
+
+    /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
 
     // ========== Attributes ==========
@@ -33,14 +36,13 @@ public class CryptoMiner
      * Create a new crypto miner
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
      * pre	{@code INBOUND_PORT_URI != null}
      * pre	{@code !INBOUND_PORT_URI.isEmpty()}
      * post	true
      * </pre>
      *
-     * @throws Exception TODO
+     * @throws Exception
      */
     protected CryptoMiner() throws Exception {
         this(INBOUND_PORT_URI);
@@ -50,7 +52,6 @@ public class CryptoMiner
      * Create a new crypto miner with the wanted inbound port URI
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
      * pre	{@code cryptoMinerInboundPortURI != null}
      * pre	{@code !cryptoMinerInboundPortURI.isEmpty()}
@@ -58,7 +59,7 @@ public class CryptoMiner
      * </pre>
      *
      * @param cryptoMinerInboundPortURI The inbound port URI
-     * @throws Exception TODO
+     * @throws Exception
      */
     protected CryptoMiner(String cryptoMinerInboundPortURI) throws Exception {
         super(1, 0);
@@ -69,7 +70,6 @@ public class CryptoMiner
      * Create a new crypto miner with the wanted inbound port URI and the reflection inbound port URI
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
      * pre	{@code cryptoMinerInboundPortURI != null}
      * pre	{@code !cryptoMinerInboundPortURI.isEmpty()}
@@ -80,7 +80,7 @@ public class CryptoMiner
      *
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param cryptoMinerInboundPortURI The inbound port URI
-     * @throws Exception TODO
+     * @throws Exception
      */
     protected CryptoMiner(String reflectionInboundPortURI, String cryptoMinerInboundPortURI) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
@@ -93,7 +93,6 @@ public class CryptoMiner
      * Initialise the newly created crypto miner
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
      * pre	{@code cryptoMinerInboundPortURI != null}
      * pre	{@code !cryptoMinerInboundPortURI.isEmpty()}
@@ -102,7 +101,7 @@ public class CryptoMiner
      * </pre>
      *
      * @param cryptoMinerInboundPortURI The crypto miner inbound port URI
-     * @throws Exception TODO
+     * @throws Exception
      */
     protected void initialise(String cryptoMinerInboundPortURI) throws Exception {
         // Assert the URI consistence

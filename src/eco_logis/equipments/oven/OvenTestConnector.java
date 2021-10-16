@@ -18,21 +18,25 @@ public class OvenTestConnector
         return ((OvenCI) offering).isBaking();
     }
 
+    /** @see OvenImplementationI#startBaking() */
     @Override
     public void startBaking() throws Exception {
         ((OvenCI) offering).startBaking();
     }
 
+    /** @see OvenImplementationI#stopBaking() */
     @Override
     public void stopBaking() throws Exception {
         ((OvenCI) offering).stopBaking();
     }
 
+    /** @see OvenImplementationI#getTemperature() */
     @Override
     public double getTemperature() throws Exception {
         return ((OvenCI) offering).getTemperature();
     }
 
+    /** @see OvenImplementationI#setTemperature(double) */
     @Override
     public void setTemperature(double temp) throws Exception {
         ((OvenCI) offering).setTemperature(temp);

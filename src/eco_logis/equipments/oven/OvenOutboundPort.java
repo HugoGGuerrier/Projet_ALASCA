@@ -1,9 +1,6 @@
 package equipments.oven;
 
-import equipments.crypto_miner.CryptoMinerCI;
-import equipments.crypto_miner.CryptoMinerImplementationI;
 import fr.sorbonne_u.components.ComponentI;
-import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
 /**
