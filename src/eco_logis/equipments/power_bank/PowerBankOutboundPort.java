@@ -84,4 +84,10 @@ public class PowerBankOutboundPort
         return ((PowerBankCI) getConnector()).getBatteryLevel();
     }
 
+    /** @see PowerBankImplementationI#setBatteryLevel(double) */
+    @Override
+    public void setBatteryLevel(double level) throws Exception {
+        ((PowerBankCI) getConnector()).setBatteryLevel(level);
+    }
+
 }

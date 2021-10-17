@@ -201,5 +201,11 @@ public class PowerBank
         return batteryLevel;
     }
 
+    /** @see PowerBankImplementationI#setBatteryLevel(double) */
+    @Override
+    public void setBatteryLevel(double level) throws Exception {
+        batteryLevel = level;
+    }
+
 
 }

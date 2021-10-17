@@ -46,7 +46,7 @@ public class PowerBankInboundPort
     @Override
     public boolean isCharging() throws Exception {
         return getOwner().handleRequest(
-                o -> ((PowerBank) o).isCharging()
+            o -> ((PowerBank) o).isCharging()
         );
     }
 
@@ -54,10 +54,10 @@ public class PowerBankInboundPort
     @Override
     public void startCharging() throws Exception {
         getOwner().handleRequest(
-                o -> {
-                    ((PowerBank) o).startCharging();
-                    return null;
-                }
+            o -> {
+                ((PowerBank) o).startCharging();
+                return null;
+            }
         );
     }
 
@@ -65,10 +65,10 @@ public class PowerBankInboundPort
     @Override
     public void stopCharging() throws Exception {
         getOwner().handleRequest(
-                o -> {
-                    ((PowerBank) o).stopCharging();
-                    return null;
-                }
+            o -> {
+                ((PowerBank) o).stopCharging();
+                return null;
+            }
         );
     }
 
@@ -76,7 +76,7 @@ public class PowerBankInboundPort
     @Override
     public boolean isDischarging() throws Exception {
         return getOwner().handleRequest(
-                o -> ((PowerBank) o).isDischarging()
+            o -> ((PowerBank) o).isDischarging()
         );
     }
 
@@ -84,10 +84,10 @@ public class PowerBankInboundPort
     @Override
     public void startDischarging() throws Exception {
         getOwner().handleRequest(
-                o -> {
-                    ((PowerBank) o).startDischarging();
-                    return null;
-                }
+            o -> {
+                ((PowerBank) o).startDischarging();
+                return null;
+            }
         );
     }
 
@@ -95,10 +95,10 @@ public class PowerBankInboundPort
     @Override
     public void stopDischarging() throws Exception {
         getOwner().handleRequest(
-                o -> {
-                    ((PowerBank) o).stopDischarging();
-                    return null;
-                }
+            o -> {
+                ((PowerBank) o).stopDischarging();
+                return null;
+            }
         );
     }
 
@@ -106,7 +106,18 @@ public class PowerBankInboundPort
     @Override
     public double getBatteryLevel() throws Exception {
         return this.getOwner().handleRequest(
-                o -> ((PowerBank) o).getBatteryLevel()
+            o -> ((PowerBank) o).getBatteryLevel()
+        );
+    }
+
+    /** @see PowerBankImplementationI#setBatteryLevel(double) */
+    @Override
+    public void setBatteryLevel(double level) throws Exception {
+        getOwner().handleRequest(
+            o -> {
+                ((PowerBank) o).setBatteryLevel(level);
+                return null;
+            }
         );
     }
 }

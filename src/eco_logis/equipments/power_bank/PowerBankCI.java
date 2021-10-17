@@ -48,4 +48,9 @@ public interface PowerBankCI
     /** @see PowerBankImplementationI#getBatteryLevel()  */
     @Override
     double getBatteryLevel() throws Exception;
+
+    /** @see PowerBankImplementationI#setBatteryLevel(double)  */
+    @Override
+    void setBatteryLevel(double level) throws Exception;
+
 }

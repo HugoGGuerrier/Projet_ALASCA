@@ -53,4 +53,10 @@ public class PowerBankTestConnector
     public double getBatteryLevel() throws Exception {
         return ((PowerBankCI) offering).getBatteryLevel();
     }
+
+    /** @see PowerBankImplementationI#setBatteryLevel(double) */
+    @Override
+    public void setBatteryLevel(double level) throws Exception {
+        ((PowerBankCI) offering).setBatteryLevel(level);
+    }
 }

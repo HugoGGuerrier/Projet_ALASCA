@@ -113,5 +113,17 @@ public interface PowerBankImplementationI {
      */
     double getBatteryLevel() throws Exception;
 
+    /**
+     * Set the battery level to the given level (percentage)
+     *
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	true		// no precondition.
+     * post	true		// no postcondition.
+     * </pre>
+     *
+     * @throws Exception
+     */
+    void setBatteryLevel(double level) throws Exception;
 
 }
