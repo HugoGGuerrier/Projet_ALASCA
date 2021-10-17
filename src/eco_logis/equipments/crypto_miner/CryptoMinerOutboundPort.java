@@ -22,7 +22,7 @@ public class CryptoMinerOutboundPort
      * @see AbstractOutboundPort#AbstractOutboundPort(Class, ComponentI)
      *
      * @param owner The port owner
-     * @throws Exception TODO
+     * @throws Exception
      */
     public CryptoMinerOutboundPort(ComponentI owner) throws Exception {
         super(CryptoMinerCI.class, owner);
@@ -35,7 +35,7 @@ public class CryptoMinerOutboundPort
      *
      * @param uri The port uri
      * @param owner The port owner
-     * @throws Exception TODO
+     * @throws Exception
      */
     public CryptoMinerOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, CryptoMinerCI.class, owner);

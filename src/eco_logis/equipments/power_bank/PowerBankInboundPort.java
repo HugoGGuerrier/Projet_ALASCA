@@ -1,6 +1,5 @@
 package equipments.power_bank;
 
-import equipments.crypto_miner.CryptoMinerCI;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
@@ -25,7 +24,7 @@ public class PowerBankInboundPort
      * @throws Exception
      */
     public PowerBankInboundPort(ComponentI owner) throws Exception {
-        super(CryptoMinerCI.class, owner);
+        super(PowerBankCI.class, owner);
     }
 
     /**
@@ -38,10 +37,18 @@ public class PowerBankInboundPort
      * @throws Exception
      */
     public PowerBankInboundPort(String uri, ComponentI owner) throws Exception {
-        super(uri, CryptoMinerCI.class, owner);
+        super(uri, PowerBankCI.class, owner);
     }
 
     // ========== Override methods ==========
+
+    /** @see PowerBankImplementationI#isCharging() */
+    @Override
+    public boolean isCharging() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((PowerBank) o).isCharging()
+        );
+    }
 
     /** @see PowerBankImplementationI#startCharging() */
     @Override
@@ -65,11 +72,11 @@ public class PowerBankInboundPort
         );
     }
 
-    /** @see PowerBankImplementationI#isCharging() */
+    /** @see PowerBankImplementationI#isDischarging() */
     @Override
-    public boolean isCharging() throws Exception {
+    public boolean isDischarging() throws Exception {
         return getOwner().handleRequest(
-                o -> ((PowerBank) o).isCharging()
+                o -> ((PowerBank) o).isDischarging()
         );
     }
 
@@ -92,14 +99,6 @@ public class PowerBankInboundPort
                     ((PowerBank) o).stopDischarging();
                     return null;
                 }
-        );
-    }
-
-    /** @see PowerBankImplementationI#isDischarging() */
-    @Override
-    public boolean isDischarging() throws Exception {
-        return getOwner().handleRequest(
-                o -> ((PowerBank) o).isDischarging()
         );
     }
 

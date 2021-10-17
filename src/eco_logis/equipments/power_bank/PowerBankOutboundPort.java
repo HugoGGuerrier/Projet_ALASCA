@@ -21,7 +21,7 @@ public class PowerBankOutboundPort
      * @see AbstractOutboundPort#AbstractOutboundPort(Class, ComponentI)
      *
      * @param owner The port owner
-     * @throws Exception TODO
+     * @throws Exception
      */
     public PowerBankOutboundPort(ComponentI owner) throws Exception {
         super(PowerBankCI.class, owner);
@@ -34,13 +34,19 @@ public class PowerBankOutboundPort
      *
      * @param uri The port uri
      * @param owner The port owner
-     * @throws Exception TODO
+     * @throws Exception
      */
     public PowerBankOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, PowerBankCI.class, owner);
     }
 
     // ========== Override methods ==========
+
+    /** @see PowerBankImplementationI#isCharging() */
+    @Override
+    public boolean isCharging() throws Exception {
+        return ((PowerBankCI) getConnector()).isCharging();
+    }
 
     /** @see PowerBankImplementationI#startCharging() */
     @Override
@@ -54,10 +60,10 @@ public class PowerBankOutboundPort
         ((PowerBankCI) getConnector()).stopCharging();
     }
 
-    /** @see PowerBankImplementationI#isCharging() */
+    /** @see PowerBankImplementationI#isDischarging() */
     @Override
-    public boolean isCharging() throws Exception {
-        return ((PowerBankCI) getConnector()).isCharging();
+    public boolean isDischarging() throws Exception {
+        return ((PowerBankCI) getConnector()).isDischarging();
     }
 
     /** @see PowerBankImplementationI#startDischarging() */
@@ -70,12 +76,6 @@ public class PowerBankOutboundPort
     @Override
     public void stopDischarging() throws Exception {
         ((PowerBankCI) getConnector()).stopDischarging();
-    }
-
-    /** @see PowerBankImplementationI#isDischarging() */
-    @Override
-    public boolean isDischarging() throws Exception {
-        return ((PowerBankCI) getConnector()).isDischarging();
     }
 
     /** @see PowerBankImplementationI#getBatteryLevel() */

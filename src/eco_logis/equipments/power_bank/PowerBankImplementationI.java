@@ -5,7 +5,6 @@ package equipments.power_bank;
  * of services implemented by the power bank component.
  *
  * <p><strong>Description</strong></p>
- *
  * <p><strong>Invariant</strong></p>
  * <pre>
  * invariant	true
@@ -17,6 +16,20 @@ package equipments.power_bank;
  * @author Hugo GUERRIER
  */
 public interface PowerBankImplementationI {
+
+    /**
+     * Get the current charging state of the power bank
+     *
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	true		// no precondition.
+     * post	true		// no postcondition.
+     * </pre>
+     *
+     * @return true if the power bank is currently charging, false otherwise
+     * @throws Exception
+     */
+    boolean isCharging() throws Exception;
 
     /**
      * Start charging the power bank
@@ -45,7 +58,7 @@ public interface PowerBankImplementationI {
     void stopCharging() throws Exception;
 
     /**
-     * Get the current charging state of the power bank
+     * Get the current discharging state of the power bank
      *
      * <p><strong>Contract</strong></p>
      * <pre>
@@ -56,7 +69,7 @@ public interface PowerBankImplementationI {
      * @return true if the power bank is charging, false otherwise
      * @throws Exception
      */
-    boolean isCharging() throws Exception;
+    boolean isDischarging() throws Exception;
 
     /**
      * Start discharging the power bank
@@ -85,20 +98,6 @@ public interface PowerBankImplementationI {
      * @throws Exception
      */
     void stopDischarging() throws Exception;
-
-    /**
-     * Get the current discharging state of the power bank
-     *
-     * <p><strong>Contract</strong></p>
-     * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
-     * </pre>
-     *
-     * @return true if the power bank is charging, false otherwise
-     * @throws Exception
-     */
-    boolean isDischarging() throws Exception;
 
     /**
      * Get the power bank percentage of energy stocked (battery level)

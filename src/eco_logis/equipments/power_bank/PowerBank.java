@@ -17,7 +17,6 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-
 @OfferedInterfaces(offered = {PowerBankCI.class})
 public class PowerBank
     extends AbstractComponent
@@ -25,7 +24,7 @@ public class PowerBank
 
     // ========== Macros ==========
 
-    /** URI of the oven inbound port used in tests */
+    /** URI of the power bank inbound port used in tests */
     public static final String INBOUND_PORT_URI = "POWERBANK-INBOUND-PORT-URI";
 
     /** When true, methods trace their actions */
@@ -126,8 +125,8 @@ public class PowerBank
         batteryLevel = 0.0;
 
         // Create the inbound port
-        this.powerBankInboundPort = new PowerBankInboundPort(powerBankInboundPortURI, this);
-        this.powerBankInboundPort.publishPort();
+        powerBankInboundPort = new PowerBankInboundPort(powerBankInboundPortURI, this);
+        powerBankInboundPort.publishPort();
 
         // Create the trace
         if(PowerBank.VERBOSE) {
@@ -139,12 +138,22 @@ public class PowerBank
 
     // ========== Override methods ==========
 
+    /** @see PowerBankImplementationI#isCharging() */
+    @Override
+    public boolean isCharging() throws Exception {
+        if(PowerBank.VERBOSE) {
+            logMessage("Power bank is charging : " + isCharging);
+        }
+        return isCharging;
+    }
+
     /** @see PowerBankImplementationI#startCharging() */
     @Override
     public void startCharging() throws Exception {
         if(PowerBank.VERBOSE) {
             logMessage("Start charging the power bank (current charge = " + batteryLevel + ")");
         }
+        assert !isDischarging;
         assert !isCharging;
         isCharging = true;
     }
@@ -159,10 +168,10 @@ public class PowerBank
         isCharging = false;
     }
 
-    /** @see PowerBankImplementationI#isCharging() */
+    /** @see PowerBankImplementationI#isDischarging() */
     @Override
-    public boolean isCharging() throws Exception {
-        return isCharging;
+    public boolean isDischarging() throws Exception {
+        return isDischarging;
     }
 
     /** @see PowerBankImplementationI#startDischarging() */
@@ -171,6 +180,7 @@ public class PowerBank
         if(PowerBank.VERBOSE) {
             logMessage("Start discharging the power bank (current charge = " + batteryLevel + ")");
         }
+        assert !isCharging;
         assert !isDischarging;
         isDischarging = true;
     }
@@ -183,12 +193,6 @@ public class PowerBank
         }
         assert isDischarging;
         isDischarging = false;
-    }
-
-    /** @see PowerBankImplementationI#isDischarging() */
-    @Override
-    public boolean isDischarging() throws Exception {
-        return isDischarging;
     }
 
     /** @see PowerBankImplementationI#getBatteryLevel() */

@@ -1,6 +1,5 @@
 package equipments.power_bank;
 
-import equipments.crypto_miner.CryptoMinerTestConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
@@ -108,7 +107,7 @@ public class PowerBankUnitTester
     }
 
     protected void runAllTests() {
-        logMessage("Starting test suite...");
+        logMessage("Starting power bank test suite...");
         testIsCharging();
         testIsDischarging();
         testStartStopCharging();
@@ -129,7 +128,7 @@ public class PowerBankUnitTester
             doPortConnection(
                     powerBankOutboundPort.getPortURI(),
                     powerBankInboundPortUri,
-                    CryptoMinerTestConnector.class.getCanonicalName()
+                    PowerBankTestConnector.class.getCanonicalName()
             );
         } catch(Exception e) {
             throw new ComponentStartException(e);
