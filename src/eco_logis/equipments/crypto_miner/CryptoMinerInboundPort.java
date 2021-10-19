@@ -22,7 +22,7 @@ public class CryptoMinerInboundPort
      * @see AbstractInboundPort#AbstractInboundPort(Class, ComponentI)
      *
      * @param owner The port owner
-     * @throws Exception TODO
+     * @throws Exception
      */
     public CryptoMinerInboundPort(ComponentI owner) throws Exception {
         super(CryptoMinerCI.class, owner);
@@ -35,7 +35,7 @@ public class CryptoMinerInboundPort
      *
      * @param uri The port URI
      * @param owner The port owner
-     * @throws Exception TODO
+     * @throws Exception
      */
     public CryptoMinerInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, CryptoMinerCI.class, owner);
@@ -55,10 +55,10 @@ public class CryptoMinerInboundPort
     @Override
     public void startMiner() throws Exception {
         getOwner().handleRequest(
-                o -> {
-                    ((CryptoMiner) o).startMiner();
-                    return null;
-                }
+            o -> {
+                ((CryptoMiner) o).startMiner();
+                return null;
+            }
         );
     }
 
@@ -66,10 +66,10 @@ public class CryptoMinerInboundPort
     @Override
     public void stopMiner() throws Exception {
         getOwner().handleRequest(
-                o -> {
-                    ((CryptoMiner) o).stopMiner();
-                    return null;
-                }
+            o -> {
+                ((CryptoMiner) o).stopMiner();
+                return null;
+            }
         );
     }
 

@@ -45,7 +45,7 @@ public class CryptoMiner
      * </pre>
      *
      *
-     * @throws Exception TODO
+     * @throws Exception
      */
     protected CryptoMiner() throws Exception {
         this(INBOUND_PORT_URI);
@@ -89,7 +89,7 @@ public class CryptoMiner
      *
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param cryptoMinerInboundPortURI The inbound port URI
-     * @throws Exception TODO
+     * @throws Exception
      */
     protected CryptoMiner(String reflectionInboundPortURI, String cryptoMinerInboundPortURI) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
