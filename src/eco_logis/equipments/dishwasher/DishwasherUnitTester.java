@@ -43,7 +43,7 @@ public class DishwasherUnitTester
 
         // Trace the execution
         tracer.get().setTitle("Dishwasher tester component");
-        tracer.get().setRelativePosition(1, 1);
+        tracer.get().setRelativePosition(0, 2);
         toggleTracing();
     }
 

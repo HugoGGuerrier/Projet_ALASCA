@@ -6,7 +6,8 @@ package equipments.dishwasher;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public interface DishwasherImplementationI {
+public interface DishwasherImplementationI
+{
 
     /**
      * This enum represents all possible program of the dishwasher

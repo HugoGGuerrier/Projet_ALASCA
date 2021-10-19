@@ -45,7 +45,7 @@ public class GeneratorUnitTester
 
         // Trace the execution
         tracer.get().setTitle("Generator tester component");
-        tracer.get().setRelativePosition(3, 1);
+        tracer.get().setRelativePosition(0, 2);
         toggleTracing();
     }
 

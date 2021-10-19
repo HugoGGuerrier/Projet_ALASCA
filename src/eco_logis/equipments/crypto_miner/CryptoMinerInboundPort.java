@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
 /**
- * This class represent an inbound port for a CryptoMinerCI component interface
+ * This class represent an inbound port for a crypto miner
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER

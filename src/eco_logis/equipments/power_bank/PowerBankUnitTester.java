@@ -44,7 +44,7 @@ public class PowerBankUnitTester
 
         // Trace the execution
         tracer.get().setTitle("Power bank tester component");
-        tracer.get().setRelativePosition(0, 1);
+        tracer.get().setRelativePosition(0, 2);
         toggleTracing();
     }
 

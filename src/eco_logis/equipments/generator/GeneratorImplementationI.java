@@ -6,7 +6,8 @@ package equipments.generator;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public interface GeneratorImplementationI {
+public interface GeneratorImplementationI
+{
 
     /**
      * Get if the generator is currently generating power

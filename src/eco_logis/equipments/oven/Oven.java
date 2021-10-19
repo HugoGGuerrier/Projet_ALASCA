@@ -8,6 +8,7 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  * The class <code>Oven</code> implements the oven component.
  *
  * <p><strong>Description</strong></p>
+ * 
  * <p>
  * The oven is an uncontrollable appliance, hence it does not connect
  * with the household energy manager (we don't want any control over the oven).
@@ -24,7 +25,8 @@ import fr.sorbonne_u.exceptions.PreconditionException;
 @OfferedInterfaces(offered = {OvenCI.class})
 public class Oven
     extends AbstractComponent
-    implements OvenImplementationI {
+    implements OvenImplementationI 
+{
 
     // ========== Macros ==========
 
@@ -39,28 +41,29 @@ public class Oven
 
     // ========== Attributes ==========
 
+    /** State of the oven : baking (on) or not (off) */
+    private boolean isBaking;
+    
     /** Temperature of the oven, Celsius degrees (°C) */
     private double temperature;
 
     /** Inbound port offering the <code>OvenCI</code> interface */
-    private OvenInboundPort ovenInboundPort;
-
-    /** State of the oven : baking (on) or not (off) */
-    private boolean isBaking;
-
+    private OvenInboundPort oip;
+    
     // ========== Constructors ==========
 
     /**
      * Create an oven component
      *
      * <p><strong>Contract</strong></p>
+     * 
      * <pre>
      * pre	{@code INBOUND_PORT_URI != null}
      * pre	{@code !INBOUND_PORT_URI.isEmpty()}
      * post true
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected Oven() throws Exception {
         this(INBOUND_PORT_URI);
@@ -70,14 +73,17 @@ public class Oven
      * Create an oven component
      *
      * <p><strong>Contract</strong></p>
+     * 
      * <pre>
      * pre	{@code ovenInboundPortURI != null}
      * pre	{@code !ovenInboundPortURI.isEmpty()}
      * post	true
      * </pre>
+     * 
+     * @see AbstractComponent#AbstractComponent(int, int) 
      *
      * @param ovenInboundPortURI URI of the oven inbound port.
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected Oven(String ovenInboundPortURI) throws Exception {
         super(1, 0);
@@ -88,6 +94,7 @@ public class Oven
      * Create a new oven with the wanted inbound port URI and the reflection inbound port URI
      *
      * <p><strong>Contract</strong></p>
+     * 
      * <pre>
      * pre	{@code ovenInboundPortURI != null}
      * pre	{@code !ovenInboundPortURI.isEmpty()}
@@ -95,10 +102,12 @@ public class Oven
      * pre	{@code !reflectionInboundPortURI.isEmpty()}
      * post	true
      * </pre>
+     * 
+     * @see AbstractComponent#AbstractComponent(String, int, int) 
      *
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param ovenInboundPortURI The inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected Oven(String reflectionInboundPortURI, String ovenInboundPortURI) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
@@ -111,6 +120,7 @@ public class Oven
      * Initialise the newly created oven
      *
      * <p><strong>Contract</strong></p>
+     * 
      * <pre>
      * pre	{@code ovenInboundPortURI != null}
      * pre	{@code !ovenInboundPortURI.isEmpty()}
@@ -120,7 +130,7 @@ public class Oven
      * </pre>
      *
      * @param ovenInboundPortURI The oven inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected void initialise(String ovenInboundPortURI) throws Exception {
         // Assert the URI consistence
@@ -132,13 +142,13 @@ public class Oven
         this.isBaking = INITIAL_STATE;
 
         // Create the inbound port
-        this.ovenInboundPort = new OvenInboundPort(ovenInboundPortURI, this);
-        this.ovenInboundPort.publishPort();
+        this.oip = new OvenInboundPort(ovenInboundPortURI, this);
+        this.oip.publishPort();
 
         // Create the trace
         if (Oven.VERBOSE) {
             this.tracer.get().setTitle("Oven component");
-            this.tracer.get().setRelativePosition(1, 0);
+            this.tracer.get().setRelativePosition(3, 0);
             this.toggleTracing();
         }
     }

@@ -45,7 +45,7 @@ public class CryptoMinerUnitTester
 
         // Trace the execution
         tracer.get().setTitle("Crypto miner tester component");
-        tracer.get().setRelativePosition(0, 1);
+        tracer.get().setRelativePosition(0, 2);
         toggleTracing();
     }
 

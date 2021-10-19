@@ -127,7 +127,7 @@ public class Generator
         // Create the tracer
         if(VERBOSE) {
             tracer.get().setTitle("Generator component");
-            tracer.get().setRelativePosition(3, 0);
+            tracer.get().setRelativePosition(2, 0);
             toggleTracing();
         }
     }

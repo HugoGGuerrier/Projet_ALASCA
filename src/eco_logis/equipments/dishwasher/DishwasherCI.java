@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 
 /**
- * This interface represents all dishwasher services for the javassist tool
+ * This interface represents all dishwasher services
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
@@ -12,6 +12,7 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
 public interface DishwasherCI
         extends DishwasherImplementationI, RequiredCI, OfferedCI
 {
+
     /** @see DishwasherImplementationI#isWashing() */
     @Override
     boolean isWashing() throws Exception;
@@ -35,4 +36,5 @@ public interface DishwasherCI
     /** @see DishwasherImplementationI#getProgram() */
     @Override
     DishwasherProgram getProgram() throws Exception;
+
 }

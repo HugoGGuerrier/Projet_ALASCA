@@ -5,8 +5,7 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
 /**
- * This class represent a crypto-currency miner which can be powered on and off.
- * This is a suspensable component.
+ * This class represent a crypto-currency miner which can be powered on and off
  *
  * @author Emilie Siau
  * @author Hugo Guerrier
@@ -45,6 +44,7 @@ public class CryptoMiner
      * post	true
      * </pre>
      *
+     *
      * @throws Exception TODO
      */
     protected CryptoMiner() throws Exception {
@@ -55,11 +55,14 @@ public class CryptoMiner
      * Create a new crypto miner with the wanted inbound port URI
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	{@code cryptoMinerInboundPortURI != null}
      * pre	{@code !cryptoMinerInboundPortURI.isEmpty()}
      * post	true
      * </pre>
+     *
+     * @see AbstractComponent#AbstractComponent(int, int)
      *
      * @param cryptoMinerInboundPortURI The inbound port URI
      * @throws Exception TODO
@@ -73,6 +76,7 @@ public class CryptoMiner
      * Create a new crypto miner with the wanted inbound port URI and the reflection inbound port URI
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	{@code cryptoMinerInboundPortURI != null}
      * pre	{@code !cryptoMinerInboundPortURI.isEmpty()}
@@ -80,6 +84,8 @@ public class CryptoMiner
      * pre	{@code !reflectionInboundPortURI.isEmpty()}
      * post	true
      * </pre>
+     *
+     * @see AbstractComponent#AbstractComponent(String, int, int)
      *
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param cryptoMinerInboundPortURI The inbound port URI

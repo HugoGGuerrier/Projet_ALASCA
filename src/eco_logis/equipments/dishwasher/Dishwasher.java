@@ -10,13 +10,21 @@ public class Dishwasher
 
     // ========== Macros ==========
 
+    /** The string representing the default dishwasher inbound port URI */
     public static final String INBOUND_PORT_URI = "DISHWASHER-INBOUND-PORT-URI";
+
+    /** Trace all actions on the component if true */
     public static final boolean VERBOSE = true;
 
     // ========== Attributes ==========
 
-    private DishwasherProgram program;
+    /** If the dishwasher is currently washing something */
     private boolean isWashing;
+
+    /** The current dishwasher program */
+    private DishwasherProgram program;
+
+    /** The dishwasher inbound port */
     private DishwasherInboundPort dwip;
 
     // ========== Constructors ==========
@@ -49,6 +57,8 @@ public class Dishwasher
      * post	true
      * </pre>
      *
+     * @see AbstractComponent#AbstractComponent(int, int)
+     *
      * @param dishwasherInboundPortURI The inbound port URI
      * @throws Exception TODO
      */
@@ -69,6 +79,8 @@ public class Dishwasher
      * pre	{@code !reflectionInboundPortURI.isEmpty()}
      * post	true
      * </pre>
+     *
+     * @see AbstractComponent#AbstractComponent(String, int, int)
      *
      * @param reflectionInboundPortURI The reflection inbound port URI
      * @param dishwasherInboundPortURI The inbound port URI

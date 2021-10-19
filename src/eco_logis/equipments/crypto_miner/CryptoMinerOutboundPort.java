@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
 /**
- * This class represent an outbound port for the crypto miner component
+ * This class represent an outbound port for the crypto miner
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER

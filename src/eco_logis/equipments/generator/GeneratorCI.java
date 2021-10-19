@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 
 /**
- * Interface that represents the offered and required interface for the generator component
+ * Interface that represents services for the generator component
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
@@ -12,6 +12,7 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
 public interface GeneratorCI
     extends GeneratorImplementationI, RequiredCI, OfferedCI
 {
+
     /** @see GeneratorImplementationI#isRunning() */
     @Override
     boolean isRunning() throws Exception;
@@ -31,4 +32,5 @@ public interface GeneratorCI
     /** @see GeneratorImplementationI#refill() */
     @Override
     void refill() throws Exception;
+
 }

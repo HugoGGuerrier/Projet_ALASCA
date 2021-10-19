@@ -1,12 +1,13 @@
 package equipments.crypto_miner;
 
 /**
- * This interface defines all services implemented by a crypto miner
+ * This interface defines the crypto miner implementation
  *
  * @author Emilie Siau
  * @author Hugo Guerrier
  */
-public interface CryptoMinerImplementationI {
+public interface CryptoMinerImplementationI
+{
 
     /**
      * Get if the miner is currently mining crypto-currency

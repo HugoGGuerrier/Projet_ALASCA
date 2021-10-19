@@ -131,7 +131,7 @@ public class PowerBank
         // Create the trace
         if(PowerBank.VERBOSE) {
             tracer.get().setTitle("Power bank component");
-            tracer.get().setRelativePosition(0, 0);
+            tracer.get().setRelativePosition(0, 1);
             toggleTracing();
         }
     }
