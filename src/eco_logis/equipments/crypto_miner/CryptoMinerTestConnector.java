@@ -13,6 +13,8 @@ public class CryptoMinerTestConnector
     implements CryptoMinerCI
 {
 
+    // ========== Override methods ==========
+
     /** @see CryptoMinerImplementationI#isMining() */
     @Override
     public boolean isMining() throws Exception {

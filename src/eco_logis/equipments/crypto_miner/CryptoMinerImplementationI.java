@@ -19,7 +19,7 @@ public interface CryptoMinerImplementationI {
      * </pre>
      *
      * @return True if the miner is currently mining
-     * @throws Exception
+     * @throws Exception TODO
      */
     boolean isMining() throws Exception;
 
@@ -33,7 +33,7 @@ public interface CryptoMinerImplementationI {
      * post {@code isMining()}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void startMiner() throws Exception;
 
@@ -47,7 +47,7 @@ public interface CryptoMinerImplementationI {
      * post {@code !isMining()}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void stopMiner() throws Exception;
 

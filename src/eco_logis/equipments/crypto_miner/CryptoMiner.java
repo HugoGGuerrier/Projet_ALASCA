@@ -19,7 +19,7 @@ public class CryptoMiner
 
     // ========== Macros ==========
 
-    /** URI of the oven inbound port used in tests */
+    /** URI of the crypto miner inbound port */
     public static final String INBOUND_PORT_URI = "CRYPTO-INBOUND-PORT-URI";
 
     /** When true, methods trace their actions */
@@ -27,7 +27,10 @@ public class CryptoMiner
 
     // ========== Attributes ==========
 
+    /** If the miner is currently mining crypto-currency */
     private boolean isMining;
+
+    /** The inbound port */
     private CryptoMinerInboundPort cmip;
 
     // ========== Constructors ==========
@@ -42,7 +45,7 @@ public class CryptoMiner
      * post	true
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected CryptoMiner() throws Exception {
         this(INBOUND_PORT_URI);
@@ -59,7 +62,7 @@ public class CryptoMiner
      * </pre>
      *
      * @param cryptoMinerInboundPortURI The inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected CryptoMiner(String cryptoMinerInboundPortURI) throws Exception {
         super(1, 0);
@@ -80,7 +83,7 @@ public class CryptoMiner
      *
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param cryptoMinerInboundPortURI The inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected CryptoMiner(String reflectionInboundPortURI, String cryptoMinerInboundPortURI) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
@@ -93,6 +96,7 @@ public class CryptoMiner
      * Initialise the newly created crypto miner
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	{@code cryptoMinerInboundPortURI != null}
      * pre	{@code !cryptoMinerInboundPortURI.isEmpty()}
@@ -101,7 +105,7 @@ public class CryptoMiner
      * </pre>
      *
      * @param cryptoMinerInboundPortURI The crypto miner inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected void initialise(String cryptoMinerInboundPortURI) throws Exception {
         // Assert the URI consistence
