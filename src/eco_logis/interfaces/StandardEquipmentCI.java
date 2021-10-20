@@ -13,7 +13,7 @@ public interface StandardEquipmentCI
 {
 
     /**
-     * Return if the equipment si currently power on
+     * Return if the equipment is currently power on
      *
      * <p><strong>Contract</strong></p>
      *

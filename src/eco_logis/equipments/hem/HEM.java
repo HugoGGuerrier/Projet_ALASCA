@@ -28,7 +28,7 @@ public class HEM
 
     private SuspensionEquipmentOutboundPort cryptoMinerOP;
     private StandardEquipmentOutboundPort ovenOP;
-    private ProductionEquipmentOutboundPort windTurbineOP;
+    private UnpredictableProductionEquipmentOutboundPort windTurbineOP;
 
 
     // ========== Constructors ==========
@@ -71,7 +71,7 @@ public class HEM
                     OvenConnector.class.getCanonicalName());
 
             // Create the wind turbine outbound port and connect it to the component
-            windTurbineOP = new ProductionEquipmentOutboundPort(this);
+            windTurbineOP = new UnpredictableProductionEquipmentOutboundPort(this);
             windTurbineOP.publishPort();
             doPortConnection(
                     windTurbineOP.getPortURI(),
@@ -86,6 +86,7 @@ public class HEM
     public synchronized void execute() throws Exception {
         // First scenario
         logMessage("The wind turbine is producing : " + windTurbineOP.isProducing());
+        logMessage("User forbids wind turbine production : " + windTurbineOP.forbidProduction());
         logMessage("User powers on the crypto miner : " + cryptoMinerOP.switchOn());
         logMessage("User starts mining crypto-currency : " + cryptoMinerOP.resume());
         logMessage("User powers on its oven : " + ovenOP.switchOn());
@@ -96,6 +97,8 @@ public class HEM
         logMessage("The oven is on : " + ovenOP.on());
         logMessage("HEM resumes the crypto miner : " + cryptoMinerOP.resume());
         logMessage("User power off the crypto miner : " + cryptoMinerOP.switchOff());
+        logMessage("User allows wind turbine production : " + windTurbineOP.allowProduction());
+
     }
 
     @Override
