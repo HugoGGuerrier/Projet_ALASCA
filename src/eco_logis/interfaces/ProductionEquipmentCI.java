@@ -2,6 +2,12 @@ package interfaces;
 
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 
+/**
+ * This interface represents a base production equipment services
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public interface ProductionEquipmentCI
     extends RequiredCI
 {
@@ -20,6 +26,36 @@ public interface ProductionEquipmentCI
      * @throws Exception TODO
      */
     boolean isProducing() throws Exception;
+
+    /**
+     * Start the energy production and return if the operation succeeded
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	{@code !isProducing()}
+     * post	{@code isProducing()}
+     * </pre>
+     *
+     * @return If the operation succeeded
+     * @throws Exception TODO
+     */
+    boolean startProducing() throws Exception;
+
+    /**
+     * Stop the energy production and return if the operation succeeded
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	{@code isProducing()}
+     * post	{@code !isProducing()}
+     * </pre>
+     *
+     * @return If the operation succeeded
+     * @throws Exception TODO
+     */
+    boolean stopProducing() throws Exception;
 
     /**
      * Get the production on the moment

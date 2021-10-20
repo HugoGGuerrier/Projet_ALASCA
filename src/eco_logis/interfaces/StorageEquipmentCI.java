@@ -1,38 +1,14 @@
 package interfaces;
 
+/**
+ * This interface defines all services for a storage equipment
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public interface StorageEquipmentCI
     extends ProductionEquipmentCI
 {
-
-    /**
-     * Start the discharging phase, enable the energy production and return the success
-     *
-     * <p><strong>Contract</strong></p>
-     *
-     * <pre>
-     * pre	{@code !isProducing()}
-     * post	{@code isProducing()}
-     * </pre>
-     *
-     * @return If the operation succeeded
-     * @throws Exception TODO
-     */
-    boolean startDischarging() throws Exception;
-
-    /**
-     * Stop the discharging phase, disable the energy production and return success
-     *
-     * <p><strong>Contract</strong></p>
-     *
-     * <pre>
-     * pre	{@code isProducing()}
-     * post	{@code !isProducing()}
-     * </pre>
-     *
-     * @return If the operation succeeded
-     * @throws Exception TODO
-     */
-    boolean stopDischarging() throws Exception;
 
     /**
      * Get if the equipment is currently consuming power
@@ -62,7 +38,7 @@ public interface StorageEquipmentCI
      * @return If the charging hsa started
      * @throws Exception TODO
      */
-    boolean startCharging() throws Exception;
+    boolean startConsuming() throws Exception;
 
     /**
      * Stop charging the device and return if it worked
@@ -77,7 +53,7 @@ public interface StorageEquipmentCI
      * @return If the operation has succeeded
      * @throws Exception TODO
      */
-    boolean stopCharging() throws Exception;
+    boolean stopConsuming() throws Exception;
 
     /**
      * Get the equipment consumption on the moment

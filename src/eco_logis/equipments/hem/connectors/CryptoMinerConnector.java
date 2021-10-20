@@ -6,6 +6,9 @@ import interfaces.SuspensionEquipmentCI;
 
 /**
  * This class is an integration test connector for the crypto miner component
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
  */
 public class CryptoMinerConnector
     extends AbstractConnector

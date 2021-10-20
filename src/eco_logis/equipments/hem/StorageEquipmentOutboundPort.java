@@ -5,6 +5,12 @@ import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
 import interfaces.StorageEquipmentCI;
 
+/**
+ * This class represents an outbound port for a storage equipment
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public class StorageEquipmentOutboundPort
     extends ProductionEquipmentOutboundPort
     implements StorageEquipmentCI
@@ -42,44 +48,26 @@ public class StorageEquipmentOutboundPort
     // ========== Override methods ==========
 
 
-    /** @see StorageEquipmentCI#startDischarging() */
-    @Override
-    public boolean startDischarging() throws Exception {
-        assert !isProducing() : new PreconditionException("startDischarging() -> !isProducing()");
-        boolean res = ((StorageEquipmentCI) getConnector()).startDischarging();
-        assert isProducing() : new PostconditionException("startDischarging() -> isProducing()");
-        return res;
-    }
-
-    /** @see StorageEquipmentCI#stopDischarging() */
-    @Override
-    public boolean stopDischarging() throws Exception {
-        assert isProducing() : new PreconditionException("stopDischarging() -> isProducing()");
-        boolean res = ((StorageEquipmentCI) getConnector()).stopDischarging();
-        assert !isProducing() : new PostconditionException("stopDischarging() -> !isProducing()");
-        return res;
-    }
-
     /** @see StorageEquipmentCI#isConsuming() */
     @Override
     public boolean isConsuming() throws Exception {
         return ((StorageEquipmentCI) getConnector()).isConsuming();
     }
 
-    /** @see StorageEquipmentCI#startCharging() */
+    /** @see StorageEquipmentCI#startConsuming() */
     @Override
-    public boolean startCharging() throws Exception {
+    public boolean startConsuming() throws Exception {
         assert !isConsuming() : new PreconditionException("startCharging() -> !isConsuming()");
-        boolean res = ((StorageEquipmentCI) getConnector()).startCharging();
+        boolean res = ((StorageEquipmentCI) getConnector()).startConsuming();
         assert isConsuming() : new PostconditionException("startCharging() -> isConsuming()");
         return res;
     }
 
-    /** @see StorageEquipmentCI#stopCharging() */
+    /** @see StorageEquipmentCI#stopConsuming() */
     @Override
-    public boolean stopCharging() throws Exception {
+    public boolean stopConsuming() throws Exception {
         assert isConsuming() : new PreconditionException("stopCharging() -> isConsuming()");
-        boolean res = ((StorageEquipmentCI) getConnector()).stopCharging();
+        boolean res = ((StorageEquipmentCI) getConnector()).stopConsuming();
         assert !isConsuming() : new PostconditionException("stopCharging() -> !isConsuming()");
         return res;
     }

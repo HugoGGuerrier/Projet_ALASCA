@@ -3,6 +3,7 @@ package equipments.hem;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
 import interfaces.ProductionEquipmentCI;
 
@@ -80,6 +81,24 @@ public class ProductionEquipmentOutboundPort
     @Override
     public boolean isProducing() throws Exception {
         return ((ProductionEquipmentCI) getConnector()).isProducing();
+    }
+
+    /** @see ProductionEquipmentCI#startProducing() */
+    @Override
+    public boolean startProducing() throws Exception {
+        assert !isProducing() : new PreconditionException("startProducing() -> !isProducing()");
+        boolean res = ((ProductionEquipmentCI) getConnector()).startProducing();
+        assert isProducing() : new PostconditionException("startProducing() -> isProducing()");
+        return res;
+    }
+
+    /** @see ProductionEquipmentCI#stopProducing() */
+    @Override
+    public boolean stopProducing() throws Exception {
+        assert isProducing() : new PreconditionException("stopProducing() -> isProducing()");
+        boolean res = ((ProductionEquipmentCI) getConnector()).stopProducing();
+        assert !isProducing() : new PostconditionException("stopProducing() -> !isProducing()");
+        return res;
     }
 
     /** @see ProductionEquipmentCI#getProduction() */
