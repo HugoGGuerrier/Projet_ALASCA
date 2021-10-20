@@ -11,9 +11,11 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
  */
 public class OvenOutboundPort
     extends AbstractOutboundPort
-    implements OvenCI {
+    implements OvenCI
+{
 
     // ========== Constructors ==========
+
 
     /**
      * Create a new oven outbound port with its owner
@@ -21,7 +23,7 @@ public class OvenOutboundPort
      * @see AbstractOutboundPort#AbstractOutboundPort(Class, ComponentI)
      *
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public OvenOutboundPort(ComponentI owner) throws Exception {
         super(OvenCI.class, owner);
@@ -34,13 +36,15 @@ public class OvenOutboundPort
      *
      * @param uri The port uri
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public OvenOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, OvenCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see OvenImplementationI#isBaking() */
     @Override
@@ -71,4 +75,5 @@ public class OvenOutboundPort
     public void setTemperature(double temp) throws Exception {
         ((OvenCI) getConnector()).setTemperature(temp);
     }
+
 }

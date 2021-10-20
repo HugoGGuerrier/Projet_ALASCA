@@ -20,9 +20,11 @@ import fr.sorbonne_u.exceptions.PreconditionException;
 @OfferedInterfaces(offered = {PowerBankCI.class})
 public class PowerBank
     extends AbstractComponent
-    implements PowerBankImplementationI {
+    implements PowerBankImplementationI
+{
 
     // ========== Macros ==========
+
 
     /** URI of the power bank inbound port used in tests */
     public static final String INBOUND_PORT_URI = "POWERBANK-INBOUND-PORT-URI";
@@ -30,7 +32,9 @@ public class PowerBank
     /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
 
+
     // ========== Attributes ==========
+
 
     /** The percentage of the power bank capacity that is filled with energy (0=empty, 100=full) */
     private double batteryLevel;
@@ -42,9 +46,11 @@ public class PowerBank
     private boolean isDischarging;
 
     /** Inbound port offering the <code>PowerBankCI</code> interface */
-    private PowerBankInboundPort powerBankInboundPort;
+    private PowerBankInboundPort pbip;
+
 
     // ========== Constructors ==========
+
 
     /**
      * Create a power bank
@@ -56,7 +62,7 @@ public class PowerBank
      * post true
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected PowerBank() throws Exception {
         this(INBOUND_PORT_URI);
@@ -87,14 +93,16 @@ public class PowerBank
      *
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param powerBankInboundPortURI The inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected PowerBank(String reflectionInboundPortURI, String powerBankInboundPortURI) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
         initialise(powerBankInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     /**
      * Initialise the newly created power bank
@@ -110,7 +118,7 @@ public class PowerBank
      * </pre>
      *
      * @param powerBankInboundPortURI The power bank inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected void initialise(String powerBankInboundPortURI) throws Exception {
         // Assert the URI consistence
@@ -125,8 +133,8 @@ public class PowerBank
         batteryLevel = 0.0;
 
         // Create the inbound port
-        powerBankInboundPort = new PowerBankInboundPort(powerBankInboundPortURI, this);
-        powerBankInboundPort.publishPort();
+        pbip = new PowerBankInboundPort(powerBankInboundPortURI, this);
+        pbip.publishPort();
 
         // Create the trace
         if(PowerBank.VERBOSE) {
@@ -136,7 +144,9 @@ public class PowerBank
         }
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see PowerBankImplementationI#isCharging() */
     @Override
@@ -206,6 +216,5 @@ public class PowerBank
     public void setBatteryLevel(double level) throws Exception {
         batteryLevel = level;
     }
-
 
 }

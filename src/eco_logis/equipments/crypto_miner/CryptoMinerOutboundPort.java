@@ -16,13 +16,14 @@ public class CryptoMinerOutboundPort
 
     // ========== Constructors ==========
 
+
     /**
      * Create a new crypto miner outbound port with its owner
      *
      * @see AbstractOutboundPort#AbstractOutboundPort(Class, ComponentI)
      *
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public CryptoMinerOutboundPort(ComponentI owner) throws Exception {
         super(CryptoMinerCI.class, owner);
@@ -35,13 +36,33 @@ public class CryptoMinerOutboundPort
      *
      * @param uri The port uri
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public CryptoMinerOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, CryptoMinerCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
+
+    /** @see CryptoMinerCI#isOn() */
+    @Override
+    public boolean isOn() throws Exception {
+        return ((CryptoMinerCI) getConnector()).isOn();
+    }
+
+    /** @see CryptoMinerCI#powerOn() */
+    @Override
+    public void powerOn() throws Exception {
+        ((CryptoMinerCI) getConnector()).powerOn();
+    }
+
+    /** @see CryptoMinerCI#powerOff() */
+    @Override
+    public void powerOff() throws Exception {
+        ((CryptoMinerCI) getConnector()).powerOff();
+    }
 
     /** @see CryptoMinerImplementationI#isMining() */
     @Override

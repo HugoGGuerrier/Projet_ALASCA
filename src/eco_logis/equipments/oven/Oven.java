@@ -30,6 +30,7 @@ public class Oven
 
     // ========== Macros ==========
 
+
     /** URI of the oven inbound port used in tests */
     public static final String INBOUND_PORT_URI = "OVEN-INBOUND-PORT-URI";
 
@@ -39,7 +40,9 @@ public class Oven
     /** Initial state of the oven (false -> OFF) */
     public static final boolean INITIAL_STATE = false;
 
+
     // ========== Attributes ==========
+
 
     /** State of the oven : baking (on) or not (off) */
     private boolean isBaking;
@@ -49,8 +52,10 @@ public class Oven
 
     /** Inbound port offering the <code>OvenCI</code> interface */
     private OvenInboundPort oip;
-    
+
+
     // ========== Constructors ==========
+
 
     /**
      * Create an oven component
@@ -114,7 +119,9 @@ public class Oven
         initialise(ovenInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     /**
      * Initialise the newly created oven
@@ -153,7 +160,9 @@ public class Oven
         }
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see OvenImplementationI#isBaking() */
     @Override
@@ -203,4 +212,5 @@ public class Oven
         assert isBaking;
         this.temperature = temp;
     }
+
 }

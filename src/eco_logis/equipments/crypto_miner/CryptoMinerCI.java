@@ -13,6 +13,18 @@ public interface CryptoMinerCI
     extends CryptoMinerImplementationI, RequiredCI, OfferedCI
 {
 
+    /** @see CryptoMinerImplementationI#isOn() */
+    @Override
+    boolean isOn() throws Exception;
+
+    /** @see CryptoMinerImplementationI#powerOn() */
+    @Override
+    void powerOn() throws Exception;
+
+    /** @see CryptoMinerImplementationI#powerOff() */
+    @Override
+    void powerOff() throws Exception;
+
     /** @see CryptoMinerImplementationI#isMining() */
     @Override
     boolean isMining() throws Exception;

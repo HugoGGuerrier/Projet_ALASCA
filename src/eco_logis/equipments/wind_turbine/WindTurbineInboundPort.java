@@ -11,9 +11,11 @@ import fr.sorbonne_u.components.ports.AbstractInboundPort;
  */
 public class WindTurbineInboundPort
     extends AbstractInboundPort
-    implements WindTurbineCI {
+    implements WindTurbineCI
+{
 
     // ========== Constructors ==========
+
 
     /**
      * Create a new wind turbine inbound port with its owner
@@ -21,7 +23,7 @@ public class WindTurbineInboundPort
      * @see AbstractInboundPort#AbstractInboundPort(Class, ComponentI)
      *
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public WindTurbineInboundPort(ComponentI owner) throws Exception {
         super(WindTurbineCI.class, owner);
@@ -34,13 +36,15 @@ public class WindTurbineInboundPort
      *
      * @param uri The port URI
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public WindTurbineInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, WindTurbineCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see WindTurbineImplementationI#isTurning() */
     @Override

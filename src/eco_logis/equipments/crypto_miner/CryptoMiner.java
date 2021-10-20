@@ -18,13 +18,19 @@ public class CryptoMiner
 
     // ========== Macros ==========
 
+
     /** URI of the crypto miner inbound port */
     public static final String INBOUND_PORT_URI = "CRYPTO-INBOUND-PORT-URI";
 
     /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
 
+
     // ========== Attributes ==========
+
+
+    /** If the crypto miner is currently on */
+    private boolean isOn;
 
     /** If the miner is currently mining crypto-currency */
     private boolean isMining;
@@ -32,7 +38,9 @@ public class CryptoMiner
     /** The inbound port */
     private CryptoMinerInboundPort cmip;
 
+
     // ========== Constructors ==========
+
 
     /**
      * Create a new crypto miner
@@ -45,7 +53,7 @@ public class CryptoMiner
      * </pre>
      *
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected CryptoMiner() throws Exception {
         this(INBOUND_PORT_URI);
@@ -89,14 +97,16 @@ public class CryptoMiner
      *
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param cryptoMinerInboundPortURI The inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected CryptoMiner(String reflectionInboundPortURI, String cryptoMinerInboundPortURI) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
         initialise(cryptoMinerInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     /**
      * Initialise the newly created crypto miner
@@ -121,6 +131,7 @@ public class CryptoMiner
                 "!cryptoMinerInboundPortURI.isEmpty()");
 
         // Initialise the component
+        isOn = false;
         isMining = false;
 
         // Create the inbound port
@@ -135,7 +146,43 @@ public class CryptoMiner
         }
     }
 
+
     // ========== Override methods ==========
+
+
+    /** @see CryptoMinerImplementationI#isOn() */
+    @Override
+    public boolean isOn() throws Exception {
+        if(VERBOSE) {
+            logMessage("Crypto miner get on : " + isOn);
+        }
+
+        return isOn;
+    }
+
+    /** @see CryptoMinerImplementationI#powerOn() */
+    @Override
+    public void powerOn() throws Exception {
+        if(VERBOSE) {
+            logMessage("Crypto miner power on");
+        }
+
+        assert !isOn : new PreconditionException("powerOn() -> !isOn()");
+
+        isOn = true;
+    }
+
+    /** @see CryptoMinerImplementationI#powerOff() */
+    @Override
+    public void powerOff() throws Exception {
+        if(VERBOSE) {
+            logMessage("Crypto miner power off");
+        }
+
+        assert isOn : new PreconditionException("powerOff() -> isOn()");
+
+        isOn = false;
+    }
 
     /** @see CryptoMinerImplementationI#isMining() */
     @Override
@@ -154,7 +201,8 @@ public class CryptoMiner
             logMessage("Start the crypto mining");
         }
 
-        assert !isMining;
+        assert isOn : new PreconditionException("startMiner() -> isOn()");
+        assert !isMining : new PreconditionException("startMiner() -> !isMining()");
 
         isMining = true;
     }
@@ -166,7 +214,7 @@ public class CryptoMiner
             logMessage("Stop the crypto mining");
         }
 
-        assert isMining;
+        assert isMining : new PreconditionException("stopMiner() -> isMining()");;
 
         isMining = false;
     }

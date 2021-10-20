@@ -6,7 +6,8 @@ package equipments.wind_turbine;
  * @author Emilie Siau
  * @author Hugo Guerrier
  */
-public interface WindTurbineImplementationI {
+public interface WindTurbineImplementationI
+{
 
     /**
      * Get if the wind turbine is turning
@@ -14,12 +15,12 @@ public interface WindTurbineImplementationI {
      * <p><strong>Contract</strong></p>
      *
      * <pre>
-     * pre true
+     * pre  true
      * post true
      * </pre>
      *
      * @return true if the turbine is currently turning, false otherwise
-     * @throws Exception
+     * @throws Exception TODO
      */
     boolean isTurning() throws Exception;
 
@@ -29,12 +30,12 @@ public interface WindTurbineImplementationI {
      * <p><strong>Contract</strong></p>
      *
      * <pre>
-     * pre true
+     * pre  true
      * post true
      * </pre>
      *
      * @return true if the turbine is currently blocked, false otherwise
-     * @throws Exception
+     * @throws Exception TODO
      */
     boolean isBlocked() throws Exception;
 
@@ -49,7 +50,7 @@ public interface WindTurbineImplementationI {
      * </pre>
      *
      * @return the current production (0 if not turning)
-     * @throws Exception
+     * @throws Exception TODO
      */
     double getCurrentProduction() throws Exception;
 
@@ -60,11 +61,11 @@ public interface WindTurbineImplementationI {
      * <p><strong>Contract</strong></p>
      *
      * <pre>
-     * pre {@code !isBlocked}
+     * pre  {@code !isBlocked}
      * post {@code isBlocked && !isTurning}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void blockTurning() throws Exception;
 
@@ -74,13 +75,12 @@ public interface WindTurbineImplementationI {
      * <p><strong>Contract</strong></p>
      *
      * <pre>
-     * pre {@code isBlocked && !isTurning}
+     * pre  {@code isBlocked && !isTurning}
      * post {@code !isBlocked}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void unblockTurning() throws Exception;
-
 
 }

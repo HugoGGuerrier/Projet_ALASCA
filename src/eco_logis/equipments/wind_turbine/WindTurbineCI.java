@@ -10,7 +10,8 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
  * @author Hugo GUERRIER
  */
 public interface WindTurbineCI
-    extends WindTurbineImplementationI, RequiredCI, OfferedCI {
+    extends WindTurbineImplementationI, RequiredCI, OfferedCI
+{
 
     /** @see WindTurbineImplementationI#isTurning() */
     @Override
@@ -31,4 +32,5 @@ public interface WindTurbineCI
     /** @see WindTurbineImplementationI#unblockTurning() */
     @Override
     void unblockTurning() throws Exception;
+
 }

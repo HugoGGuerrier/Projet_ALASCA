@@ -12,15 +12,17 @@ import fr.sorbonne_u.components.ports.AbstractInboundPort;
  */
 public class OvenInboundPort
         extends AbstractInboundPort
-        implements OvenCI {
+        implements OvenCI
+{
 
     // ========== Constructors ==========
+
 
     /**
      * Create a new oven inbound port with its owner
      *
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public OvenInboundPort(ComponentI owner) throws Exception {
         super(OvenCI.class, owner);
@@ -31,13 +33,15 @@ public class OvenInboundPort
      *
      * @param uri The port URI
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public OvenInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, OvenCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see OvenImplementationI#isBaking() */
     @Override
@@ -91,4 +95,5 @@ public class OvenInboundPort
             }
         );
     }
+
 }

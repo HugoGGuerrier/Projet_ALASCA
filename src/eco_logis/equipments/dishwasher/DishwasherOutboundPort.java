@@ -16,6 +16,7 @@ public class DishwasherOutboundPort
 
     // ========== Constructors ==========
 
+
     /**
      * Create a new dishwasher outbound port with its owner
      *
@@ -41,7 +42,9 @@ public class DishwasherOutboundPort
         super(DishwasherCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see DishwasherImplementationI#isWashing() */
     @Override

@@ -16,6 +16,7 @@ public class GeneratorInboundPort
 
     // ========== Constructors ==========
 
+
     /**
      * Create a new generator inbound port with the owner component
      *
@@ -41,7 +42,9 @@ public class GeneratorInboundPort
         super(uri, GeneratorCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see GeneratorImplementationI#isRunning() */
     @Override

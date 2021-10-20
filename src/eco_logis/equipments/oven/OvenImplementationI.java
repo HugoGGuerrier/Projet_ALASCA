@@ -17,18 +17,20 @@ package equipments.oven;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public interface OvenImplementationI {
+public interface OvenImplementationI
+{
 
     /**
      * Turn on the oven, start baking
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	{@code !isBaking()}
      * post	{@code isBaking()}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void startBaking() throws Exception;
 
@@ -36,12 +38,13 @@ public interface OvenImplementationI {
      * Turn off the oven, stop baking
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	{@code isBaking()}
      * post	{@code !isBaking()}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void stopBaking() throws Exception;
 
@@ -49,13 +52,14 @@ public interface OvenImplementationI {
      * Get the current state of the oven (baking or not)
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
+     * pre	true
+     * post	true
      * </pre>
      *
      * @return true if the oven is on/baking, false otherwise
-     * @throws Exception
+     * @throws Exception TODO
      */
     boolean isBaking() throws Exception;
 
@@ -63,13 +67,14 @@ public interface OvenImplementationI {
      * Get the oven temperature (Celsius degrees °C)
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	{@code isBaking()}
-     * post	true		// no postcondition.
+     * post	true
      * </pre>
      *
      * @return the temperature (°C)
-     * @throws Exception
+     * @throws Exception TODO
      */
     double getTemperature() throws Exception;
 
@@ -77,13 +82,15 @@ public interface OvenImplementationI {
      * Set the oven temperature to the given temperature (Celsius degrees °C)
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	{@code isBaking()}
-     * post	true		// no postcondition.
+     * post	true
      * </pre>
      *
      * @param temp the temperature (°C)
-     * @throws Exception
+     * @throws Exception TODO
      */
     void setTemperature(double temp) throws Exception;
+
 }

@@ -11,9 +11,11 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
  */
 public class PowerBankOutboundPort
     extends AbstractOutboundPort
-    implements PowerBankCI {
+    implements PowerBankCI
+{
 
     // ========== Constructors ==========
+
 
     /**
      * Create a new power bank outbound port with its owner
@@ -21,7 +23,7 @@ public class PowerBankOutboundPort
      * @see AbstractOutboundPort#AbstractOutboundPort(Class, ComponentI)
      *
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public PowerBankOutboundPort(ComponentI owner) throws Exception {
         super(PowerBankCI.class, owner);
@@ -34,13 +36,15 @@ public class PowerBankOutboundPort
      *
      * @param uri The port uri
      * @param owner The port owner
-     * @throws Exception
+     * @throws Exception TODO
      */
     public PowerBankOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, PowerBankCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see PowerBankImplementationI#isCharging() */
     @Override

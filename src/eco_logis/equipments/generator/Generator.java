@@ -18,13 +18,16 @@ public class Generator
 
     // ========== Macros ==========
 
+
     /** URI of the generator inbound port */
     public static final String INBOUND_PORT_URI = "GENERATOR-INBOUND-PORT-URI";
 
     /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
 
+
     // ========== Attributes ==========
+
 
     /** If the generator is currently running */
     private boolean isRunning;
@@ -35,7 +38,9 @@ public class Generator
     /** The inbound port */
     private GeneratorInboundPort gip;
 
+
     // ========== Constructors ==========
+
 
     /**
      * Create a new generator
@@ -95,7 +100,9 @@ public class Generator
         initialise(generatorInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     /**
      * Initialise the generator with the wanted inbound port URI
@@ -132,7 +139,9 @@ public class Generator
         }
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see GeneratorImplementationI#isRunning() */
     @Override

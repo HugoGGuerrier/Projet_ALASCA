@@ -15,6 +15,25 @@ public class CryptoMinerTestConnector
 
     // ========== Override methods ==========
 
+
+    /** @see CryptoMinerCI#isOn() */
+    @Override
+    public boolean isOn() throws Exception {
+        return ((CryptoMinerCI) offering).isOn();
+    }
+
+    /** @see CryptoMinerCI#powerOn() */
+    @Override
+    public void powerOn() throws Exception {
+        ((CryptoMinerCI) offering).powerOn();
+    }
+
+    /** @see CryptoMinerCI#powerOff() */
+    @Override
+    public void powerOff() throws Exception {
+        ((CryptoMinerCI) offering).powerOff();
+    }
+
     /** @see CryptoMinerImplementationI#isMining() */
     @Override
     public boolean isMining() throws Exception {

@@ -15,19 +15,20 @@ package equipments.power_bank;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public interface PowerBankImplementationI {
+public interface PowerBankImplementationI
+{
 
     /**
      * Get the current charging state of the power bank
      *
      * <p><strong>Contract</strong></p>
      * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
+     * pre	true
+     * post	true
      * </pre>
      *
      * @return true if the power bank is currently charging, false otherwise
-     * @throws Exception
+     * @throws Exception TODO
      */
     boolean isCharging() throws Exception;
 
@@ -40,7 +41,7 @@ public interface PowerBankImplementationI {
      * post	{@code isCharging()}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void startCharging() throws Exception;
 
@@ -53,7 +54,7 @@ public interface PowerBankImplementationI {
      * post	{@code !isCharging()}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void stopCharging() throws Exception;
 
@@ -62,12 +63,12 @@ public interface PowerBankImplementationI {
      *
      * <p><strong>Contract</strong></p>
      * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
+     * pre	true
+     * post	true
      * </pre>
      *
      * @return true if the power bank is charging, false otherwise
-     * @throws Exception
+     * @throws Exception TODO
      */
     boolean isDischarging() throws Exception;
 
@@ -81,7 +82,7 @@ public interface PowerBankImplementationI {
      * post	{@code isDischarging()}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void startDischarging() throws Exception;
 
@@ -95,7 +96,7 @@ public interface PowerBankImplementationI {
      * post	{@code !isDischarging()}
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void stopDischarging() throws Exception;
 
@@ -104,12 +105,12 @@ public interface PowerBankImplementationI {
      *
      * <p><strong>Contract</strong></p>
      * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
+     * pre	true
+     * post	true
      * </pre>
      *
      * @return the battery level (percentage)
-     * @throws Exception
+     * @throws Exception TODO
      */
     double getBatteryLevel() throws Exception;
 
@@ -118,11 +119,11 @@ public interface PowerBankImplementationI {
      *
      * <p><strong>Contract</strong></p>
      * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
+     * pre	true
+     * post	true
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     void setBatteryLevel(double level) throws Exception;
 

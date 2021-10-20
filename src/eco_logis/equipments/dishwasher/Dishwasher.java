@@ -10,13 +10,16 @@ public class Dishwasher
 
     // ========== Macros ==========
 
+
     /** The string representing the default dishwasher inbound port URI */
     public static final String INBOUND_PORT_URI = "DISHWASHER-INBOUND-PORT-URI";
 
     /** Trace all actions on the component if true */
     public static final boolean VERBOSE = true;
 
+
     // ========== Attributes ==========
+
 
     /** If the dishwasher is currently washing something */
     private boolean isWashing;
@@ -27,7 +30,9 @@ public class Dishwasher
     /** The dishwasher inbound port */
     private DishwasherInboundPort dwip;
 
+
     // ========== Constructors ==========
+
 
     /**
      * Create a new dishwasher
@@ -91,7 +96,9 @@ public class Dishwasher
         initialise(dishwasherInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     /**
      * Initialise the newly created dishwasher
@@ -130,7 +137,9 @@ public class Dishwasher
         }
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see DishwasherImplementationI#isWashing() */
     @Override

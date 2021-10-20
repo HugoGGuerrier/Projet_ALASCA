@@ -18,7 +18,8 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
  * @author Hugo GUERRIER
  */
 public interface OvenCI
-        extends OfferedCI, RequiredCI, OvenImplementationI {
+        extends OfferedCI, RequiredCI, OvenImplementationI
+{
 
     /** @see OvenImplementationI#isBaking() */
     @Override
@@ -39,4 +40,5 @@ public interface OvenCI
     /** @see OvenImplementationI#setTemperature(double) */
     @Override
     void setTemperature(double temp) throws Exception;
+
 }

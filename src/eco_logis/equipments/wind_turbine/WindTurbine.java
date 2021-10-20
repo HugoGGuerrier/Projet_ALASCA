@@ -13,9 +13,11 @@ import fr.sorbonne_u.exceptions.PreconditionException;
 @OfferedInterfaces(offered = {WindTurbineCI.class})
 public class WindTurbine
     extends AbstractComponent
-    implements WindTurbineImplementationI {
+    implements WindTurbineImplementationI
+{
 
     // ========== Macros ==========
+
 
     /** URI of the wind turbine inbound port */
     public static final String INBOUND_PORT_URI = "WIND-TURBINE-INBOUND-PORT-URI";
@@ -23,7 +25,9 @@ public class WindTurbine
     /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
 
+
     // ========== Attributes ==========
+
 
     /** If the turbine is currently turning (there is wind, it produces electricity) */
     private boolean isTurning;
@@ -35,14 +39,17 @@ public class WindTurbine
     private double currentProduction;
 
     /** The inbound port */
-    private WindTurbineInboundPort windTurbineInboundPort;
+    private WindTurbineInboundPort wtip;
+
 
     // ========== Constructors ==========
+
 
     /**
      * Create a new wind turbine
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	{@code INBOUND_PORT_URI != null}
      * pre	{@code !INBOUND_PORT_URI.isEmpty()}
@@ -50,7 +57,7 @@ public class WindTurbine
      * </pre>
      *
      *
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected WindTurbine() throws Exception {
         this(INBOUND_PORT_URI);
@@ -94,14 +101,16 @@ public class WindTurbine
      *
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param windTurbineInboundPortURI The wind turbine inbound port URI
-     * @throws Exception
+     * @throws Exception TODO
      */
     protected WindTurbine(String reflectionInboundPortURI, String windTurbineInboundPortURI) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
         initialise(windTurbineInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     /**
      * Initialise the newly created wind turbine
@@ -131,8 +140,8 @@ public class WindTurbine
         currentProduction = 0.0;
 
         // Create the inbound port
-        windTurbineInboundPort = new WindTurbineInboundPort(windTurbineInboundPortURI, this);
-        windTurbineInboundPort.publishPort();
+        wtip = new WindTurbineInboundPort(windTurbineInboundPortURI, this);
+        wtip.publishPort();
 
         // Create the trace
         if(WindTurbine.VERBOSE) {
@@ -142,7 +151,9 @@ public class WindTurbine
         }
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see WindTurbineImplementationI#isTurning() */
     @Override
@@ -198,4 +209,5 @@ public class WindTurbine
 
         isBlocked = false;
     }
+
 }

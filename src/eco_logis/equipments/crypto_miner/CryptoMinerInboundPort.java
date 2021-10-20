@@ -16,6 +16,7 @@ public class CryptoMinerInboundPort
 
     // ========== Constructors ==========
 
+
     /**
      * Create a new crypto miner inbound port with its owner
      *
@@ -41,7 +42,39 @@ public class CryptoMinerInboundPort
         super(uri, CryptoMinerCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
+
+    /** @see CryptoMinerCI#isOn() */
+    @Override
+    public boolean isOn() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((CryptoMiner) o).isOn()
+        );
+    }
+
+    /** @see CryptoMinerCI#powerOn() */
+    @Override
+    public void powerOn() throws Exception {
+        getOwner().handleRequest(
+                o -> {
+                    ((CryptoMiner) o).powerOn();
+                    return null;
+                }
+        );
+    }
+
+    /** @see CryptoMinerCI#powerOff() */
+    @Override
+    public void powerOff() throws Exception {
+        getOwner().handleRequest(
+                o -> {
+                    ((CryptoMiner) o).powerOff();
+                    return null;
+                }
+        );
+    }
 
     /** @see CryptoMinerImplementationI#isMining() */
     @Override

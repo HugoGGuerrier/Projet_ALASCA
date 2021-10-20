@@ -51,6 +51,33 @@ public class CryptoMinerUnitTester
 
     // ========== Test methods ==========
 
+    protected void testIsOn() {
+        logMessage("Test isOn()...");
+        try {
+            assertFalse(cmop.isOn());
+        } catch (Exception e) {
+            logMessage("... FAILED!");
+            fail(e);
+        }
+        logMessage("... Done!");
+    }
+
+    protected void testPowerOnOff() {
+        logMessage("Test powerOn() and powerOff()...");
+        try {
+            assertFalse(cmop.isOn());
+            cmop.powerOn();
+            assertTrue(cmop.isOn());
+            cmop.powerOff();
+            assertFalse(cmop.isOn());
+            cmop.powerOn();
+        } catch (Exception e) {
+            logMessage("... FAILED!");
+            fail(e);
+        }
+        logMessage("...Done!");
+    }
+
     protected void testIsMining() {
         logMessage("Test isMining()...");
         try {
@@ -79,6 +106,8 @@ public class CryptoMinerUnitTester
 
     protected void runAllTests() {
         logMessage("Starting test suite...");
+        testIsOn();
+        testPowerOnOff();
         testIsMining();
         testStartStopMiner();
         logMessage("All tests passed !");

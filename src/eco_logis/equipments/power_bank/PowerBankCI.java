@@ -19,7 +19,8 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
  * @author Hugo GUERRIER
  */
 public interface PowerBankCI
-    extends OfferedCI, RequiredCI, PowerBankImplementationI {
+    extends OfferedCI, RequiredCI, PowerBankImplementationI
+{
 
     /** @see PowerBankImplementationI#isCharging() */
     @Override
