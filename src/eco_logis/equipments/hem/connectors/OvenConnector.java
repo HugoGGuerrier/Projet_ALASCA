@@ -1,5 +1,6 @@
-package equipments.hem;
+package equipments.hem.connectors;
 
+import equipments.hem.StandardEquipmentOutboundPort;
 import equipments.oven.OvenCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.StandardEquipmentCI;

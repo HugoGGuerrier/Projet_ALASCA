@@ -1,4 +1,4 @@
-package equipments.hem;
+package equipments.hem.connectors;
 
 public class GeneratorConnector
 {

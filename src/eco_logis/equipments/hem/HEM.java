@@ -1,6 +1,9 @@
 package equipments.hem;
 
 import equipments.crypto_miner.CryptoMiner;
+import equipments.hem.connectors.CryptoMinerConnector;
+import equipments.hem.connectors.OvenConnector;
+import equipments.hem.connectors.WindTurbineConnector;
 import equipments.oven.Oven;
 import equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;

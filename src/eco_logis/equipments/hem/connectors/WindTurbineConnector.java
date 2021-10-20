@@ -1,4 +1,4 @@
-package equipments.hem;
+package equipments.hem.connectors;
 
 import equipments.wind_turbine.WindTurbineCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
