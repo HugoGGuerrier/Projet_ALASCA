@@ -9,9 +9,12 @@ import interfaces.ProductionEquipmentCI;
  */
 public class WindTurbineConnector
     extends AbstractConnector
-    implements ProductionEquipmentCI {
+    implements ProductionEquipmentCI
+{
+
 
     // ========== Override methods ==========
+
 
     /** @see ProductionEquipmentCI#isProducing() */
     @Override
@@ -24,4 +27,5 @@ public class WindTurbineConnector
     public double getProduction() throws Exception {
         return ((WindTurbineCI) offering).getCurrentProduction();
     }
+
 }
