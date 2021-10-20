@@ -72,16 +72,16 @@ public class HEM
     @Override
     public synchronized void execute() throws Exception {
         // First scenario
-        traceMessage("User powers on the crypto miner : " + cryptoMinerOP.switchOn());
-        traceMessage("User starts mining crypto-currency : " + cryptoMinerOP.resume());
-        traceMessage("User powers on its oven : " + ovenOP.switchOn());
-        traceMessage("Is the crypto miner on : " + cryptoMinerOP.on());
-        traceMessage("Is the crypto miner suspended : " + cryptoMinerOP.suspended());
-        traceMessage("HEM suspends the crypto miner : " + cryptoMinerOP.suspend());
-        traceMessage("User power of the oven : " + ovenOP.switchOff());
-        traceMessage("Is the oven on : " + ovenOP.on());
-        traceMessage("HEM resumes the crypto miner : " + cryptoMinerOP.resume());
-        traceMessage("User power off the crypto miner : " + cryptoMinerOP.switchOff());
+        logMessage("User powers on the crypto miner : " + cryptoMinerOP.switchOn());
+        logMessage("User starts mining crypto-currency : " + cryptoMinerOP.resume());
+        logMessage("User powers on its oven : " + ovenOP.switchOn());
+        logMessage("Is the crypto miner on : " + cryptoMinerOP.on());
+        logMessage("Is the crypto miner suspended : " + cryptoMinerOP.suspended());
+        logMessage("HEM suspends the crypto miner : " + cryptoMinerOP.suspend());
+        logMessage("User power of the oven : " + ovenOP.switchOff());
+        logMessage("Is the oven on : " + ovenOP.on());
+        logMessage("HEM resumes the crypto miner : " + cryptoMinerOP.resume());
+        logMessage("User power off the crypto miner : " + cryptoMinerOP.switchOff());
     }
 
     @Override

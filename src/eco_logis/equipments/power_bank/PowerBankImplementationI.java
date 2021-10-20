@@ -103,7 +103,8 @@ public interface PowerBankImplementationI
     /**
      * Get the power bank percentage of energy stocked (battery level)
      *
-     * <p><strong>Contract</strong></p>
+     * <p><strong>Contract</strong></p>double
+     *
      * <pre>
      * pre	true
      * post	true
@@ -118,6 +119,7 @@ public interface PowerBankImplementationI
      * Set the battery level to the given level (percentage)
      *
      * <p><strong>Contract</strong></p>
+     *
      * <pre>
      * pre	true
      * post	true

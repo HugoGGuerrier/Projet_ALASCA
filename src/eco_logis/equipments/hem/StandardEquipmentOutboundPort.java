@@ -98,40 +98,4 @@ public class StandardEquipmentOutboundPort
         return res;
     }
 
-    /** @see StandardEquipmentCI#maxMode() */
-    @Override
-    public int maxMode() throws Exception {
-        return ((StandardEquipmentCI) getConnector()).maxMode();
-    }
-
-    /** @see StandardEquipmentCI#upMode() */
-    @Override
-    public boolean upMode() throws Exception {
-        assert on() : new PreconditionException("upMode() -> on()");
-        return ((StandardEquipmentCI) getConnector()).upMode();
-    }
-
-    /** @see StandardEquipmentCI#downMode() */
-    @Override
-    public boolean downMode() throws Exception {
-        assert on() : new PreconditionException("downMode() -> on()");
-        return ((StandardEquipmentCI) getConnector()).downMode();
-    }
-
-    /** @see StandardEquipmentCI#setMode(int) */
-    @Override
-    public boolean setMode(int mode) throws Exception {
-        assert on() : new PreconditionException("setMode(mode) -> on()");
-        assert mode > 0 : new PreconditionException("setMode(mode) -> mode > 0");
-        assert mode <= maxMode() : new PreconditionException("setMode(mode) -> mode <= maxMode()");
-        return ((StandardEquipmentCI) getConnector()).setMode(mode);
-    }
-
-    /** @see StandardEquipmentCI#currentMode() */
-    @Override
-    public int currentMode() throws Exception {
-        assert on() : new PreconditionException("currentMode() -> on()");
-        return ((StandardEquipmentCI) getConnector()).currentMode();
-    }
-
 }

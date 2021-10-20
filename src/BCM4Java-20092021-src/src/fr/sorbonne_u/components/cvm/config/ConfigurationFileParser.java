@@ -346,7 +346,7 @@ public class			ConfigurationFileParser
 										  		+ cyclicBarrierPort + "!") ;
 
 		try {
-			globalRegistryHostname =
+			globalRegistryHostname =16h15 : Eco-logis
 					((Node)xpathEvaluator.evaluate(
 							"/deployment/globalRegistry/@hostname",
 							doc,
