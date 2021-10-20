@@ -59,29 +59,4 @@ public class DishwasherConnector
         return false;
     }
 
-    @Override
-    public int maxMode() throws Exception {
-        return 0;
-    }
-
-    @Override
-    public boolean upMode() throws Exception {
-        return false;
-    }
-
-    @Override
-    public boolean downMode() throws Exception {
-        return false;
-    }
-
-    @Override
-    public boolean setMode(int mode) throws Exception {
-        return false;
-    }
-
-    @Override
-    public int currentMode() throws Exception {
-        return 0;
-    }
-
 }
