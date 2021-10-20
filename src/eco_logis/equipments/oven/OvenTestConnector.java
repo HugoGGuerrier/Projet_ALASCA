@@ -10,35 +10,37 @@ import fr.sorbonne_u.components.connectors.AbstractConnector;
  */
 public class OvenTestConnector
         extends AbstractConnector
-        implements OvenCI {
+        implements OvenCI
+{
 
-    /** @see OvenImplementationI#isBaking() */
+    /** @see OvenCI#isBaking() */
     @Override
     public boolean isBaking() throws Exception {
         return ((OvenCI) offering).isBaking();
     }
 
-    /** @see OvenImplementationI#startBaking() */
+    /** @see OvenCI#startBaking() */
     @Override
     public void startBaking() throws Exception {
         ((OvenCI) offering).startBaking();
     }
 
-    /** @see OvenImplementationI#stopBaking() */
+    /** @see OvenCI#stopBaking() */
     @Override
     public void stopBaking() throws Exception {
         ((OvenCI) offering).stopBaking();
     }
 
-    /** @see OvenImplementationI#getTemperature() */
+    /** @see OvenCI#getTemperature() */
     @Override
     public double getTemperature() throws Exception {
         return ((OvenCI) offering).getTemperature();
     }
 
-    /** @see OvenImplementationI#setTemperature(double) */
+    /** @see OvenCI#setTemperature(double) */
     @Override
     public void setTemperature(double temp) throws Exception {
         ((OvenCI) offering).setTemperature(temp);
     }
+
 }

@@ -25,6 +25,9 @@ public class Generator
     /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
 
+    /** The default generator production */
+    private static final double DEFAULT_PRODUCTION = 200.0d;
+
 
     // ========== Attributes ==========
 
@@ -160,7 +163,7 @@ public class Generator
             logMessage("Generator start running");
         }
 
-        assert !isRunning;
+        assert !isRunning : new PreconditionException("startGenerator() -> !isRunning");
 
         isRunning = true;
     }
@@ -172,9 +175,20 @@ public class Generator
             logMessage("Generator stop running");
         }
 
-        assert isRunning;
+        assert isRunning : new PreconditionException("stopGenerator() -> isRunning");
 
         isRunning = false;
+    }
+
+    @Override
+    public double getEnergyProduction() throws Exception {
+        if(VERBOSE) {
+            logMessage("Generator get production : " + DEFAULT_PRODUCTION);
+        }
+
+        assert isRunning : new PreconditionException("getEnergyProduction() -> isRunning");
+
+        return DEFAULT_PRODUCTION;
     }
 
     /** @see GeneratorImplementationI#getFuelLevel() */
@@ -194,7 +208,7 @@ public class Generator
             logMessage("Generator refill the tank");
         }
 
-        assert !isRunning;
+        assert !isRunning : new PreconditionException("refill() -> !isRunning");
 
         fuelLevel = 1.0f;
     }

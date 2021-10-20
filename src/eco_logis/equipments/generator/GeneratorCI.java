@@ -25,6 +25,10 @@ public interface GeneratorCI
     @Override
     void stopGenerator() throws Exception;
 
+    /** @see GeneratorImplementationI#getEnergyProduction() */
+    @Override
+    double getEnergyProduction() throws Exception;
+
     /** @see GeneratorImplementationI#getFuelLevel() */
     @Override
     float getFuelLevel() throws Exception;

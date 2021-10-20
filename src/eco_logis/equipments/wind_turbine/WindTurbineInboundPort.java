@@ -46,7 +46,7 @@ public class WindTurbineInboundPort
     // ========== Override methods ==========
 
 
-    /** @see WindTurbineImplementationI#isTurning() */
+    /** @see WindTurbineCI#isTurning() */
     @Override
     public boolean isTurning() throws Exception {
         return getOwner().handleRequest(
@@ -54,7 +54,7 @@ public class WindTurbineInboundPort
         );
     }
 
-    /** @see WindTurbineImplementationI#isBlocked() */
+    /** @see WindTurbineCI#isBlocked() */
     @Override
     public boolean isBlocked() throws Exception {
         return getOwner().handleRequest(
@@ -62,7 +62,7 @@ public class WindTurbineInboundPort
         );
     }
 
-    /** @see WindTurbineImplementationI#getCurrentProduction() */
+    /** @see WindTurbineCI#getCurrentProduction() */
     @Override
     public double getCurrentProduction() throws Exception {
         return getOwner().handleRequest(
@@ -70,7 +70,7 @@ public class WindTurbineInboundPort
         );
     }
 
-    /** @see WindTurbineImplementationI#blockTurning() */
+    /** @see WindTurbineCI#blockTurning() */
     @Override
     public void blockTurning() throws Exception {
         getOwner().handleRequest(
@@ -81,7 +81,7 @@ public class WindTurbineInboundPort
         );
     }
 
-    /** @see WindTurbineImplementationI#unblockTurning() */
+    /** @see WindTurbineCI#unblockTurning() */
     @Override
     public void unblockTurning() throws Exception {
         getOwner().handleRequest(

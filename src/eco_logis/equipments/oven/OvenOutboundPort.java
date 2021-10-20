@@ -46,31 +46,31 @@ public class OvenOutboundPort
     // ========== Override methods ==========
 
 
-    /** @see OvenImplementationI#isBaking() */
+    /** @see OvenCI#isBaking() */
     @Override
     public boolean isBaking() throws Exception {
         return ((OvenCI) getConnector()).isBaking();
     }
 
-    /** @see OvenImplementationI#startBaking() */
+    /** @see OvenCI#startBaking() */
     @Override
     public void startBaking() throws Exception {
         ((OvenCI) getConnector()).startBaking();
     }
 
-    /** @see OvenImplementationI#stopBaking() */
+    /** @see OvenCI#stopBaking() */
     @Override
     public void stopBaking() throws Exception {
         ((OvenCI) getConnector()).stopBaking();
     }
 
-    /** @see OvenImplementationI#getTemperature() */
+    /** @see OvenCI#getTemperature() */
     @Override
     public double getTemperature() throws Exception {
         return ((OvenCI) getConnector()).getTemperature();
     }
 
-    /** @see OvenImplementationI#setTemperature(double) */
+    /** @see OvenCI#setTemperature(double) */
     @Override
     public void setTemperature(double temp) throws Exception {
         ((OvenCI) getConnector()).setTemperature(temp);

@@ -146,7 +146,7 @@ public class WindTurbine
         // Create the trace
         if(WindTurbine.VERBOSE) {
             tracer.get().setTitle("Wind turbine component");
-            tracer.get().setRelativePosition(0, 0);
+            tracer.get().setRelativePosition(1, 1);
             toggleTracing();
         }
     }

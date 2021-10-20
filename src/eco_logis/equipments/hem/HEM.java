@@ -1,7 +1,9 @@
 package equipments.hem;
 
 import equipments.crypto_miner.CryptoMiner;
+import equipments.generator.Generator;
 import equipments.hem.connectors.CryptoMinerConnector;
+import equipments.hem.connectors.GeneratorConnector;
 import equipments.hem.connectors.OvenConnector;
 import equipments.hem.connectors.WindTurbineConnector;
 import equipments.oven.Oven;
@@ -27,6 +29,7 @@ public class HEM
 
 
     private SuspensionEquipmentOutboundPort cryptoMinerOP;
+    private ProductionEquipmentOutboundPort generatorOP;
     private StandardEquipmentOutboundPort ovenOP;
     private UnpredictableProductionEquipmentOutboundPort windTurbineOP;
 
@@ -62,6 +65,14 @@ public class HEM
                     CryptoMiner.INBOUND_PORT_URI,
                     CryptoMinerConnector.class.getCanonicalName());
 
+            // Create the generator
+            generatorOP = new ProductionEquipmentOutboundPort(this);
+            generatorOP.publishPort();
+            doPortConnection(
+                    generatorOP.getPortURI(),
+                    Generator.INBOUND_PORT_URI,
+                    GeneratorConnector.class.getCanonicalName());
+
             // Create the oven outbound port and connect it to the component
             ovenOP = new StandardEquipmentOutboundPort(this);
             ovenOP.publishPort();
@@ -85,12 +96,15 @@ public class HEM
     @Override
     public synchronized void execute() throws Exception {
         // First scenario
+        logMessage("User start the generator : " + generatorOP.startProducing());
         logMessage("The wind turbine is producing : " + windTurbineOP.isProducing());
         logMessage("User forbids wind turbine production : " + windTurbineOP.forbidProduction());
         logMessage("User powers on the crypto miner : " + cryptoMinerOP.switchOn());
         logMessage("User starts mining crypto-currency : " + cryptoMinerOP.resume());
         logMessage("User powers on its oven : " + ovenOP.switchOn());
         logMessage("The crypto miner is on : " + cryptoMinerOP.on());
+        logMessage("The generator is on : " + generatorOP.isProducing());
+        logMessage("The generator produce " + generatorOP.getProduction() + " watt");
         logMessage("The crypto miner is suspended : " + cryptoMinerOP.suspended());
         logMessage("HEM suspends the crypto miner : " + cryptoMinerOP.suspend());
         logMessage("User power of the oven : " + ovenOP.switchOff());
@@ -98,7 +112,7 @@ public class HEM
         logMessage("HEM resumes the crypto miner : " + cryptoMinerOP.resume());
         logMessage("User power off the crypto miner : " + cryptoMinerOP.switchOff());
         logMessage("User allows wind turbine production : " + windTurbineOP.allowProduction());
-
+        logMessage("User stop the generator : " + generatorOP.stopProducing());
     }
 
     @Override

@@ -46,7 +46,7 @@ public class DishwasherInboundPort
     // ========== Override methods ==========
 
 
-    /** @see DishwasherImplementationI#isWashing() */
+    /** @see DishwasherCI#isWashing() */
     @Override
     public boolean isWashing() throws Exception {
         return getOwner().handleRequest(
@@ -54,7 +54,7 @@ public class DishwasherInboundPort
         );
     }
 
-    /** @see DishwasherImplementationI#startWasherFull() */
+    /** @see DishwasherCI#startWasherFull() */
     @Override
     public void startWasherFull() throws Exception {
         getOwner().handleRequest(
@@ -65,7 +65,7 @@ public class DishwasherInboundPort
         );
     }
 
-    /** @see DishwasherImplementationI#startWasherEco() */
+    /** @see DishwasherCI#startWasherEco() */
     @Override
     public void startWasherEco() throws Exception {
         getOwner().handleRequest(
@@ -76,7 +76,7 @@ public class DishwasherInboundPort
         );
     }
 
-    /** @see DishwasherImplementationI#startWasherFast() */
+    /** @see DishwasherCI#startWasherFast() */
     @Override
     public void startWasherFast() throws Exception {
         getOwner().handleRequest(
@@ -87,7 +87,7 @@ public class DishwasherInboundPort
         );
     }
 
-    /** @see DishwasherImplementationI#stopWashing() */
+    /** @see DishwasherCI#stopWashing() */
     @Override
     public void stopWashing() throws Exception {
         getOwner().handleRequest(
@@ -98,7 +98,7 @@ public class DishwasherInboundPort
         );
     }
 
-    /** @see DishwasherImplementationI#getProgram() */
+    /** @see DishwasherCI#getProgram() */
     @Override
     public DishwasherProgram getProgram() throws Exception {
         return getOwner().handleRequest(

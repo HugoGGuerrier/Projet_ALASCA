@@ -46,37 +46,37 @@ public class DishwasherOutboundPort
     // ========== Override methods ==========
 
 
-    /** @see DishwasherImplementationI#isWashing() */
+    /** @see DishwasherCI#isWashing() */
     @Override
     public boolean isWashing() throws Exception {
         return ((DishwasherCI) getConnector()).isWashing();
     }
 
-    /** @see DishwasherImplementationI#startWasherFull() */
+    /** @see DishwasherCI#startWasherFull() */
     @Override
     public void startWasherFull() throws Exception {
         ((DishwasherCI) getConnector()).startWasherFull();
     }
 
-    /** @see DishwasherImplementationI#startWasherEco() */
+    /** @see DishwasherCI#startWasherEco() */
     @Override
     public void startWasherEco() throws Exception {
         ((DishwasherCI) getConnector()).startWasherEco();
     }
 
-    /** @see DishwasherImplementationI#startWasherFast() */
+    /** @see DishwasherCI#startWasherFast() */
     @Override
     public void startWasherFast() throws Exception {
         ((DishwasherCI) getConnector()).startWasherFast();
     }
 
-    /** @see DishwasherImplementationI#stopWashing() */
+    /** @see DishwasherCI#stopWashing() */
     @Override
     public void stopWashing() throws Exception {
         ((DishwasherCI) getConnector()).stopWashing();
     }
 
-    /** @see DishwasherImplementationI#getProgram() */
+    /** @see DishwasherCI#getProgram() */
     @Override
     public DishwasherProgram getProgram() throws Exception {
         return ((DishwasherCI) getConnector()).getProgram();

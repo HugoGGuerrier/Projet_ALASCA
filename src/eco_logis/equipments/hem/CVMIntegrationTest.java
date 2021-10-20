@@ -1,6 +1,7 @@
 package equipments.hem;
 
 import equipments.crypto_miner.CryptoMiner;
+import equipments.generator.Generator;
 import equipments.oven.Oven;
 import equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -25,6 +26,12 @@ public class CVMIntegrationTest
         // Create the crypto miner
         AbstractComponent.createComponent(
                 CryptoMiner.class.getCanonicalName(),
+                new Object[]{}
+        );
+
+        // Create the generator
+        AbstractComponent.createComponent(
+                Generator.class.getCanonicalName(),
                 new Object[]{}
         );
 

@@ -46,7 +46,7 @@ public class GeneratorInboundPort
     // ========== Override methods ==========
 
 
-    /** @see GeneratorImplementationI#isRunning() */
+    /** @see GeneratorCI#isRunning() */
     @Override
     public boolean isRunning() throws Exception {
         return getOwner().handleRequest(
@@ -54,7 +54,7 @@ public class GeneratorInboundPort
         );
     }
 
-    /** @see GeneratorImplementationI#startGenerator() */
+    /** @see GeneratorCI#startGenerator() */
     @Override
     public void startGenerator() throws Exception {
         getOwner().handleRequest(
@@ -65,7 +65,7 @@ public class GeneratorInboundPort
         );
     }
 
-    /** @see GeneratorImplementationI#stopGenerator() */
+    /** @see GeneratorCI#stopGenerator() */
     @Override
     public void stopGenerator() throws Exception {
         getOwner().handleRequest(
@@ -76,7 +76,15 @@ public class GeneratorInboundPort
         );
     }
 
-    /** @see GeneratorImplementationI#getFuelLevel() */
+    /** @see GeneratorCI#getEnergyProduction() */
+    @Override
+    public double getEnergyProduction() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Generator) o).getEnergyProduction()
+        );
+    }
+
+    /** @see GeneratorCI#getFuelLevel() */
     @Override
     public float getFuelLevel() throws Exception {
         return getOwner().handleRequest(
@@ -84,7 +92,7 @@ public class GeneratorInboundPort
         );
     }
 
-    /** @see GeneratorImplementationI#refill() */
+    /** @see GeneratorCI#refill() */
     @Override
     public void refill() throws Exception {
         getOwner().handleRequest(

@@ -46,49 +46,49 @@ public class PowerBankOutboundPort
     // ========== Override methods ==========
 
 
-    /** @see PowerBankImplementationI#isCharging() */
+    /** @see PowerBankCI#isCharging() */
     @Override
     public boolean isCharging() throws Exception {
         return ((PowerBankCI) getConnector()).isCharging();
     }
 
-    /** @see PowerBankImplementationI#startCharging() */
+    /** @see PowerBankCI#startCharging() */
     @Override
     public void startCharging() throws Exception {
         ((PowerBankCI) getConnector()).startCharging();
     }
 
-    /** @see PowerBankImplementationI#stopCharging() */
+    /** @see PowerBankCI#stopCharging() */
     @Override
     public void stopCharging() throws Exception {
         ((PowerBankCI) getConnector()).stopCharging();
     }
 
-    /** @see PowerBankImplementationI#isDischarging() */
+    /** @see PowerBankCI#isDischarging() */
     @Override
     public boolean isDischarging() throws Exception {
         return ((PowerBankCI) getConnector()).isDischarging();
     }
 
-    /** @see PowerBankImplementationI#startDischarging() */
+    /** @see PowerBankCI#startDischarging() */
     @Override
     public void startDischarging() throws Exception {
         ((PowerBankCI) getConnector()).startDischarging();
     }
 
-    /** @see PowerBankImplementationI#stopDischarging() */
+    /** @see PowerBankCI#stopDischarging() */
     @Override
     public void stopDischarging() throws Exception {
         ((PowerBankCI) getConnector()).stopDischarging();
     }
 
-    /** @see PowerBankImplementationI#getBatteryLevel() */
+    /** @see PowerBankCI#getBatteryLevel() */
     @Override
     public double getBatteryLevel() throws Exception {
         return ((PowerBankCI) getConnector()).getBatteryLevel();
     }
 
-    /** @see PowerBankImplementationI#setBatteryLevel(double) */
+    /** @see PowerBankCI#setBatteryLevel(double) */
     @Override
     public void setBatteryLevel(double level) throws Exception {
         ((PowerBankCI) getConnector()).setBatteryLevel(level);

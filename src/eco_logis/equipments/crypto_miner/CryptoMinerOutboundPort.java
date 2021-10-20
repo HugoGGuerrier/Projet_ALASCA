@@ -64,19 +64,19 @@ public class CryptoMinerOutboundPort
         ((CryptoMinerCI) getConnector()).powerOff();
     }
 
-    /** @see CryptoMinerImplementationI#isMining() */
+    /** @see CryptoMinerCI#isMining() */
     @Override
     public boolean isMining() throws Exception {
         return ((CryptoMinerCI) getConnector()).isMining();
     }
 
-    /** @see CryptoMinerImplementationI#startMiner() */
+    /** @see CryptoMinerCI#startMiner() */
     @Override
     public void startMiner() throws Exception {
         ((CryptoMinerCI) getConnector()).startMiner();
     }
 
-    /** @see CryptoMinerImplementationI#stopMiner() */
+    /** @see CryptoMinerCI#stopMiner() */
     @Override
     public void stopMiner() throws Exception {
         ((CryptoMinerCI) getConnector()).stopMiner();

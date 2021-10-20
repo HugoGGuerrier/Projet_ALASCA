@@ -1,8 +1,15 @@
 package equipments.hem.connectors;
 
+import equipments.generator.GeneratorCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.ProductionEquipmentCI;
 
+/**
+ * This class is a test connector for the generator component
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public class GeneratorConnector
     extends AbstractConnector
     implements ProductionEquipmentCI
@@ -11,24 +18,30 @@ public class GeneratorConnector
     // ========== Override methods ==========
 
 
+    /** @see ProductionEquipmentCI#isProducing() */
     @Override
     public boolean isProducing() throws Exception {
-        return false;
+        return ((GeneratorCI) offering).isRunning();
     }
 
+    /** @see ProductionEquipmentCI#startProducing() */
     @Override
     public boolean startProducing() throws Exception {
-        return false;
+        ((GeneratorCI) offering).startGenerator();
+        return true;
     }
 
+    /** @see ProductionEquipmentCI#stopProducing() */
     @Override
     public boolean stopProducing() throws Exception {
-        return false;
+        ((GeneratorCI) offering).stopGenerator();
+        return true;
     }
 
+    /** @see ProductionEquipmentCI#getProduction() */
     @Override
     public double getProduction() throws Exception {
-        return 0;
+        return ((GeneratorCI) offering).getEnergyProduction();
     }
 
 }

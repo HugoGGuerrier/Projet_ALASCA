@@ -34,19 +34,19 @@ public class CryptoMinerTestConnector
         ((CryptoMinerCI) offering).powerOff();
     }
 
-    /** @see CryptoMinerImplementationI#isMining() */
+    /** @see CryptoMinerCI#isMining() */
     @Override
     public boolean isMining() throws Exception {
         return ((CryptoMinerCI) offering).isMining();
     }
 
-    /** @see CryptoMinerImplementationI#startMiner() */
+    /** @see CryptoMinerCI#startMiner() */
     @Override
     public void startMiner() throws Exception {
         ((CryptoMinerCI) offering).startMiner();
     }
 
-    /** @see CryptoMinerImplementationI#stopMiner() */
+    /** @see CryptoMinerCI#stopMiner() */
     @Override
     public void stopMiner() throws Exception {
         ((CryptoMinerCI) offering).stopMiner();

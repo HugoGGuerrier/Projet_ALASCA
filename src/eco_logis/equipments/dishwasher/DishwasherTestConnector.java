@@ -7,37 +7,37 @@ public class DishwasherTestConnector
     implements DishwasherCI
 {
 
-    /** @see DishwasherImplementationI#isWashing() */
+    /** @see DishwasherCI#isWashing() */
     @Override
     public boolean isWashing() throws Exception {
         return ((DishwasherCI) offering).isWashing();
     }
 
-    /** @see DishwasherImplementationI#startWasherFull() */
+    /** @see DishwasherCI#startWasherFull() */
     @Override
     public void startWasherFull() throws Exception {
         ((DishwasherCI) offering).startWasherFull();
     }
 
-    /** @see DishwasherImplementationI#startWasherEco() */
+    /** @see DishwasherCI#startWasherEco() */
     @Override
     public void startWasherEco() throws Exception {
         ((DishwasherCI) offering).startWasherEco();
     }
 
-    /** @see DishwasherImplementationI#startWasherFast() */
+    /** @see DishwasherCI#startWasherFast() */
     @Override
     public void startWasherFast() throws Exception {
         ((DishwasherCI) offering).startWasherFast();
     }
 
-    /** @see DishwasherImplementationI#stopWashing() */
+    /** @see DishwasherCI#stopWashing() */
     @Override
     public void stopWashing() throws Exception {
         ((DishwasherCI) offering).stopWashing();
     }
 
-    /** @see DishwasherImplementationI#getProgram() */
+    /** @see DishwasherCI#getProgram() */
     @Override
     public DishwasherProgram getProgram() throws Exception {
         return ((DishwasherCI) offering).getProgram();

@@ -76,7 +76,7 @@ public class CryptoMinerInboundPort
         );
     }
 
-    /** @see CryptoMinerImplementationI#isMining() */
+    /** @see CryptoMinerCI#isMining() */
     @Override
     public boolean isMining() throws Exception {
         return getOwner().handleRequest(
@@ -84,7 +84,7 @@ public class CryptoMinerInboundPort
         );
     }
 
-    /** @see CryptoMinerImplementationI#startMiner() */
+    /** @see CryptoMinerCI#startMiner() */
     @Override
     public void startMiner() throws Exception {
         getOwner().handleRequest(
@@ -95,7 +95,7 @@ public class CryptoMinerInboundPort
         );
     }
 
-    /** @see CryptoMinerImplementationI#stopMiner() */
+    /** @see CryptoMinerCI#stopMiner() */
     @Override
     public void stopMiner() throws Exception {
         getOwner().handleRequest(

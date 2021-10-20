@@ -37,31 +37,37 @@ public class GeneratorOutboundPort
 
     // ========== Override methods ==========
 
-    /** @see GeneratorImplementationI#isRunning() */
+    /** @see GeneratorCI#isRunning() */
     @Override
     public boolean isRunning() throws Exception {
         return ((GeneratorCI) getConnector()).isRunning();
     }
 
-    /** @see GeneratorImplementationI#startGenerator() */
+    /** @see GeneratorCI#startGenerator() */
     @Override
     public void startGenerator() throws Exception {
         ((GeneratorCI) getConnector()).startGenerator();
     }
 
-    /** @see GeneratorImplementationI#stopGenerator() */
+    /** @see GeneratorCI#stopGenerator() */
     @Override
     public void stopGenerator() throws Exception {
         ((GeneratorCI) getConnector()).stopGenerator();
     }
 
-    /** @see GeneratorImplementationI#getFuelLevel() */
+    /** @see GeneratorCI#getEnergyProduction() */
+    @Override
+    public double getEnergyProduction() throws Exception {
+        return ((GeneratorCI) getConnector()).getEnergyProduction();
+    }
+
+    /** @see GeneratorCI#getFuelLevel() */
     @Override
     public float getFuelLevel() throws Exception {
         return ((GeneratorCI) getConnector()).getFuelLevel();
     }
 
-    /** @see GeneratorImplementationI#refill() */
+    /** @see GeneratorCI#refill() */
     @Override
     public void refill() throws Exception {
         ((GeneratorCI) getConnector()).refill();

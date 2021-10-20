@@ -53,6 +53,21 @@ public interface GeneratorImplementationI
     void stopGenerator() throws Exception;
 
     /**
+     * Get the energy production on the moment
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre {@code isRunning()}
+     * post true
+     * </pre>
+     *
+     * @return The electricity production in Watt
+     * @throws Exception TODO
+     */
+    double getEnergyProduction() throws Exception;
+
+    /**
      * Get the generator fuel level
      *
      * <p><strong>Contract</strong></p>

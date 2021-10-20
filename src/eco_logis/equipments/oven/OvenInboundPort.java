@@ -43,7 +43,7 @@ public class OvenInboundPort
     // ========== Override methods ==========
 
 
-    /** @see OvenImplementationI#isBaking() */
+    /** @see OvenCI#isBaking() */
     @Override
     public boolean isBaking() throws Exception {
         return this.getOwner().handleRequest(
@@ -51,7 +51,7 @@ public class OvenInboundPort
         );
     }
 
-    /** @see OvenImplementationI#startBaking() */
+    /** @see OvenCI#startBaking() */
     @Override
     public void startBaking() throws Exception {
         this.getOwner().handleRequest(
@@ -62,7 +62,7 @@ public class OvenInboundPort
         );
     }
 
-    /** @see OvenImplementationI#stopBaking() */
+    /** @see OvenCI#stopBaking() */
     @Override
     public void stopBaking() throws Exception {
         this.getOwner().handleRequest(
@@ -73,7 +73,7 @@ public class OvenInboundPort
         );
     }
 
-    /** @see OvenImplementationI#getTemperature() */
+    /** @see OvenCI#getTemperature() */
     @Override
     public double getTemperature() throws Exception {
         return this.getOwner().handleRequest(
@@ -81,7 +81,7 @@ public class OvenInboundPort
         );
     }
 
-    /** @see OvenImplementationI#setTemperature(double) */
+    /** @see OvenCI#setTemperature(double) */
     @Override
     public void setTemperature(double temp) throws Exception {
         this.getOwner().handleRequest(
