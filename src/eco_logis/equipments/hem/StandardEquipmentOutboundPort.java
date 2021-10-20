@@ -72,7 +72,9 @@ public class StandardEquipmentOutboundPort
         super(uri, implInterface, owner);
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see StandardEquipmentCI#on() */
     @Override

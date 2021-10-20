@@ -5,7 +5,6 @@ import equipments.oven.Oven;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.ProductionEquipmentCI;
 
 /**
  * The class <code>HEM</code> implements the basis for a household energy
