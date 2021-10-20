@@ -5,7 +5,6 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.exceptions.PreconditionException;
 import interfaces.ProductionEquipmentCI;
-import interfaces.StandardEquipmentCI;
 
 /**
  * This class represents an outbound port for a production equipment

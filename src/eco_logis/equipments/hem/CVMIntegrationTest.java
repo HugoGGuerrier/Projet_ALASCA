@@ -2,6 +2,7 @@ package equipments.hem;
 
 import equipments.crypto_miner.CryptoMiner;
 import equipments.oven.Oven;
+import equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
@@ -30,6 +31,12 @@ public class CVMIntegrationTest
         // Create the oven
         AbstractComponent.createComponent(
                 Oven.class.getCanonicalName(),
+                new Object[]{}
+        );
+
+        // Create the wind turbine
+        AbstractComponent.createComponent(
+                WindTurbine.class.getCanonicalName(),
                 new Object[]{}
         );
 

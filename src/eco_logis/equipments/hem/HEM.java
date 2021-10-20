@@ -2,6 +2,7 @@ package equipments.hem;
 
 import equipments.crypto_miner.CryptoMiner;
 import equipments.oven.Oven;
+import equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
@@ -67,7 +68,12 @@ public class HEM
                     OvenConnector.class.getCanonicalName());
 
             // Create the wind turbine outbound port and connect it to the component
-
+            windTurbineOP = new ProductionEquipmentOutboundPort(this);
+            windTurbineOP.publishPort();
+            doPortConnection(
+                    windTurbineOP.getPortURI(),
+                    WindTurbine.INBOUND_PORT_URI,
+                    WindTurbineConnector.class.getCanonicalName());
         } catch (Exception e) {
             throw new ComponentStartException(e);
         }
@@ -76,14 +82,15 @@ public class HEM
     @Override
     public synchronized void execute() throws Exception {
         // First scenario
+        logMessage("The wind turbine is producing : " + windTurbineOP.isProducing());
         logMessage("User powers on the crypto miner : " + cryptoMinerOP.switchOn());
         logMessage("User starts mining crypto-currency : " + cryptoMinerOP.resume());
         logMessage("User powers on its oven : " + ovenOP.switchOn());
-        logMessage("Is the crypto miner on : " + cryptoMinerOP.on());
-        logMessage("Is the crypto miner suspended : " + cryptoMinerOP.suspended());
+        logMessage("The crypto miner is on : " + cryptoMinerOP.on());
+        logMessage("The crypto miner is suspended : " + cryptoMinerOP.suspended());
         logMessage("HEM suspends the crypto miner : " + cryptoMinerOP.suspend());
         logMessage("User power of the oven : " + ovenOP.switchOff());
-        logMessage("Is the oven on : " + ovenOP.on());
+        logMessage("The oven is on : " + ovenOP.on());
         logMessage("HEM resumes the crypto miner : " + cryptoMinerOP.resume());
         logMessage("User power off the crypto miner : " + cryptoMinerOP.switchOff());
     }
@@ -92,6 +99,7 @@ public class HEM
     public synchronized void finalise() throws Exception {
         doPortDisconnection(cryptoMinerOP.getPortURI());
         doPortDisconnection(ovenOP.getPortURI());
+        doPortDisconnection(windTurbineOP.getPortURI());
         super.finalise();
     }
 
@@ -100,6 +108,7 @@ public class HEM
         try {
             cryptoMinerOP.unpublishPort();
             ovenOP.unpublishPort();
+            windTurbineOP.unpublishPort();
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
