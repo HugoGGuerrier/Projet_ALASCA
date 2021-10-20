@@ -182,6 +182,7 @@ public class CryptoMiner
         assert isOn : new PreconditionException("powerOff() -> isOn()");
 
         isOn = false;
+        isMining = false;
     }
 
     /** @see CryptoMinerImplementationI#isMining() */
@@ -214,6 +215,7 @@ public class CryptoMiner
             logMessage("Stop the crypto mining");
         }
 
+        assert isOn : new PreconditionException("stopMiner() -> isOn()");
         assert isMining : new PreconditionException("stopMiner() -> isMining()");;
 
         isMining = false;

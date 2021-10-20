@@ -1,4 +1,5 @@
 package equipments.hem;
 
-public class WindTurbineConnector {
+public class WindTurbineConnector
+{
 }

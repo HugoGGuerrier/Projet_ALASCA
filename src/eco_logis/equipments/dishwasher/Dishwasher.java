@@ -3,6 +3,10 @@ package equipments.dishwasher;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
+import java.time.Duration;
+import java.time.LocalTime;
+import java.util.Map;
+
 public class Dishwasher
     extends AbstractComponent
     implements DishwasherImplementationI
@@ -26,6 +30,15 @@ public class Dishwasher
 
     /** The current dishwasher program */
     private DishwasherProgram program;
+
+    /** Each program is associated with a duration */
+    private Map<DishwasherProgram, Duration> programDurationMap;
+
+    /** The time the dishwasher should start */
+    private LocalTime startingTime;
+
+    /** The washing deadline */
+    private LocalTime deadline;
 
     /** The dishwasher inbound port */
     private DishwasherInboundPort dwip;
