@@ -5,6 +5,7 @@ import equipments.oven.Oven;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import interfaces.ProductionEquipmentCI;
 
 /**
  * The class <code>HEM</code> implements the basis for a household energy
@@ -24,6 +25,7 @@ public class HEM
 
     private SuspensionEquipmentOutboundPort cryptoMinerOP;
     private StandardEquipmentOutboundPort ovenOP;
+    private ProductionEquipmentOutboundPort windTurbineOP;
 
 
     // ========== Constructors ==========
@@ -64,6 +66,9 @@ public class HEM
                     ovenOP.getPortURI(),
                     Oven.INBOUND_PORT_URI,
                     OvenConnector.class.getCanonicalName());
+
+            // Create the wind turbine outbound port and connect it to the component
+
         } catch (Exception e) {
             throw new ComponentStartException(e);
         }
