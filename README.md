@@ -20,10 +20,7 @@ Emilie SIAU 3700323
 
 
 
-### Audit
-15min max
-états ON OFF : non, booléens -> faire dans Oven
-5 composants consommateurs, 2 générateurs
-présentation du code et des choix
-démo exécution
-questions du prof
+### Récap Audit
+Abandon du générateur XML
+Finir les composants : dishwasher (départ différé etc), power bank (changer, pas besoin de faire Discharge), Electric Meter
+Tests complets d'intégration
