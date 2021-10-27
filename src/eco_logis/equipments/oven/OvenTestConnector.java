@@ -1,4 +1,4 @@
-package equipments.oven;
+package eco_logis.equipments.oven;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 

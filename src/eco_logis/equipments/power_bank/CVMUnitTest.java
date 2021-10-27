@@ -1,4 +1,4 @@
-package equipments.power_bank;
+package eco_logis.equipments.power_bank;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
@@ -23,7 +23,7 @@ public class CVMUnitTest
 
     public static void main(String[] args) {
         try {
-            equipments.power_bank.CVMUnitTest cvm = new equipments.power_bank.CVMUnitTest();
+            CVMUnitTest cvm = new CVMUnitTest();
             cvm.startStandardLifeCycle(1000L);
             Thread.sleep(10000L);
             System.exit(0);

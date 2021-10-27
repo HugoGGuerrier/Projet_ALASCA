@@ -1,4 +1,4 @@
-package interfaces;
+package eco_logis.interfaces;
 
 import java.time.Duration;
 import java.time.LocalTime;

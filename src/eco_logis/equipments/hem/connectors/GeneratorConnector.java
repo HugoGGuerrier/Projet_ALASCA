@@ -1,8 +1,8 @@
-package equipments.hem.connectors;
+package eco_logis.equipments.hem.connectors;
 
-import equipments.generator.GeneratorCI;
+import eco_logis.equipments.generator.GeneratorCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.ProductionEquipmentCI;
+import eco_logis.interfaces.ProductionEquipmentCI;
 
 /**
  * This class is a test connector for the generator component

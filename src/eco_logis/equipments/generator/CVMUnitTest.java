@@ -1,7 +1,5 @@
-package equipments.generator;
+package eco_logis.equipments.generator;
 
-import equipments.crypto_miner.CryptoMiner;
-import equipments.crypto_miner.CryptoMinerUnitTester;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 

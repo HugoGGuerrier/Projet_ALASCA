@@ -1,4 +1,4 @@
-package interfaces;
+package eco_logis.interfaces;
 
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;

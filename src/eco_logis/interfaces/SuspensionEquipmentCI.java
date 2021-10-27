@@ -1,4 +1,4 @@
-package interfaces;
+package eco_logis.interfaces;
 
 /**
  * This interface defines all services for a suspension equipment

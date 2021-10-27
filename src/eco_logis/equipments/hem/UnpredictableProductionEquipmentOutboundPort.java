@@ -1,9 +1,9 @@
-package equipments.hem;
+package eco_logis.equipments.hem;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import interfaces.UnpredictableProductionEquipmentCI;
+import eco_logis.interfaces.UnpredictableProductionEquipmentCI;
 
 /**
  * This class represents an outbound port for an unpredictable production equipment

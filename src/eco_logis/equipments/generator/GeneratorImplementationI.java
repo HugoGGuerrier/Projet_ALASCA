@@ -1,4 +1,4 @@
-package equipments.generator;
+package eco_logis.equipments.generator;
 
 /**
  * Interface of all methods that a generator should implement

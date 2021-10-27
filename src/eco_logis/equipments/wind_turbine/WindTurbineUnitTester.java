@@ -1,4 +1,4 @@
-package equipments.wind_turbine;
+package eco_logis.equipments.wind_turbine;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;

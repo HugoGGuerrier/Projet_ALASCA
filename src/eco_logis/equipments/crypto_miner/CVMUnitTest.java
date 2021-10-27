@@ -1,4 +1,4 @@
-package equipments.crypto_miner;
+package eco_logis.equipments.crypto_miner;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;

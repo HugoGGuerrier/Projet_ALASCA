@@ -1,6 +1,5 @@
-package equipments.power_bank;
+package eco_logis.equipments.power_bank;
 
-import equipments.oven.OvenImplementationI;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 

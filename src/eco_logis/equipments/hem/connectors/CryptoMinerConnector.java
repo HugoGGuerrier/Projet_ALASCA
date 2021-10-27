@@ -1,8 +1,8 @@
-package equipments.hem.connectors;
+package eco_logis.equipments.hem.connectors;
 
-import equipments.crypto_miner.CryptoMinerCI;
+import eco_logis.equipments.crypto_miner.CryptoMinerCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.SuspensionEquipmentCI;
+import eco_logis.interfaces.SuspensionEquipmentCI;
 
 /**
  * This class is an integration test connector for the crypto miner component

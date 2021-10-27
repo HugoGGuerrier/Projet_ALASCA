@@ -1,4 +1,4 @@
-package equipments.wind_turbine;
+package eco_logis.equipments.wind_turbine;
 
 /**
  * This interface defines the wind turbine implementation

@@ -1,4 +1,4 @@
-package equipments.generator;
+package eco_logis.equipments.generator;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;

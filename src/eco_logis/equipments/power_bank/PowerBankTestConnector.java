@@ -1,4 +1,4 @@
-package equipments.power_bank;
+package eco_logis.equipments.power_bank;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 

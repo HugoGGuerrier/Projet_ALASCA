@@ -1,9 +1,9 @@
-package equipments.hem.connectors;
+package eco_logis.equipments.hem.connectors;
 
-import equipments.wind_turbine.WindTurbineCI;
+import eco_logis.equipments.wind_turbine.WindTurbineCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.ProductionEquipmentCI;
-import interfaces.UnpredictableProductionEquipmentCI;
+import eco_logis.interfaces.ProductionEquipmentCI;
+import eco_logis.interfaces.UnpredictableProductionEquipmentCI;
 
 /**
  * This class is an integration test connector for the wind turbine component (unpredictable producer)

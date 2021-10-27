@@ -1,13 +1,13 @@
-package equipments.hem;
+package eco_logis.equipments.hem;
 
-import equipments.crypto_miner.CryptoMiner;
-import equipments.generator.Generator;
-import equipments.hem.connectors.CryptoMinerConnector;
-import equipments.hem.connectors.GeneratorConnector;
-import equipments.hem.connectors.OvenConnector;
-import equipments.hem.connectors.WindTurbineConnector;
-import equipments.oven.Oven;
-import equipments.wind_turbine.WindTurbine;
+import eco_logis.equipments.crypto_miner.CryptoMiner;
+import eco_logis.equipments.generator.Generator;
+import eco_logis.equipments.hem.connectors.CryptoMinerConnector;
+import eco_logis.equipments.hem.connectors.GeneratorConnector;
+import eco_logis.equipments.hem.connectors.OvenConnector;
+import eco_logis.equipments.hem.connectors.WindTurbineConnector;
+import eco_logis.equipments.oven.Oven;
+import eco_logis.equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;

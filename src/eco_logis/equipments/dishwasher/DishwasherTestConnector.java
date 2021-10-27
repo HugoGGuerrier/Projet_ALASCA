@@ -1,4 +1,4 @@
-package equipments.dishwasher;
+package eco_logis.equipments.dishwasher;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 

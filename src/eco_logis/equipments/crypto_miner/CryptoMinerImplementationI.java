@@ -1,4 +1,4 @@
-package equipments.crypto_miner;
+package eco_logis.equipments.crypto_miner;
 
 /**
  * This interface defines the crypto miner implementation

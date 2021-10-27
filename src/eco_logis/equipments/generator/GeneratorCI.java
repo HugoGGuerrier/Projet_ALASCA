@@ -1,4 +1,4 @@
-package equipments.generator;
+package eco_logis.equipments.generator;
 
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;

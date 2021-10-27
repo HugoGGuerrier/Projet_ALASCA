@@ -1,9 +1,9 @@
-package equipments.hem.connectors;
+package eco_logis.equipments.hem.connectors;
 
-import equipments.hem.StandardEquipmentOutboundPort;
-import equipments.oven.OvenCI;
+import eco_logis.equipments.hem.StandardEquipmentOutboundPort;
+import eco_logis.equipments.oven.OvenCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.StandardEquipmentCI;
+import eco_logis.interfaces.StandardEquipmentCI;
 
 public class OvenConnector
     extends AbstractConnector

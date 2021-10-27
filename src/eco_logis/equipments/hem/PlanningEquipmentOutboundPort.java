@@ -1,9 +1,9 @@
-package equipments.hem;
+package eco_logis.equipments.hem;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import interfaces.PlanningEquipmentCI;
+import eco_logis.interfaces.PlanningEquipmentCI;
 
 import java.time.Duration;
 import java.time.LocalTime;

@@ -1,4 +1,4 @@
-package interfaces;
+package eco_logis.interfaces;
 
 public interface UnpredictableProductionEquipmentCI
     extends ProductionEquipmentCI

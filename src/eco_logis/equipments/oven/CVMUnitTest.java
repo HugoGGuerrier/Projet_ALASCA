@@ -1,4 +1,4 @@
-package equipments.oven;
+package eco_logis.equipments.oven;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
@@ -23,7 +23,7 @@ public class CVMUnitTest
 
     public static void main(String[] args) {
         try {
-            equipments.oven.CVMUnitTest cvm = new equipments.oven.CVMUnitTest();
+            CVMUnitTest cvm = new CVMUnitTest();
             cvm.startStandardLifeCycle(1000L);
             Thread.sleep(10000L);
             System.exit(0);

@@ -1,4 +1,4 @@
-package equipments.oven;
+package eco_logis.equipments.oven;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;

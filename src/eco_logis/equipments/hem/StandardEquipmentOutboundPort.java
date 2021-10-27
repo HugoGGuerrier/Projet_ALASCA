@@ -1,11 +1,11 @@
-package equipments.hem;
+package eco_logis.equipments.hem;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import interfaces.StandardEquipmentCI;
+import eco_logis.interfaces.StandardEquipmentCI;
 
 /**
  * This class represents an outbound port for a standard equipment

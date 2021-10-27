@@ -1,4 +1,4 @@
-package equipments.oven;
+package eco_logis.equipments.oven;
 
 
 /**

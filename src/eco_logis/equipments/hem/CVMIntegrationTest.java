@@ -1,9 +1,9 @@
-package equipments.hem;
+package eco_logis.equipments.hem;
 
-import equipments.crypto_miner.CryptoMiner;
-import equipments.generator.Generator;
-import equipments.oven.Oven;
-import equipments.wind_turbine.WindTurbine;
+import eco_logis.equipments.crypto_miner.CryptoMiner;
+import eco_logis.equipments.generator.Generator;
+import eco_logis.equipments.oven.Oven;
+import eco_logis.equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 

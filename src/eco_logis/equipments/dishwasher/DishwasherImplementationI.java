@@ -1,4 +1,4 @@
-package equipments.dishwasher;
+package eco_logis.equipments.dishwasher;
 
 /**
  * This interface represents all methods of the dishwasher component

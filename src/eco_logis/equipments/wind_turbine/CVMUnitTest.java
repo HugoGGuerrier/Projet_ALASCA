@@ -1,4 +1,4 @@
-package equipments.wind_turbine;
+package eco_logis.equipments.wind_turbine;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
@@ -23,7 +23,7 @@ public class CVMUnitTest
 
     public static void main(String[] args) {
         try {
-            equipments.wind_turbine.CVMUnitTest cvm = new equipments.wind_turbine.CVMUnitTest();
+            CVMUnitTest cvm = new CVMUnitTest();
             cvm.startStandardLifeCycle(1000L);
             Thread.sleep(10000L);
             System.exit(0);

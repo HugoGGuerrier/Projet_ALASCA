@@ -1,9 +1,9 @@
-package equipments.hem;
+package eco_logis.equipments.hem;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import interfaces.SuspensionEquipmentCI;
+import eco_logis.interfaces.SuspensionEquipmentCI;
 
 /**
  * This class represents an outbound port for a suspension equipment

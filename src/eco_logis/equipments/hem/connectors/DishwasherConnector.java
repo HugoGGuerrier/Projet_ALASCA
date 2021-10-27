@@ -1,7 +1,7 @@
-package equipments.hem.connectors;
+package eco_logis.equipments.hem.connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.PlanningEquipmentCI;
+import eco_logis.interfaces.PlanningEquipmentCI;
 
 import java.time.Duration;
 import java.time.LocalTime;
