@@ -11,8 +11,8 @@ public class CVMUnitTest
 
     public CVMUnitTest() throws Exception {}
 
-    // ========== Class methods ==========
 
+    // ========== Class methods ==========
 
     @Override
     public void deploy() throws Exception {

@@ -5,6 +5,12 @@ import eco_logis.equipments.oven.OvenCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import eco_logis.interfaces.StandardEquipmentCI;
 
+/**
+ * This class is an integration test connector for the oven component
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public class OvenConnector
     extends AbstractConnector
     implements StandardEquipmentCI

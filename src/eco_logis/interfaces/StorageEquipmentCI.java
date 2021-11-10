@@ -56,21 +56,6 @@ public interface StorageEquipmentCI
     boolean stopConsuming() throws Exception;
 
     /**
-     * Get the equipment consumption on the moment
-     *
-     * <p><strong>Contract</strong></p>
-     *
-     * <pre>
-     * pre	{@code isConsuming()}
-     * post	true
-     * </pre>
-     *
-     * @return The consumption in Watt
-     * @throws Exception TODO
-     */
-    double getConsumption() throws Exception;
-
-    /**
      * Get the equipment energy level
      *
      * <p><strong>Contract</strong></p>
@@ -83,6 +68,6 @@ public interface StorageEquipmentCI
      * @return The energy level between 0 and 1
      * @throws Exception TODO
      */
-    float getPowerLevel() throws Exception;
+    double getPowerLevel() throws Exception;
 
 }

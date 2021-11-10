@@ -72,16 +72,9 @@ public class StorageEquipmentOutboundPort
         return res;
     }
 
-    /** @see StorageEquipmentCI#getConsumption() */
-    @Override
-    public double getConsumption() throws Exception {
-        assert isConsuming() : new PreconditionException("getConsumption() -> isConsuming()");
-        return ((StorageEquipmentCI) getConnector()).getConsumption();
-    }
-
     /** @see StorageEquipmentOutboundPort#getPowerLevel() */
     @Override
-    public float getPowerLevel() throws Exception {
+    public double getPowerLevel() throws Exception {
         return ((StorageEquipmentCI) getConnector()).getPowerLevel();
     }
 

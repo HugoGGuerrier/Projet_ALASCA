@@ -2,11 +2,9 @@ package eco_logis.equipments.hem;
 
 import eco_logis.equipments.crypto_miner.CryptoMiner;
 import eco_logis.equipments.generator.Generator;
-import eco_logis.equipments.hem.connectors.CryptoMinerConnector;
-import eco_logis.equipments.hem.connectors.GeneratorConnector;
-import eco_logis.equipments.hem.connectors.OvenConnector;
-import eco_logis.equipments.hem.connectors.WindTurbineConnector;
+import eco_logis.equipments.hem.connectors.*;
 import eco_logis.equipments.oven.Oven;
+import eco_logis.equipments.power_bank.PowerBank;
 import eco_logis.equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
@@ -29,8 +27,10 @@ public class HEM
 
 
     private SuspensionEquipmentOutboundPort cryptoMinerOP;
+    private PlanningEquipmentOutboundPort dishwasherOP;
     private ProductionEquipmentOutboundPort generatorOP;
     private StandardEquipmentOutboundPort ovenOP;
+    private StorageEquipmentOutboundPort powerBankOP;
     private UnpredictableProductionEquipmentOutboundPort windTurbineOP;
 
 
@@ -65,7 +65,10 @@ public class HEM
                     CryptoMiner.INBOUND_PORT_URI,
                     CryptoMinerConnector.class.getCanonicalName());
 
-            // Create the generator
+            // Create the dishwasher outbound port and connect it to the component
+            // TODO
+
+            // Create the generator outbound port and connect it to the component
             generatorOP = new ProductionEquipmentOutboundPort(this);
             generatorOP.publishPort();
             doPortConnection(
@@ -81,6 +84,14 @@ public class HEM
                     Oven.INBOUND_PORT_URI,
                     OvenConnector.class.getCanonicalName());
 
+            // Create the power bank outbound port and connect it to the component
+            powerBankOP = new StorageEquipmentOutboundPort(this);
+            powerBankOP.publishPort();
+            doPortConnection(
+                    powerBankOP.getPortURI(),
+                    PowerBank.INBOUND_PORT_URI,
+                    PowerBankConnector.class.getCanonicalName());
+
             // Create the wind turbine outbound port and connect it to the component
             windTurbineOP = new UnpredictableProductionEquipmentOutboundPort(this);
             windTurbineOP.publishPort();
@@ -88,6 +99,7 @@ public class HEM
                     windTurbineOP.getPortURI(),
                     WindTurbine.INBOUND_PORT_URI,
                     WindTurbineConnector.class.getCanonicalName());
+
         } catch (Exception e) {
             throw new ComponentStartException(e);
         }
@@ -98,17 +110,24 @@ public class HEM
         // First scenario
         logMessage("User start the generator : " + generatorOP.startProducing());
         logMessage("The wind turbine is producing : " + windTurbineOP.isProducing());
+        logMessage("The power bank starts charging : " + powerBankOP.startConsuming());
+        logMessage("The power bank is charging : " + powerBankOP.isConsuming());
         logMessage("User forbids wind turbine production : " + windTurbineOP.forbidProduction());
+        logMessage("The power bank stops charging : " + powerBankOP.stopConsuming());
         logMessage("User powers on the crypto miner : " + cryptoMinerOP.switchOn());
         logMessage("User starts mining crypto-currency : " + cryptoMinerOP.resume());
         logMessage("User powers on its oven : " + ovenOP.switchOn());
+        logMessage("The power bank starts discharging : " + powerBankOP.startProducing());
+        logMessage("The power bank is discharging : " + powerBankOP.isProducing());
         logMessage("The crypto miner is on : " + cryptoMinerOP.on());
         logMessage("The generator is on : " + generatorOP.isProducing());
-        logMessage("The generator produce " + generatorOP.getProduction() + " watt");
         logMessage("The crypto miner is suspended : " + cryptoMinerOP.suspended());
         logMessage("HEM suspends the crypto miner : " + cryptoMinerOP.suspend());
         logMessage("User power of the oven : " + ovenOP.switchOff());
         logMessage("The oven is on : " + ovenOP.on());
+        logMessage("The power bank stops discharging : " + powerBankOP.stopProducing());
+        logMessage("The power bank is charging : " + powerBankOP.isConsuming());
+        logMessage("The power bank is discharging : " + powerBankOP.isProducing());
         logMessage("HEM resumes the crypto miner : " + cryptoMinerOP.resume());
         logMessage("User power off the crypto miner : " + cryptoMinerOP.switchOff());
         logMessage("User allows wind turbine production : " + windTurbineOP.allowProduction());
@@ -118,7 +137,10 @@ public class HEM
     @Override
     public synchronized void finalise() throws Exception {
         doPortDisconnection(cryptoMinerOP.getPortURI());
+        // TODO doPortDisconnection(dishwasherOP.getPortURI());
+        doPortDisconnection(generatorOP.getPortURI());
         doPortDisconnection(ovenOP.getPortURI());
+        doPortDisconnection(powerBankOP.getPortURI());
         doPortDisconnection(windTurbineOP.getPortURI());
         super.finalise();
     }
@@ -127,7 +149,10 @@ public class HEM
     public synchronized void shutdown() throws ComponentShutdownException {
         try {
             cryptoMinerOP.unpublishPort();
+            // TODO dishwasherOP.unpublishPort();
+            generatorOP.unpublishPort();
             ovenOP.unpublishPort();
+            powerBankOP.unpublishPort();
             windTurbineOP.unpublishPort();
         } catch (Exception e) {
             throw new ComponentShutdownException(e);

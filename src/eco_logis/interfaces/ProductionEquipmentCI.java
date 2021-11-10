@@ -57,19 +57,4 @@ public interface ProductionEquipmentCI
      */
     boolean stopProducing() throws Exception;
 
-    /**
-     * Get the production on the moment
-     *
-     * <p><strong>Contract</strong></p>
-     *
-     * <pre>
-     * pre	{@code isProducing()}
-     * post	true
-     * </pre>
-     *
-     * @return The production in Watt
-     * @throws Exception TODO
-     */
-    double getProduction() throws Exception;
-
 }

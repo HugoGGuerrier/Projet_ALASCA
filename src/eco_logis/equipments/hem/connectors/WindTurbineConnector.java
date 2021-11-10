@@ -36,12 +36,6 @@ public class WindTurbineConnector
         return false;
     }
 
-    /** @see UnpredictableProductionEquipmentCI#getProduction() */
-    @Override
-    public double getProduction() throws Exception {
-        return ((WindTurbineCI) offering).getCurrentProduction();
-    }
-
     /** @see UnpredictableProductionEquipmentCI#isForbidden() */
     @Override
     public boolean isForbidden() throws Exception {

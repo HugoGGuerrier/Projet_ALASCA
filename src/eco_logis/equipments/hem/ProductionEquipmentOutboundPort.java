@@ -101,11 +101,5 @@ public class ProductionEquipmentOutboundPort
         return res;
     }
 
-    /** @see ProductionEquipmentCI#getProduction() */
-    @Override
-    public double getProduction() throws Exception {
-        assert isProducing() : new PreconditionException("getProduction() -> isProducing()");
-        return ((ProductionEquipmentCI) getConnector()).getProduction();
-    }
 
 }

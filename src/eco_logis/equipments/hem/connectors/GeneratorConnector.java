@@ -38,10 +38,4 @@ public class GeneratorConnector
         return true;
     }
 
-    /** @see ProductionEquipmentCI#getProduction() */
-    @Override
-    public double getProduction() throws Exception {
-        return ((GeneratorCI) offering).getEnergyProduction();
-    }
-
 }
