@@ -56,20 +56,18 @@ public class CVMIntegrationTest
                 new Object[]{}
         );
 
-        /* TODO
         // Create the dishwasher
         AbstractComponent.createComponent(
                 Dishwasher.class.getCanonicalName(),
                 new Object[]{}
         );
-        */
-        /* TODO
+
         // Create the electric meter
         AbstractComponent.createComponent(
                 ElectricMeter.class.getCanonicalName(),
                 new Object[]{}
         );
-        */
+
         // Create the HEM
         AbstractComponent.createComponent(
                 HEM.class.getCanonicalName(),

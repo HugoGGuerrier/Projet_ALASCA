@@ -3,6 +3,8 @@ package eco_logis.equipments.dishwasher;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
+import java.time.LocalTime;
+
 /**
  * This class represent an outbound port for the dishwasher services
  *
@@ -46,40 +48,46 @@ public class DishwasherOutboundPort
     // ========== Override methods ==========
 
 
+    /** @see DishwasherCI#getProgram() */
+    @Override
+    public DishwasherProgram getProgram() throws Exception {
+        return ((DishwasherCI) getConnector()).getProgram();
+    }
+
+    /** @see DishwasherCI#isPlanned() */
+    @Override
+    public boolean isPlanned() throws Exception {
+        return ((DishwasherCI) getConnector()).isPlanned();
+    }
+
+    /** @see DishwasherCI#plan(LocalTime) */
+    @Override
+    public boolean plan(LocalTime deadline) throws Exception {
+        return ((DishwasherCI) getConnector()).plan(deadline);
+    }
+
+    /** @see DishwasherCI#plan(LocalTime, DishwasherProgram) */
+    @Override
+    public boolean plan(LocalTime deadline, DishwasherProgram program) throws Exception {
+        return ((DishwasherCI) getConnector()).plan(deadline, program);
+    }
+
     /** @see DishwasherCI#isWashing() */
     @Override
     public boolean isWashing() throws Exception {
         return ((DishwasherCI) getConnector()).isWashing();
     }
 
-    /** @see DishwasherCI#startWasherFull() */
+    /** @see DishwasherCI#startWashing() */
     @Override
-    public void startWasherFull() throws Exception {
-        ((DishwasherCI) getConnector()).startWasherFull();
-    }
-
-    /** @see DishwasherCI#startWasherEco() */
-    @Override
-    public void startWasherEco() throws Exception {
-        ((DishwasherCI) getConnector()).startWasherEco();
-    }
-
-    /** @see DishwasherCI#startWasherFast() */
-    @Override
-    public void startWasherFast() throws Exception {
-        ((DishwasherCI) getConnector()).startWasherFast();
+    public void startWashing() throws Exception {
+        ((DishwasherCI) getConnector()).startWashing();
     }
 
     /** @see DishwasherCI#stopWashing() */
     @Override
     public void stopWashing() throws Exception {
         ((DishwasherCI) getConnector()).stopWashing();
-    }
-
-    /** @see DishwasherCI#getProgram() */
-    @Override
-    public DishwasherProgram getProgram() throws Exception {
-        return ((DishwasherCI) getConnector()).getProgram();
     }
 
 }

@@ -14,7 +14,7 @@ public interface PlanningEquipmentCI
 {
 
     /**
-     * Get if the equipment has a plan
+     * Get if the equipment has a plan ; if the equipment currently has a planned program
      *
      * <p><strong>Contract</strong></p>
      *
@@ -29,7 +29,7 @@ public interface PlanningEquipmentCI
     boolean hasPlan() throws Exception;
 
     /**
-     * Get the planed start time of the equipment
+     * Get the planned start time of the equipment
      *
      * <p><strong>Contract</strong></p>
      *
@@ -85,7 +85,7 @@ public interface PlanningEquipmentCI
      * </pre>
      *
      * @param duration The duration to postpone
-     * @return If the plan has been changed
+     * @return If the operation succeeded
      * @throws Exception TODO
      */
     boolean postPone(Duration duration) throws Exception;
@@ -100,7 +100,7 @@ public interface PlanningEquipmentCI
      * post	{@code !hasPlan()}
      * </pre>
      *
-     * @return If the plan has been changed
+     * @return If the operation succeeded
      * @throws Exception TODO
      */
     boolean cancel() throws Exception;

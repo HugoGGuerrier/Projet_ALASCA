@@ -1,6 +1,7 @@
 package eco_logis.equipments.hem;
 
 import eco_logis.equipments.crypto_miner.CryptoMiner;
+import eco_logis.equipments.dishwasher.Dishwasher;
 import eco_logis.equipments.generator.Generator;
 import eco_logis.equipments.hem.connectors.*;
 import eco_logis.equipments.oven.Oven;
@@ -66,7 +67,12 @@ public class HEM
                     CryptoMinerConnector.class.getCanonicalName());
 
             // Create the dishwasher outbound port and connect it to the component
-            // TODO
+            dishwasherOP = new PlanningEquipmentOutboundPort(this);
+            dishwasherOP.publishPort();
+            doPortConnection(
+                    dishwasherOP.getPortURI(),
+                    Dishwasher.INBOUND_PORT_URI,
+                    DishwasherConnector.class.getCanonicalName());
 
             // Create the generator outbound port and connect it to the component
             generatorOP = new ProductionEquipmentOutboundPort(this);
@@ -132,16 +138,19 @@ public class HEM
         logMessage("User power off the crypto miner : " + cryptoMinerOP.switchOff());
         logMessage("User allows wind turbine production : " + windTurbineOP.allowProduction());
         logMessage("User stop the generator : " + generatorOP.stopProducing());
+        // TODO dishwasher
+        // TODO electric meter
     }
 
     @Override
     public synchronized void finalise() throws Exception {
         doPortDisconnection(cryptoMinerOP.getPortURI());
-        // TODO doPortDisconnection(dishwasherOP.getPortURI());
+        doPortDisconnection(dishwasherOP.getPortURI());
         doPortDisconnection(generatorOP.getPortURI());
         doPortDisconnection(ovenOP.getPortURI());
         doPortDisconnection(powerBankOP.getPortURI());
         doPortDisconnection(windTurbineOP.getPortURI());
+        // TODO electric meter
         super.finalise();
     }
 
@@ -149,11 +158,12 @@ public class HEM
     public synchronized void shutdown() throws ComponentShutdownException {
         try {
             cryptoMinerOP.unpublishPort();
-            // TODO dishwasherOP.unpublishPort();
+            dishwasherOP.unpublishPort();
             generatorOP.unpublishPort();
             ovenOP.unpublishPort();
             powerBankOP.unpublishPort();
             windTurbineOP.unpublishPort();
+            // TODO electric meter
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }

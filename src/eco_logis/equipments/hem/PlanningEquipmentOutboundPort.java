@@ -21,6 +21,7 @@ public class PlanningEquipmentOutboundPort
 
     // ========== Constructors ==========
 
+    
     /**
      * Create a new planning equipment outbound port with the wanted owner
      *
@@ -46,7 +47,9 @@ public class PlanningEquipmentOutboundPort
         super(uri, PlanningEquipmentCI.class, owner);
     }
 
+
     // ========== Override methods ==========
+
 
     /** @see PlanningEquipmentCI#hasPlan() */
     @Override

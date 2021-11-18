@@ -25,6 +25,9 @@ public class Dishwasher
     // ========== Attributes ==========
 
 
+    /** If the dishwasher is currently planned */
+    private boolean isPlanned;
+
     /** If the dishwasher is currently washing something */
     private boolean isWashing;
 
@@ -135,6 +138,7 @@ public class Dishwasher
                 "!dishwasherInboundPortURI.isEmpty()");
 
         // Initialise the component
+        isPlanned = false;
         isWashing = false;
         program = null;
 
@@ -154,56 +158,87 @@ public class Dishwasher
     // ========== Override methods ==========
 
 
+    /** @see DishwasherImplementationI#getProgram() */
+    @Override
+    public DishwasherProgram getProgram() throws Exception {
+        if(VERBOSE) {
+            logMessage("Dishwasher get program : " + program);
+        }
+
+        assert isPlanned || isWashing;
+        assert program != null;
+
+        return program;
+    }
+
+    /** @see DishwasherImplementationI#isPlanned() */
+    @Override
+    public boolean isPlanned() throws Exception {
+        if(VERBOSE) {
+            logMessage("Dishwasher is planned : " + isWashing);
+        }
+        return isPlanned;
+    }
+
+    /** @see DishwasherImplementationI#plan(LocalTime) */
+    @Override
+    public boolean plan(LocalTime deadline) throws Exception {
+        assert deadline != null;
+
+        if(VERBOSE) {
+            logMessage("Dishwasher planned (default prog), must be ready for " + deadline);
+        }
+
+        assert !isPlanned && !isWashing;
+        assert program == null;
+
+        isPlanned = true;
+        program = DishwasherProgram.FULL;
+
+        return true;
+    }
+
+    /** @see DishwasherImplementationI#plan(LocalTime, DishwasherProgram) */
+    @Override
+    public boolean plan(LocalTime deadline, DishwasherProgram prog) throws Exception {
+        assert deadline != null;
+        assert prog != null;
+
+        if(VERBOSE) {
+            logMessage("Dishwasher planned (defined prog), must be ready for " + deadline);
+        }
+
+        assert !isPlanned && !isWashing;
+        assert program == null;
+
+        isPlanned = true;
+        program = prog;
+
+        return true;
+    }
+
     /** @see DishwasherImplementationI#isWashing() */
     @Override
     public boolean isWashing() throws Exception {
         if(VERBOSE) {
-            logMessage("Dishwasher get washing : " + isWashing);
+            logMessage("Dishwasher is washing : " + isWashing);
         }
 
         return isWashing;
     }
 
-    /** @see DishwasherImplementationI#startWasherFull() */
+
+    /** @see DishwasherImplementationI#startWashing() */
     @Override
-    public void startWasherFull() throws Exception {
+    public void startWashing() throws Exception {
         if(VERBOSE) {
-            logMessage("Start the washer in full program");
+            logMessage("Dishwasher starts washing dishes");
         }
 
-        assert !isWashing;
-        assert program == null;
+        assert isPlanned && !isWashing;
+        assert program != null;
 
         isWashing = true;
-        program = DishwasherProgram.FULL;
-    }
-
-    /** @see DishwasherImplementationI#startWasherEco() */
-    @Override
-    public void startWasherEco() throws Exception {
-        if(VERBOSE) {
-            logMessage("Start the washer in eco program");
-        }
-
-        assert !isWashing;
-        assert program == null;
-
-        isWashing = true;
-        program = DishwasherProgram.ECO;
-    }
-
-    /** @see DishwasherImplementationI#startWasherFast() */
-    @Override
-    public void startWasherFast() throws Exception {
-        if(VERBOSE) {
-            logMessage("Start the washer in fast program");
-        }
-
-        assert !isWashing;
-        assert program == null;
-
-        isWashing = true;
-        program = DishwasherProgram.FAST;
     }
 
     /** @see DishwasherImplementationI#stopWashing() */
@@ -213,23 +248,12 @@ public class Dishwasher
             logMessage("Dishwasher stop washing");
         }
 
-        assert isWashing;
-
-        isWashing = false;
-        program = null;
-    }
-
-    /** @see DishwasherImplementationI#getProgram() */
-    @Override
-    public DishwasherProgram getProgram() throws Exception {
-        if(VERBOSE) {
-            logMessage("Dishwasher get program : " + program);
-        }
-
-        assert isWashing;
+        assert isWashing && isPlanned;
         assert program != null;
 
-        return program;
+        isPlanned = false;
+        isWashing = false;
+        program = null;
     }
 
 }

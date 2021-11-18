@@ -4,6 +4,8 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 
+import java.time.LocalTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DishwasherUnitTester
@@ -12,10 +14,13 @@ public class DishwasherUnitTester
 
     // ========== Attributes ==========
 
+
     private String dishwasherInboundPortURI;
     private DishwasherOutboundPort dwop;
 
+
     // ========== Constructors ==========
+
 
     protected DishwasherUnitTester() throws Exception {
         this(Dishwasher.INBOUND_PORT_URI);
@@ -31,7 +36,9 @@ public class DishwasherUnitTester
         initialise(dishwasherInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     protected void initialise(String dishwasherInboundPortURI) throws Exception {
         // Set the inbound port uri
@@ -47,7 +54,20 @@ public class DishwasherUnitTester
         toggleTracing();
     }
 
+
     // ========== Test methods ==========
+
+
+    protected void testIsPlanned() {
+        logMessage("Test isPlanned()...");
+        try {
+            assertFalse(dwop.isPlanned());
+        } catch(Exception e) {
+            logMessage("... FAILED!");
+            fail(e);
+        }
+        logMessage("... Done!");
+    }
 
     protected void testIsWashing() {
         logMessage("Test isWashing()...");
@@ -60,47 +80,15 @@ public class DishwasherUnitTester
         logMessage("... Done!");
     }
 
-    protected void testStartingFull() {
-        logMessage("Test startWasherFull()...");
+    protected void testPlanDefault() {
+        logMessage("Test plan(deadline)...");
         try {
             assertFalse(dwop.isWashing());
-            dwop.startWasherFull();
-            assertTrue(dwop.isWashing());
+            assertFalse(dwop.isPlanned());
+            dwop.plan(LocalTime.NOON);
+            assertTrue(dwop.isPlanned());
+            assertFalse(dwop.isWashing());
             assertEquals(DishwasherImplementationI.DishwasherProgram.FULL, dwop.getProgram());
-            dwop.stopWashing();
-            assertFalse(dwop.isWashing());
-        } catch(Exception e) {
-            logMessage("... FAILED!");
-            fail(e);
-        }
-        logMessage("... Done!");
-    }
-
-    protected void testStartingEco() {
-        logMessage("Test startWasherEco()...");
-        try {
-            assertFalse(dwop.isWashing());
-            dwop.startWasherEco();
-            assertTrue(dwop.isWashing());
-            assertEquals(DishwasherImplementationI.DishwasherProgram.ECO, dwop.getProgram());
-            dwop.stopWashing();
-            assertFalse(dwop.isWashing());
-        } catch(Exception e) {
-            logMessage("... FAILED!");
-            fail(e);
-        }
-        logMessage("... Done!");
-    }
-
-    protected void testStartingFast() {
-        logMessage("Test startWasherFast()...");
-        try {
-            assertFalse(dwop.isWashing());
-            dwop.startWasherFast();
-            assertTrue(dwop.isWashing());
-            assertEquals(DishwasherImplementationI.DishwasherProgram.FAST, dwop.getProgram());
-            dwop.stopWashing();
-            assertFalse(dwop.isWashing());
         } catch(Exception e) {
             logMessage("... FAILED!");
             fail(e);
@@ -111,11 +99,11 @@ public class DishwasherUnitTester
     protected void runAllTests() {
         logMessage("Starting test suite...");
         testIsWashing();
-        testStartingFull();
-        testStartingEco();
-        testStartingFast();
+        testPlanDefault();
+        // TODO : test starting/stopping
         logMessage("All tests passed!");
     }
+    
 
     // ========== Lifecycle methods ==========
 

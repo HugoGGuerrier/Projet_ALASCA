@@ -3,6 +3,8 @@ package eco_logis.equipments.dishwasher;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
+import java.time.LocalTime;
+
 /**
  * This class represent an inbound port for the dishwasher services
  *
@@ -46,6 +48,38 @@ public class DishwasherInboundPort
     // ========== Override methods ==========
 
 
+    /** @see DishwasherCI#getProgram() */
+    @Override
+    public DishwasherProgram getProgram() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).getProgram()
+        );
+    }
+
+    /** @see DishwasherCI#isPlanned() */
+    @Override
+    public boolean isPlanned() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).isPlanned()
+        );
+    }
+
+    /** @see DishwasherCI#plan(LocalTime) */
+    @Override
+    public boolean plan(LocalTime deadline) throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).plan(deadline)
+        );
+    }
+
+    /** @see DishwasherCI#plan(LocalTime, DishwasherProgram) */
+    @Override
+    public boolean plan(LocalTime deadline, DishwasherProgram program) throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).plan(deadline, program)
+        );
+    }
+
     /** @see DishwasherCI#isWashing() */
     @Override
     public boolean isWashing() throws Exception {
@@ -54,34 +88,12 @@ public class DishwasherInboundPort
         );
     }
 
-    /** @see DishwasherCI#startWasherFull() */
+    /** @see DishwasherCI#startWashing() () */
     @Override
-    public void startWasherFull() throws Exception {
+    public void startWashing() throws Exception {
         getOwner().handleRequest(
                 o -> {
-                    ((Dishwasher) o).startWasherFull();
-                    return null;
-                }
-        );
-    }
-
-    /** @see DishwasherCI#startWasherEco() */
-    @Override
-    public void startWasherEco() throws Exception {
-        getOwner().handleRequest(
-                o -> {
-                    ((Dishwasher) o).startWasherEco();
-                    return null;
-                }
-        );
-    }
-
-    /** @see DishwasherCI#startWasherFast() */
-    @Override
-    public void startWasherFast() throws Exception {
-        getOwner().handleRequest(
-                o -> {
-                    ((Dishwasher) o).startWasherFast();
+                    ((Dishwasher) o).startWashing();
                     return null;
                 }
         );
@@ -95,14 +107,6 @@ public class DishwasherInboundPort
                     ((Dishwasher) o).stopWashing();
                     return null;
                 }
-        );
-    }
-
-    /** @see DishwasherCI#getProgram() */
-    @Override
-    public DishwasherProgram getProgram() throws Exception {
-        return getOwner().handleRequest(
-                o -> ((Dishwasher) o).getProgram()
         );
     }
 

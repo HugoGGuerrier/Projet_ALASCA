@@ -17,7 +17,6 @@ public class DishwasherConnector
     extends AbstractConnector
     implements PlanningEquipmentCI
 {
-    // TODO
 
     // ========== Override methods ==========
 

@@ -191,7 +191,7 @@ public class ElectricMeter
         // Create the trace
         if (VERBOSE) {
             this.tracer.get().setTitle("Electric meter component");
-            this.tracer.get().setRelativePosition(0, 1);
+            this.tracer.get().setRelativePosition(2, 1);
             this.toggleTracing();
         }
     }
