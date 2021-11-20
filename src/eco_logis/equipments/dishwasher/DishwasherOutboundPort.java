@@ -3,6 +3,7 @@ package eco_logis.equipments.dishwasher;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 /**
@@ -54,6 +55,24 @@ public class DishwasherOutboundPort
         return ((DishwasherCI) getConnector()).getProgram();
     }
 
+    /** @see DishwasherCI#getProgramDuration() */
+    @Override
+    public Duration getProgramDuration() throws Exception {
+        return ((DishwasherCI) getConnector()).getProgramDuration();
+    }
+
+    /** @see DishwasherCI#getDeadline() */
+    @Override
+    public LocalTime getDeadline() throws Exception {
+        return ((DishwasherCI) getConnector()).getDeadline();
+    }
+
+    /** @see DishwasherCI#getStartTime() */
+    @Override
+    public LocalTime getStartTime() throws Exception {
+        return ((DishwasherCI) getConnector()).getStartTime();
+    }
+
     /** @see DishwasherCI#isPlanned() */
     @Override
     public boolean isPlanned() throws Exception {
@@ -70,6 +89,18 @@ public class DishwasherOutboundPort
     @Override
     public boolean plan(LocalTime deadline, DishwasherProgram program) throws Exception {
         return ((DishwasherCI) getConnector()).plan(deadline, program);
+    }
+
+    /** @see DishwasherCI#cancel() */
+    @Override
+    public boolean cancel() throws Exception {
+        return ((DishwasherCI) getConnector()).cancel();
+    }
+
+    /** @see DishwasherCI#postPone(Duration) */
+    @Override
+    public boolean postPone(Duration duration) throws Exception {
+        return ((DishwasherCI) getConnector()).postPone(duration);
     }
 
     /** @see DishwasherCI#isWashing() */

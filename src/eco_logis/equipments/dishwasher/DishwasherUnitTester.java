@@ -85,7 +85,7 @@ public class DishwasherUnitTester
         try {
             assertFalse(dwop.isWashing());
             assertFalse(dwop.isPlanned());
-            dwop.plan(LocalTime.NOON);
+            dwop.plan(LocalTime.now().plusMinutes(100));
             assertTrue(dwop.isPlanned());
             assertFalse(dwop.isWashing());
             assertEquals(DishwasherImplementationI.DishwasherProgram.FULL, dwop.getProgram());
@@ -101,6 +101,8 @@ public class DishwasherUnitTester
         testIsWashing();
         testPlanDefault();
         // TODO : test starting/stopping
+        // TODO : test cancel
+        // TODO : test getters
         logMessage("All tests passed!");
     }
     

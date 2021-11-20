@@ -17,7 +17,7 @@ public class CVMUnitTest
 
     @Override
     public void deploy() throws Exception {
-        // Create the components to test the crypto miner
+        // Create the components to test the dishwasher
         AbstractComponent.createComponent(Dishwasher.class.getCanonicalName(), new Object[]{});
         AbstractComponent.createComponent(DishwasherUnitTester.class.getCanonicalName(), new Object[]{});
 

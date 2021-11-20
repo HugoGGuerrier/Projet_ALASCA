@@ -5,6 +5,7 @@ import fr.sorbonne_u.exceptions.PreconditionException;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class Dishwasher
@@ -35,7 +36,7 @@ public class Dishwasher
     private DishwasherProgram program;
 
     /** Each program is associated with a duration */
-    private Map<DishwasherProgram, Duration> programDurationMap;
+    public final static Map<DishwasherProgram, Duration> dishwasherProgramDuration = new EnumMap<>(DishwasherProgram.class);
 
     /** The time the dishwasher should start */
     private LocalTime startingTime;
@@ -141,6 +142,10 @@ public class Dishwasher
         isPlanned = false;
         isWashing = false;
         program = null;
+        dishwasherProgramDuration.put(DishwasherProgram.FULL, Duration.ofMinutes(160));
+        dishwasherProgramDuration.put(DishwasherProgram.ECO, Duration.ofMinutes(180));
+        dishwasherProgramDuration.put(DishwasherProgram.FAST, Duration.ofMinutes(100));
+        dishwasherProgramDuration.put(DishwasherProgram.RINSE, Duration.ofMinutes(15));
 
         // Create the inbound port
         dwip = new DishwasherInboundPort(dishwasherInboundPortURI, this);
@@ -161,21 +166,65 @@ public class Dishwasher
     /** @see DishwasherImplementationI#getProgram() */
     @Override
     public DishwasherProgram getProgram() throws Exception {
-        if(VERBOSE) {
-            logMessage("Dishwasher get program : " + program);
-        }
-
-        assert isPlanned || isWashing;
         assert program != null;
 
+        if(VERBOSE) {
+            logMessage("Dishwasher get program: " + program);
+        }
+
+        assert isPlanned;
+
         return program;
+    }
+
+
+    /** @see DishwasherImplementationI#getProgramDuration() */
+    @Override
+    public Duration getProgramDuration() throws Exception {
+        assert program != null;
+
+        if(VERBOSE) {
+            logMessage("Dishwasher get program duration: " + dishwasherProgramDuration.get(program));
+        }
+
+        assert isPlanned;
+
+        return dishwasherProgramDuration.get(program);
+    }
+
+    /** @see DishwasherImplementationI#getDeadline() */
+    @Override
+    public LocalTime getDeadline() throws Exception {
+        assert deadline != null;
+
+        if(VERBOSE) {
+            logMessage("Dishwasher get deadline: " + deadline);
+        }
+
+        assert isPlanned;
+
+        return deadline;
+    }
+
+    /** @see DishwasherImplementationI#getStartTime() */
+    @Override
+    public LocalTime getStartTime() throws Exception {
+        assert startingTime != null;
+
+        if(VERBOSE) {
+            logMessage("Dishwasher get starting time: " + startingTime);
+        }
+
+        assert isPlanned;
+
+        return startingTime;
     }
 
     /** @see DishwasherImplementationI#isPlanned() */
     @Override
     public boolean isPlanned() throws Exception {
         if(VERBOSE) {
-            logMessage("Dishwasher is planned : " + isWashing);
+            logMessage("Dishwasher is planned: " + isPlanned);
         }
         return isPlanned;
     }
@@ -189,30 +238,76 @@ public class Dishwasher
             logMessage("Dishwasher planned (default prog), must be ready for " + deadline);
         }
 
-        assert !isPlanned && !isWashing;
-        assert program == null;
+        assert !this.isPlanned;
+        assert this.program == null;
 
-        isPlanned = true;
-        program = DishwasherProgram.FULL;
+        this.isPlanned = true;
+        this.deadline = deadline;
+        this.program = DishwasherProgram.FULL;
 
         return true;
     }
 
     /** @see DishwasherImplementationI#plan(LocalTime, DishwasherProgram) */
     @Override
-    public boolean plan(LocalTime deadline, DishwasherProgram prog) throws Exception {
+    public boolean plan(LocalTime deadline, DishwasherProgram program) throws Exception {
         assert deadline != null;
-        assert prog != null;
+        assert program != null;
 
         if(VERBOSE) {
             logMessage("Dishwasher planned (defined prog), must be ready for " + deadline);
         }
 
-        assert !isPlanned && !isWashing;
-        assert program == null;
+        assert !this.isPlanned;
+        assert this.program == null;
 
-        isPlanned = true;
-        program = prog;
+        this.isPlanned = true;
+        this.deadline = deadline;
+        this.program = program;
+
+        return true;
+    }
+
+
+    /** @see DishwasherImplementationI#cancel() */
+    @Override
+    public boolean cancel() throws Exception {
+        if(VERBOSE) {
+            logMessage("Dishwasher cancels its program (stops washing if it was washing)");
+        }
+
+        if(isWashing) {
+            this.stopWashing();
+
+        } else {
+            assert isPlanned;
+            assert program != null;
+            assert deadline != null;
+
+            isPlanned = false;
+            program = null;
+            deadline = null;
+        }
+
+        return true;
+    }
+
+    /** @see DishwasherImplementationI#postPone(Duration) () */
+    @Override
+    public boolean postPone(Duration duration) throws Exception {
+        assert duration != null;
+        assert startingTime != null;
+
+        LocalTime newStartingTime = startingTime.plusSeconds(duration.getSeconds());
+
+        if(VERBOSE) {
+            logMessage("Dishwasher postpones its starting time of: " + duration + ", will start at: " + newStartingTime + "(old was: " + startingTime + ")");
+        }
+
+        // Verify that the new starting time will not make the washing exceed the deadline
+        assert deadline.isAfter(newStartingTime.plusMinutes(dishwasherProgramDuration.get(program).toMinutes()));
+
+        startingTime = newStartingTime;
 
         return true;
     }
@@ -221,7 +316,7 @@ public class Dishwasher
     @Override
     public boolean isWashing() throws Exception {
         if(VERBOSE) {
-            logMessage("Dishwasher is washing : " + isWashing);
+            logMessage("Dishwasher is washing: " + isWashing);
         }
 
         return isWashing;
@@ -245,15 +340,17 @@ public class Dishwasher
     @Override
     public void stopWashing() throws Exception {
         if(VERBOSE) {
-            logMessage("Dishwasher stop washing");
+            logMessage("Dishwasher stops washing");
         }
 
         assert isWashing && isPlanned;
         assert program != null;
+        assert deadline != null;
 
         isPlanned = false;
         isWashing = false;
         program = null;
+        deadline = null;
     }
 
 }

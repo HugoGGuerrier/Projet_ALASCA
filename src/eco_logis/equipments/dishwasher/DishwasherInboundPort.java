@@ -3,6 +3,7 @@ package eco_logis.equipments.dishwasher;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 /**
@@ -56,6 +57,30 @@ public class DishwasherInboundPort
         );
     }
 
+    /** @see DishwasherCI#getProgramDuration() */
+    @Override
+    public Duration getProgramDuration() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).getProgramDuration()
+        );
+    }
+
+    /** @see DishwasherCI#getDeadline() */
+    @Override
+    public LocalTime getDeadline() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).getDeadline()
+        );
+    }
+
+    /** @see DishwasherCI#getStartTime() */
+    @Override
+    public LocalTime getStartTime() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).getStartTime()
+        );
+    }
+
     /** @see DishwasherCI#isPlanned() */
     @Override
     public boolean isPlanned() throws Exception {
@@ -77,6 +102,22 @@ public class DishwasherInboundPort
     public boolean plan(LocalTime deadline, DishwasherProgram program) throws Exception {
         return getOwner().handleRequest(
                 o -> ((Dishwasher) o).plan(deadline, program)
+        );
+    }
+
+    /** @see DishwasherCI#cancel() */
+    @Override
+    public boolean cancel() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).cancel()
+        );
+    }
+
+    /** @see DishwasherCI#postPone(Duration) */
+    @Override
+    public boolean postPone(Duration duration) throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).postPone(duration)
         );
     }
 
