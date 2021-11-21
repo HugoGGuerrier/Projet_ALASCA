@@ -1,9 +1,7 @@
-package eco_logis.equipments.crypto_miner.mil;
+package eco_logis.equipments.dishwasher.mil;
 
-import eco_logis.equipments.crypto_miner.mil.events.MineOffCryptoMiner;
-import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
-import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
-import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.CryptoMinerUserModel;
+import eco_logis.equipments.dishwasher.mil.events.*;
 import fr.sorbonne_u.devs_simulation.es.events.ES_EventI;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -18,29 +16,30 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class represent the user model for the crypto miner
+ * This class represents a user model for the dishwasher
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
 @ModelExternalEvents(exported = {
-        SwitchOnCryptoMiner.class,
-        SwitchOffCryptoMiner.class,
-        MineOnCryptoMiner.class,
-        MineOffCryptoMiner.class
+        SetEcoProgram.class,
+        SetFastProgram.class,
+        SetFullProgram.class,
+        SetRinseProgram.class,
+        SwitchOffDishwasher.class
 })
-public class CryptoMinerUserModel
+public class DishwasherUserModel
     extends AtomicES_Model
 {
 
     // ========== Macros ==========
 
 
-    /** Unique URI of the crypto miner user model */
+    /** Unique URI of the dishwasher user model */
     public static final String URI = CryptoMinerUserModel.class.getSimpleName();
 
     /** Mean time between two outputs */
-    protected static double STEP_MEAN_DURATION = 1.0;
+    protected static double STEP_MEAN_DURATION = 5.0;
 
     /** The random data generator from the common math lib */
     protected RandomDataGenerator generator;
@@ -50,16 +49,16 @@ public class CryptoMinerUserModel
 
 
     /**
-     * Create a new user model for the crypto miner
+     * Create a new user model for the dishwasher
      *
      * @see AtomicES_Model#AtomicES_Model(String, TimeUnit, SimulatorI)
-     * 
+     *
      * @param uri The identifier of the model
      * @param simulatedTimeUnit The simulation time unit
      * @param simulationEngine The simulation engine bound to the model
      * @throws Exception TODO
      */
-    public CryptoMinerUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
+    public DishwasherUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
         generator = new RandomDataGenerator();
         setLogger(new StandardLogger());
@@ -80,17 +79,25 @@ public class CryptoMinerUserModel
 
         // Create the next event
         ES_EventI next = null;
-        if(current instanceof SwitchOnCryptoMiner) {
-            next = new MineOnCryptoMiner(nextTime);
+        if(current instanceof SwitchOffDishwasher) {
+            int nextProg = generator.nextInt(1,4);
+            switch (nextProg) {
+                case 1:
+                    next = new SetEcoProgram(nextTime);
+                    break;
+                case 2:
+                    next = new SetFastProgram(nextTime);
+                    break;
+                case 3:
+                    next = new SetFullProgram(nextTime);
+                    break;
+                case 4:
+                    next = new SetRinseProgram(nextTime);
+                    break;
+            }
         }
-        else if(current instanceof SwitchOffCryptoMiner) {
-            next = new SwitchOnCryptoMiner(nextTime);
-        }
-        else if(current instanceof MineOnCryptoMiner) {
-            next = new MineOffCryptoMiner(nextTime);
-        }
-        else if(current instanceof MineOffCryptoMiner) {
-            next = new SwitchOffCryptoMiner(nextTime);
+        else {
+            next = new SwitchOffDishwasher(nextTime);
         }
         scheduleEvent(next);
     }
@@ -119,7 +126,7 @@ public class CryptoMinerUserModel
 
         // Create the first event
         Time nextTime = computeTimeOfNextEvent(getCurrentStateTime());
-        scheduleEvent(new SwitchOnCryptoMiner(nextTime));
+        scheduleEvent(new SetFastProgram(nextTime));
 
         // Re initialize the time
         nextTimeAdvance = timeAdvance();

@@ -1,7 +1,7 @@
-package eco_logis.equipments.crypto_miner.mil;
-
+package eco_logis.equipments.dishwasher.mil;
 
 import eco_logis.equipments.crypto_miner.mil.events.*;
+import eco_logis.equipments.dishwasher.mil.events.*;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -17,55 +17,81 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class represents the electricity model of a crypto miner
+ * The electricity model for the dishwasher
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
 @ModelExternalEvents(imported = {
-        SwitchOnCryptoMiner.class,
-        SwitchOffCryptoMiner.class,
-        MineOnCryptoMiner.class,
-        MineOffCryptoMiner.class
+        SetEcoProgram.class,
+        SetFastProgram.class,
+        SetFullProgram.class,
+        SetRinseProgram.class,
+        SwitchOffDishwasher.class
 })
-public class CryptoMinerElectricityModel
+public class DishwasherElectricityModel
     extends AtomicHIOA
 {
+
+    // ========== Inner class and types ==========
+
+
+    public enum State {
+        /** The dishwasher is off */
+        OFF,
+
+        /** The dishwasher is currently running the full program */
+        FULL,
+
+        /** The dishwasher is currently running the eco program */
+        ECO,
+
+        /** The dishwasher is currently running the fast program */
+        FAST,
+
+        /** The dishwasher is currently running the rinse program */
+        RINSE
+    }
+
 
     // ========== Macros ==========
 
 
-    /** The model unique URI */
-    public static final String URI = CryptoMinerElectricityModel.class.getSimpleName();
+    /** The URI of the dishwasher electricity model */
+    public static final String URI = DishwasherElectricityModel.class.getSimpleName();
 
-    /** The consumption of the crypto miner when it's currently mining */
-    private static final double MINING_CONSUMPTION = 1200.0; // Watts
+    /** Consumption of the full program */
+    private final static double FULL_PROGRAM_CONSUMPTION = 1000.0;
 
-    /** The consumption of the crypto miner when it's in standby mode */
-    private static final double STANDBY_CONSUMPTION = 50.0; // Watts
+    /** Consumption of the eco program */
+    private final static double ECO_PROGRAM_CONSUMPTION = 718.0;
+
+    /** Consumption of the fast program */
+    private final static double FAST_PROGRAM_CONSUMPTION = 1720.0;
+
+    /** Consumption of the rinse program */
+    private final static double RINSE_PROGRAM_CONSUMPTION = 652.0;
 
 
     // ========== Attributes ==========
 
 
-    /** If the miner is currently on */
-    private boolean isOn;
+    /** Current state of the dishwasher */
+    private State currentState;
 
-    /** If the miner is currently mining */
-    private boolean isMining;
-
-    /** If the internal state has changed */
+    /** If the state has changed and you have to perform an internal transition */
     private boolean hasChanged;
 
-    /** The current consumption of the miner in a shared var */
+    /** The current consumption of the dishwasher in a shared var */
     @ExportedVariable(type = Double.class)
     protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
 
 
-    // ========== Constructors ==========
+    // ========== Attributes ==========
+
 
     /**
-     * Create a new crypto miner electricity model
+     * Create a new dishwasher electricity model
      *
      * @see AtomicHIOA#AtomicHIOA(String, TimeUnit, SimulatorI)
      *
@@ -75,7 +101,7 @@ public class CryptoMinerElectricityModel
      *
      * @throws Exception TODO
      */
-    public CryptoMinerElectricityModel(String uri, TimeUnit timeUnit, SimulatorI engine) throws Exception {
+    public DishwasherElectricityModel(String uri, TimeUnit timeUnit, SimulatorI engine) throws Exception {
         super(uri, timeUnit, engine);
         setLogger(new StandardLogger());
     }
@@ -84,29 +110,10 @@ public class CryptoMinerElectricityModel
     // ========== Getters ==========
 
 
-    /**
-     * Get if the miner is currently on
-     *
-     * @return True if the miner is on, false else
-     */
-    public boolean isOn() {
-        return isOn;
+    public State getCurrentState() {
+        return currentState;
     }
 
-    /**
-     * Get if the miner is currently mining
-     *
-     * @return True if the miner is mining, false else
-     */
-    public boolean isMining() {
-        return isMining;
-    }
-
-    /**
-     * Get if the model has to do an internal transition
-     *
-     * @return True if there is an internal transition, false else
-     */
     public boolean hasChanged() {
         return hasChanged;
     }
@@ -115,29 +122,10 @@ public class CryptoMinerElectricityModel
     // ========== Setters ==========
 
 
-    /**
-     * Set if the crypto miner is on
-     *
-     * @param on True if the crypto miner is on, false else
-     */
-    public void setOn(boolean on) {
-        isOn = on;
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
     }
 
-    /**
-     * Set if the crypto miner is mining
-     *
-     * @param mining True if the crypto miner is mining, false else
-     */
-    public void setMining(boolean mining) {
-        isMining = mining;
-    }
-
-    /**
-     * Set if the model has changed
-     *
-     * @param hasChanged If the model has changed
-     */
     public void setHasChanged(boolean hasChanged) {
         this.hasChanged = hasChanged;
     }
@@ -150,9 +138,8 @@ public class CryptoMinerElectricityModel
     @Override
     public void initialiseState(Time initialTime) {
         super.initialiseState(initialTime);
-        
-        isOn = false;
-        isMining = false;
+
+        currentState = State.OFF;
         hasChanged = false;
 
         toggleDebugMode();
@@ -163,7 +150,7 @@ public class CryptoMinerElectricityModel
     @Override
     protected void initialiseVariables(Time startTime) {
         super.initialiseVariables(startTime);
-        
+
         currentConsumption.v = 0.0d;
     }
 
@@ -190,14 +177,26 @@ public class CryptoMinerElectricityModel
         super.userDefinedInternalTransition(elapsedTime);
 
         // Set the current consumption
-        if(isOn) {
-            if(isMining) {
-                currentConsumption.v = MINING_CONSUMPTION;
-            } else {
-                currentConsumption.v = STANDBY_CONSUMPTION;
-            }
-        } else {
-            currentConsumption.v = 0.0d;
+        switch (currentState) {
+            case OFF:
+                currentConsumption.v = 0.0;
+                break;
+
+            case FULL:
+                currentConsumption.v = FULL_PROGRAM_CONSUMPTION;
+                break;
+
+            case ECO:
+                currentConsumption.v = ECO_PROGRAM_CONSUMPTION;
+                break;
+
+            case FAST:
+                currentConsumption.v = FAST_PROGRAM_CONSUMPTION;
+                break;
+
+            case RINSE:
+                currentConsumption.v = RINSE_PROGRAM_CONSUMPTION;
+                break;
         }
 
         // Set the value time
@@ -219,7 +218,7 @@ public class CryptoMinerElectricityModel
         Event currentEvent = (Event) currentEvents.get(0);
 
         // Execute the event on the model
-        assert currentEvent instanceof AbstractCryptoMinerEvent;
+        assert currentEvent instanceof AbstractDishwasherEvent;
         currentEvent.executeOn(this);
 
         super.userDefinedExternalTransition(elapsedTime);
@@ -228,8 +227,8 @@ public class CryptoMinerElectricityModel
     /** @see AtomicHIOA#endSimulation(Time) */
     @Override
     public void endSimulation(Time endTime) throws Exception {
-        logMessage("simulations ends!\n");
+        logMessage("Simulations ends!\n");
         super.endSimulation(endTime);
     }
-    
+
 }
