@@ -14,6 +14,15 @@ public class AbstractOvenEvent
     extends ES_Event
 {
 
+    // =========== Macros ==========
+
+
+    private static final long serialVersionUID = 1L;
+
+
+    // =========== Constructors ==========
+
+
     /** @see ES_Event#ES_Event(Time, EventInformationI) */
     public AbstractOvenEvent(Time timeOfOccurrence, EventInformationI content) {
         super(timeOfOccurrence, content);

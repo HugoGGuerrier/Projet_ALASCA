@@ -1,10 +1,13 @@
 package eco_logis.equipments.oven.mil;
 
 import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
+import eco_logis.equipments.oven.mil.events.SwitchOffOven;
+import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.components.cyphy.hem2021e2.utils.Electricity;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
+import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
@@ -19,31 +22,23 @@ import java.util.concurrent.TimeUnit;
  * @author Emilie Siau
  * @author Hugo Guerrier
  */
-/*
 @ModelExternalEvents(imported = {
-        SwitchOnHairDryer.class,
-        SwitchOffHairDryer.class,
-        SetLowHairDryer.class,
-        SetHighHairDryer.class})*/ // TODO
+        SwitchOnOven.class,
+        SwitchOffOven.class})
 public class OvenElectricityModel
     extends AtomicHIOA
 {
 
-    // ========== Macros & Attributes ==========
+    // ========== Macros ==========
+
 
     /** State of the oven */
     public static enum State {
-        OFF,
-        ON
+        /** Oven is on and heating to its goal temperature */
+        ON,
+        /** Oven is off and getting to room temperature (does not consume electricity) */
+        OFF
     }
-
-    /** Current temperature of the oven */
-    protected int currentTemperature;
-
-    /** Goal temperature of the oven, when oven is ON State */
-    protected int goalTemperature;
-
-    private static final long serialVersionUID = 1L;
 
     /** URI for an instance model; works as long as only one instance is created. */
     public static final String URI = OvenElectricityModel.class.getSimpleName();
@@ -54,7 +49,19 @@ public class OvenElectricityModel
     /** Nominal tension (in Volts) of the oven */
     public static double TENSION = 220.0; // Volts
 
-    /** Current intensity in amperes; intensity is power/tension.			*/
+    private static final long serialVersionUID = 1L;
+
+
+    // ========== Attributes ==========
+
+
+    /** Current temperature of the oven */
+    protected int currentTemperature;
+
+    /** Goal temperature of the oven, when oven is ON State */
+    protected int goalTemperature;
+
+    /** Current intensity in amperes; intensity is power/tension */
     @ExportedVariable(type = Double.class)
     protected final Value<Double> currentIntensity = new Value<Double>(this, 0.0, 0);
 
@@ -65,7 +72,7 @@ public class OvenElectricityModel
      *  after executing an external event; the external event changes the
      *  value of <code>currentState</code> and then an internal transition
      *  will be triggered by putting through in this variable which will
-     *  update the variable <code>currentIntensity</code>.					*/
+     *  update the variable <code>currentIntensity</code>. */
     protected boolean consumptionHasChanged = false;
 
     /** Total consumption of the oven during the simulation in kWh	*/
@@ -76,19 +83,7 @@ public class OvenElectricityModel
 
 
     /**
-     * Create an oven MIL model instance.
-     *
-     * <p><strong>Contract</strong></p>
-     *
-     * <pre>
-     * pre	{@code simulatedTimeUnit != null}
-     * pre	{@code simulationEngine == null || simulationEngine instanceof HIOA_AtomicEngine}
-     * post	{@code getURI() != null}
-     * post	{@code uri != null implies this.getURI().equals(uri)}
-     * post	{@code getSimulatedTimeUnit().equals(simulatedTimeUnit)}
-     * post	{@code simulationEngine != null implies getSimulationEngine().equals(simulationEngine)}
-     * post	{@code !isDebugModeOn()}
-     * </pre>
+     * Create an oven MIL model instance
      *
      * @param uri				URI of the model.
      * @param simulatedTimeUnit	time unit used for the simulation time.
@@ -111,12 +106,6 @@ public class OvenElectricityModel
     /**
      * Set the state of the oven
      *
-     * <p><strong>Contract</strong></p>
-     * <pre>
-     * pre	{@code s != null}
-     * post	{@code getState() == s}
-     * </pre>
-     *
      * @param s the new state
      */
     public void	setState(OvenElectricityModel.State s) {
@@ -125,12 +114,6 @@ public class OvenElectricityModel
 
     /**
      * Return the state of the oven
-     *
-     * <p><strong>Contract</strong></p>
-     * <pre>
-     * pre	true		// no precondition.
-     * post	{@code ret != null}
-     * </pre>
      *
      * @return the state of the oven
      */
@@ -281,7 +264,5 @@ public class OvenElectricityModel
         this.logMessage("simulation ends.\n");
         super.endSimulation(endTime);
     }
-
-    // TODO : Optional DEVS sim protocol
 
 }
