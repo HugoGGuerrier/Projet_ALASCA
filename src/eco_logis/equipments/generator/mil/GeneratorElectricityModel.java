@@ -1,7 +1,8 @@
-package eco_logis.equipments.crypto_miner.mil;
+package eco_logis.equipments.generator.mil;
 
-
-import eco_logis.equipments.crypto_miner.mil.events.*;
+import eco_logis.equipments.generator.mil.events.AbstractGeneratorEvent;
+import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
+import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -17,18 +18,16 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class represents the electricity model of a crypto miner
+ * This class represents an electric model for the generator
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
 @ModelExternalEvents(imported = {
-        SwitchOnCryptoMiner.class,
-        SwitchOffCryptoMiner.class,
-        MineOnCryptoMiner.class,
-        MineOffCryptoMiner.class
+        SwitchOnGenerator.class,
+        SwitchOffGenerator.class
 })
-public class CryptoMinerElectricityModel
+public class GeneratorElectricityModel
     extends AtomicHIOA
 {
 
@@ -36,47 +35,41 @@ public class CryptoMinerElectricityModel
 
 
     /** The model unique URI */
-    public static final String URI = CryptoMinerElectricityModel.class.getSimpleName();
+    public static final String URI = GeneratorElectricityModel.class.getSimpleName();
 
-    /** The consumption of the crypto miner when it's currently mining */
-    private static final double MINING_CONSUMPTION = 1200.0; // Watts
-
-    /** The consumption of the crypto miner when it's in standby mode */
-    private static final double STANDBY_CONSUMPTION = 50.0; // Watts
+    /** The production of the generator when it's running */
+    private static final double PRODUCTION = 2000.0;
 
 
     // ========== Attributes ==========
 
 
-    /** If the miner is currently on */
-    private boolean isOn;
-
-    /** If the miner is currently mining */
-    private boolean isMining;
+    /** If the generator is currently on */
+    private boolean isRunning;
 
     /** If the internal state has changed */
     private boolean hasChanged;
 
-    /** The current consumption of the miner in a shared var */
+    /** The current production of the generator in a shared var */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentProduction = new Value<>(this, 0.0, 0);
 
 
     // ========== Constructors ==========
 
+
     /**
-     * Create a new crypto miner electricity model
-     *
-     * @see AtomicHIOA#AtomicHIOA(String, TimeUnit, SimulatorI)
-     *
-     * @param uri The electricity model URI
-     * @param timeUnit The simulation time unit
-     * @param engine The simulation engine
-     *
+     * Create a new generator electricity model
+     * 
+     * @see AtomicHIOA#AtomicHIOA(String, TimeUnit, SimulatorI) 
+     * 
+     * @param uri The model URI
+     * @param simulatedTimeUnit The simulation time unit
+     * @param simulationEngine The engine
      * @throws Exception TODO
      */
-    public CryptoMinerElectricityModel(String uri, TimeUnit timeUnit, SimulatorI engine) throws Exception {
-        super(uri, timeUnit, engine);
+    public GeneratorElectricityModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
+        super(uri, simulatedTimeUnit, simulationEngine);
         setLogger(new StandardLogger());
     }
 
@@ -85,21 +78,12 @@ public class CryptoMinerElectricityModel
 
 
     /**
-     * Get if the miner is currently on
-     *
-     * @return True if the miner is on, false else
+     * Get if the generator is currently running
+     * 
+     * @return True if the generator is running, false else
      */
-    public boolean isOn() {
-        return isOn;
-    }
-
-    /**
-     * Get if the miner is currently mining
-     *
-     * @return True if the miner is mining, false else
-     */
-    public boolean isMining() {
-        return isMining;
+    public boolean isRunning() {
+        return isRunning;
     }
 
     /**
@@ -116,23 +100,14 @@ public class CryptoMinerElectricityModel
 
 
     /**
-     * Set if the crypto miner is on
-     *
-     * @param on True if the crypto miner is on, false else
+     * Set if the generator is running
+     * 
+     * @param running If the generator is running
      */
-    public void setOn(boolean on) {
-        isOn = on;
+    public void setRunning(boolean running) {
+        isRunning = running;
     }
-
-    /**
-     * Set if the crypto miner is mining
-     *
-     * @param mining True if the crypto miner is mining, false else
-     */
-    public void setMining(boolean mining) {
-        isMining = mining;
-    }
-
+    
     /**
      * Set if the model has changed
      *
@@ -150,36 +125,34 @@ public class CryptoMinerElectricityModel
     @Override
     public void initialiseState(Time initialTime) {
         super.initialiseState(initialTime);
-        
-        isOn = false;
-        isMining = false;
-        hasChanged = false;
+
+        isRunning = false;
 
         toggleDebugMode();
-        logMessage("Simulation starts...\n");
+        logMessage("Simulation start...\n");
     }
 
     /** @see AtomicHIOA#initialiseVariables(Time) */
     @Override
     protected void initialiseVariables(Time startTime) {
         super.initialiseVariables(startTime);
-        
-        currentConsumption.v = 0.0d;
+
+        currentProduction.v = 0.0;
     }
 
     /** @see AtomicHIOA#output() */
     @Override
     public ArrayList<EventI> output() {
-        // The model does not export events
+        // This model does not export events
         return null;
     }
 
     /** @see AtomicHIOA#timeAdvance() */
     @Override
     public Duration timeAdvance() {
-        if(this.hasChanged) {
-            this.hasChanged = false;
-            return new Duration(0.0, this.getSimulatedTimeUnit());
+        if(hasChanged) {
+            hasChanged = false;
+            return new Duration(0.0, getSimulatedTimeUnit());
         }
         return Duration.INFINITY;
     }
@@ -189,22 +162,18 @@ public class CryptoMinerElectricityModel
     public void userDefinedInternalTransition(Duration elapsedTime) {
         super.userDefinedInternalTransition(elapsedTime);
 
-        // Set the current consumption
-        if(isOn) {
-            if(isMining) {
-                currentConsumption.v = MINING_CONSUMPTION;
-            } else {
-                currentConsumption.v = STANDBY_CONSUMPTION;
-            }
+        // Set the current production
+        if(isRunning) {
+            currentProduction.v = PRODUCTION;
         } else {
-            currentConsumption.v = 0.0d;
+            currentProduction.v = 0.0;
         }
 
         // Set the value time
-        currentConsumption.time = getCurrentStateTime();
+        currentProduction.time = getCurrentStateTime();
 
         // Tracing
-        logMessage("Current consumption " + currentConsumption.v + " at " + currentConsumption.time + "\n");
+        logMessage("Current production " + currentProduction.v + " at " + currentProduction.time + "\n");
     }
 
     /** @see AtomicHIOA#userDefinedExternalTransition(Duration) */
@@ -216,7 +185,7 @@ public class CryptoMinerElectricityModel
         Event currentEvent = (Event) currentEvents.get(0);
 
         // Execute the event on the model
-        assert currentEvent instanceof AbstractCryptoMinerEvent;
+        assert currentEvent instanceof AbstractGeneratorEvent;
         currentEvent.executeOn(this);
 
         super.userDefinedExternalTransition(elapsedTime);
@@ -225,7 +194,7 @@ public class CryptoMinerElectricityModel
     /** @see AtomicHIOA#endSimulation(Time) */
     @Override
     public void endSimulation(Time endTime) throws Exception {
-        logMessage("simulations ends!\n");
+        logMessage("Simulation ends!\n");
         super.endSimulation(endTime);
     }
     

@@ -106,6 +106,8 @@ public class ElectricMeterElectricityModel
     public void userDefinedInternalTransition(Duration elapsedTime) {
         super.userDefinedInternalTransition(elapsedTime);
         updateConsumption(elapsedTime);
+
+        logMessage("Current global consumption " + currentConsumption.v + " watts\n");
     }
 
     /** @see AtomicHIOA#endSimulation(Time) */
