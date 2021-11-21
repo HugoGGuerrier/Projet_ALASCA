@@ -15,6 +15,11 @@ import eco_logis.equipments.generator.mil.GeneratorFuelModel;
 import eco_logis.equipments.generator.mil.GeneratorUserModel;
 import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
 import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
+import eco_logis.equipments.oven.mil.OvenElectricityModel;
+import eco_logis.equipments.oven.mil.OvenTemperatureModel;
+import eco_logis.equipments.oven.mil.OvenUserModel;
+import eco_logis.equipments.oven.mil.events.SwitchOffOven;
+import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.ArchitectureI;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
@@ -122,6 +127,40 @@ public class RunHEMSim {
                     )
             );
 
+            // Add the oven
+            atomicModelDescriptors.put(
+                    OvenElectricityModel.URI,
+                    AtomicHIOA_Descriptor.create(
+                            OvenElectricityModel.class,
+                            OvenElectricityModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
+
+            atomicModelDescriptors.put(
+                    OvenTemperatureModel.URI,
+                    AtomicHIOA_Descriptor.create(
+                            OvenTemperatureModel.class,
+                            OvenTemperatureModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
+
+            atomicModelDescriptors.put(
+                    OvenUserModel.URI,
+                    AtomicModelDescriptor.create(
+                            OvenUserModel.class,
+                            OvenUserModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
+
             // Add the electric meter
             atomicModelDescriptors.put(
                     ElectricMeterElectricityModel.URI,
@@ -144,6 +183,9 @@ public class RunHEMSim {
             submodels.add(GeneratorElectricityModel.URI);
             submodels.add(GeneratorFuelModel.URI);
             submodels.add(GeneratorUserModel.URI);
+            submodels.add(OvenElectricityModel.URI);
+            submodels.add(OvenTemperatureModel.URI);
+            submodels.add(OvenUserModel.URI);
             submodels.add(ElectricMeterElectricityModel.URI);
 
 
@@ -239,6 +281,24 @@ public class RunHEMSim {
                     }
             );
 
+            // Add the oven events
+            connections.put(
+                    new EventSource(OvenUserModel.URI, SwitchOnOven.class),
+                    new EventSink[] {
+                            new EventSink(OvenElectricityModel.URI, SwitchOnOven.class),
+                            new EventSink(OvenTemperatureModel.URI, SwitchOnOven.class)
+                    }
+            );
+
+            // Add the switch off event connection
+            connections.put(
+                    new EventSource(OvenUserModel.URI, SwitchOffOven.class),
+                    new EventSink[] {
+                            new EventSink(OvenElectricityModel.URI, SwitchOffOven.class),
+                            new EventSink(OvenTemperatureModel.URI, SwitchOffOven.class)
+                    }
+            );
+
 
             // --- Create the variable bindings
             Map<VariableSource, VariableSink[]> bindings = new HashMap<>();
@@ -272,6 +332,14 @@ public class RunHEMSim {
                     new VariableSource("currentProduction", Double.class, GeneratorElectricityModel.URI),
                     new VariableSink[] {
                             new VariableSink("currentGeneratorProduction", Double.class, ElectricMeterElectricityModel.URI)
+                    }
+            );
+
+            // Bind the oven consumption to the electric meter
+            bindings.put(
+                    new VariableSource("currentConsumption", Double.class, OvenElectricityModel.URI),
+                    new VariableSink[] {
+                            new VariableSink("currentOvenConsumption", Double.class, ElectricMeterElectricityModel.URI)
                     }
             );
 

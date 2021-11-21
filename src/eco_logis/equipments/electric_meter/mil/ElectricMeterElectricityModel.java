@@ -47,6 +47,10 @@ public class ElectricMeterElectricityModel
     @ImportedVariable(type = Double.class)
     protected Value<Double> currentDishwasherConsumption;
 
+    /** The current consumption of the oven */
+    @ImportedVariable(type = Double.class)
+    protected Value<Double> currentOvenConsumption;
+
     /** The current generator production */
     @ImportedVariable(type = Double.class)
     protected Value<Double> currentGeneratorProduction;
@@ -55,6 +59,7 @@ public class ElectricMeterElectricityModel
     @InternalVariable(type = Double.class)
     protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
 
+    /** The current total production in the house */
     @InternalVariable(type = Double.class)
     protected final Value<Double> currentProduction = new Value<>(this, 0.0, 0);
 
@@ -81,7 +86,7 @@ public class ElectricMeterElectricityModel
     protected boolean updateConsumption(Duration d) {
         currentConsumption.time = currentConsumption.time.add(d);
 
-        double computedCons = currentCryptoConsumption.v + currentDishwasherConsumption.v;
+        double computedCons = currentCryptoConsumption.v + currentDishwasherConsumption.v + currentOvenConsumption.v;
         if(currentConsumption.v != computedCons) {
             currentConsumption.v = computedCons;
             return true;

@@ -124,7 +124,7 @@ public class UnitarySim {
             // Start the simulation
             SimulationEngine engine = architecture.constructSimulator();
             SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 0L;
-            engine.doStandAloneSimulation(0.0, 10.0);
+            engine.doStandAloneSimulation(0.0, 50.0);
             System.exit(0);
 
         } catch (Exception e) {

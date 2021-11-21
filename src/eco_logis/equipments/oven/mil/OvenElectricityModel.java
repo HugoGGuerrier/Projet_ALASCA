@@ -46,24 +46,13 @@ public class OvenElectricityModel
     /** Energy consumption (in Watts) of the oven */
     public static double AVERAGE_CONSUMPTION = 660.0; // Watts
 
-    /** Nominal tension (in Volts) of the oven */
-    public static double TENSION = 220.0; // Volts
-
-    private static final long serialVersionUID = 1L;
-
 
     // ========== Attributes ==========
 
 
-    /** Current temperature of the oven */
-    protected int currentTemperature;
-
-    /** Goal temperature of the oven, when oven is ON State */
-    protected int goalTemperature;
-
     /** Current intensity in amperes; intensity is power/tension */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentIntensity = new Value<Double>(this, 0.0, 0);
+    protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
 
     /** Current state (OFF,ON) of the oven */
     protected OvenElectricityModel.State currentState = OvenElectricityModel.State.OFF;
@@ -74,9 +63,6 @@ public class OvenElectricityModel
      *  will be triggered by putting through in this variable which will
      *  update the variable <code>currentIntensity</code>. */
     protected boolean consumptionHasChanged = false;
-
-    /** Total consumption of the oven during the simulation in kWh	*/
-    protected double totalConsumption;
 
 
     // ========== Constructors ==========
@@ -152,7 +138,7 @@ public class OvenElectricityModel
         super.initialiseVariables(startTime);
 
         // Initially, the oven is off, so its consumption is zero.
-        this.currentIntensity.v = 0.0;
+        this.currentConsumption.v = 0.0;
     }
 
     /** @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time) */
@@ -163,10 +149,9 @@ public class OvenElectricityModel
         // Initially the oven is off and its electricity consumption is not about to change.
         this.currentState = OvenElectricityModel.State.OFF;
         this.consumptionHasChanged = false;
-        this.totalConsumption = 0.0;
 
         this.toggleDebugMode();
-        this.logMessage("simulation begins.\n");
+        this.logMessage("Simulation starts...\n");
     }
 
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output() */
@@ -204,23 +189,15 @@ public class OvenElectricityModel
         switch (this.currentState)
         {
             case OFF :
-                this.currentIntensity.v = 0.0;
+                this.currentConsumption.v = 0.0;
                 break;
             case ON :
-                this.currentIntensity.v = AVERAGE_CONSUMPTION/TENSION;
-                // TODO : adjust to the goal temperature of the oven
+                this.currentConsumption.v = AVERAGE_CONSUMPTION;
         }
-        this.currentIntensity.time = this.getCurrentStateTime();
+        this.currentConsumption.time = this.getCurrentStateTime();
 
         // Tracing
-        StringBuffer message =
-                new StringBuffer("executes an internal transition ");
-        message.append("with current consumption ");
-        message.append(this.currentIntensity.v);
-        message.append(" at ");
-        message.append(this.currentIntensity.time);
-        message.append(".\n");
-        this.logMessage(message.toString());
+        logMessage("Current consumption " + currentConsumption.v + " at " + currentConsumption.time + "\n");
     }
 
 
@@ -230,15 +207,9 @@ public class OvenElectricityModel
     {
         // Get the vector of currently received external events
         ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
-        /* When this method is called, there is at least one external event,
-           and for the current oven model, there must be exactly one by
-           construction. */ // TODO : adjust
         assert	currentEvents != null && currentEvents.size() == 1;
 
         Event ce = (Event) currentEvents.get(0);
-
-        // Compute the total consumption (in kWh) for the simulation report.
-        this.totalConsumption += Electricity.computeConsumption(elapsedTime, TENSION*this.currentIntensity.v);
 
         // Tracing
         StringBuffer message =
@@ -259,9 +230,7 @@ public class OvenElectricityModel
     /** @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time) */
     @Override
     public void endSimulation(Time endTime) throws Exception {
-        Duration d = endTime.subtract(this.getCurrentStateTime());
-        this.totalConsumption += Electricity.computeConsumption(d,TENSION*this.currentIntensity.v);
-        this.logMessage("simulation ends.\n");
+        this.logMessage("Simulation ends!\n");
         super.endSimulation(endTime);
     }
 
