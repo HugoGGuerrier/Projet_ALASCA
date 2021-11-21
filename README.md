@@ -20,7 +20,15 @@ Emilie SIAU 3700323
 
 
 
-### Récap Audit
+### Récap Audit1
 Abandon du générateur XML
 Finir les composants : dishwasher (départ différé etc), power bank (changer, pas besoin de faire Discharge), Electric Meter
 Tests complets d'intégration
+
+### Etape 2 : idées consommation/production électrique
+dishwasher : 1kWh/cycle de lavage
+powerbank : 
+windturbine : entre 100W et 20kW
+oven : 1kWh par heure
+generator : 2kW
+crypto_miner :
