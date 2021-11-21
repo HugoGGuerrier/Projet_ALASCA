@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
         SwitchOnHairDryer.class,
         SwitchOffHairDryer.class,
         SetLowHairDryer.class,
-        SetHighHairDryer.class})*/
+        SetHighHairDryer.class})*/ // TODO
 public class OvenElectricityModel
     extends AtomicHIOA
 {
