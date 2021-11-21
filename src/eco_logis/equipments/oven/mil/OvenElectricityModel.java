@@ -1,5 +1,6 @@
 package eco_logis.equipments.oven.mil;
 
+import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
 import fr.sorbonne_u.components.cyphy.hem2021e2.utils.Electricity;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
