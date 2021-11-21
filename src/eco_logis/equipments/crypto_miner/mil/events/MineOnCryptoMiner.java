@@ -1,5 +1,6 @@
 package eco_logis.equipments.crypto_miner.mil.events;
 
+import eco_logis.equipments.crypto_miner.mil.CryptoMinerElectricityModel;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.events.EventInformationI;
@@ -19,8 +20,8 @@ public class MineOnCryptoMiner
 
 
     /** @see AbstractCryptoMinerEvent#AbstractCryptoMinerEvent(Time, EventInformationI) */
-    public MineOnCryptoMiner(Time timeOfOccurrence, EventInformationI content) {
-        super(timeOfOccurrence, content);
+    public MineOnCryptoMiner(Time timeOfOccurrence) {
+        super(timeOfOccurrence, null);
     }
 
 
@@ -37,8 +38,12 @@ public class MineOnCryptoMiner
     /** @see AbstractCryptoMinerEvent#executeOn(AtomicModel) */
     @Override
     public void executeOn(AtomicModel model) {
-        // TODO
-        System.out.println("MineOnCryptoMiner#executeOn TODO");
+        assert model instanceof CryptoMinerElectricityModel;
+        CryptoMinerElectricityModel m = (CryptoMinerElectricityModel) model;
+        if(!m.isMining() && m.isOn()) {
+            m.setMining(true);
+            m.setHasChanged(true);
+        }
     }
 
 }
