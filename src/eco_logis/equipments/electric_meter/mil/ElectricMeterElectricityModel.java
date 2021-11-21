@@ -15,6 +15,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * This class represents the electricity model of the electric meter
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
  */
 public class ElectricMeterElectricityModel
     extends AtomicHIOA
@@ -44,9 +47,16 @@ public class ElectricMeterElectricityModel
     @ImportedVariable(type = Double.class)
     protected Value<Double> currentDishwasherConsumption;
 
+    /** The current generator production */
+    @ImportedVariable(type = Double.class)
+    protected Value<Double> currentGeneratorProduction;
+
     /** The current total consumption in the house */
     @InternalVariable(type = Double.class)
     protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
+
+    @InternalVariable(type = Double.class)
+    protected final Value<Double> currentProduction = new Value<>(this, 0.0, 0);
 
 
     // ========== Constructors ==========
@@ -68,9 +78,31 @@ public class ElectricMeterElectricityModel
      * 
      * @param d The time since the last update
      */
-    protected void updateConsumption(Duration d) {
-        currentConsumption.v = currentCryptoConsumption.v + currentDishwasherConsumption.v;
+    protected boolean updateConsumption(Duration d) {
         currentConsumption.time = currentConsumption.time.add(d);
+
+        double computedCons = currentCryptoConsumption.v + currentDishwasherConsumption.v;
+        if(currentConsumption.v != computedCons) {
+            currentConsumption.v = computedCons;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Update the energy production with the elapsed time
+     *
+     * @param d The elapsed time
+     */
+    protected boolean updateProduction(Duration d) {
+        currentProduction.time = currentProduction.time.add(d);
+
+        double computedProd = currentGeneratorProduction.v;
+        if(currentProduction.v != computedProd) {
+            currentProduction.v = computedProd;
+            return true;
+        }
+        return false;
     }
 
 
@@ -83,6 +115,7 @@ public class ElectricMeterElectricityModel
         super.initialiseVariables(startTime);
 
         currentConsumption.v = 0.0;
+        currentProduction.v = 0.0;
 
         toggleDebugMode();
         logMessage("Simulation starts...\n");
@@ -105,9 +138,10 @@ public class ElectricMeterElectricityModel
     @Override
     public void userDefinedInternalTransition(Duration elapsedTime) {
         super.userDefinedInternalTransition(elapsedTime);
-        updateConsumption(elapsedTime);
+        if(updateConsumption(elapsedTime) || updateProduction(elapsedTime)) {
+            logMessage("Current global consumption : " + currentConsumption.v + " watts | Current global production : " + currentProduction.v + " watts" + "\n");
+        }
 
-        logMessage("Current global consumption " + currentConsumption.v + " watts\n");
     }
 
     /** @see AtomicHIOA#endSimulation(Time) */

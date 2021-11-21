@@ -1,6 +1,5 @@
 package eco_logis.equipments.dishwasher.mil;
 
-import eco_logis.equipments.crypto_miner.mil.CryptoMinerUserModel;
 import eco_logis.equipments.dishwasher.mil.events.*;
 import fr.sorbonne_u.devs_simulation.es.events.ES_EventI;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
@@ -36,7 +35,7 @@ public class DishwasherUserModel
 
 
     /** Unique URI of the dishwasher user model */
-    public static final String URI = CryptoMinerUserModel.class.getSimpleName();
+    public static final String URI = DishwasherUserModel.class.getSimpleName();
 
     /** Mean time between two outputs */
     protected static double STEP_MEAN_DURATION = 5.0;
