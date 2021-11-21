@@ -44,7 +44,7 @@ public class OvenElectricityModel
     public static final String URI = OvenElectricityModel.class.getSimpleName();
 
     /** Energy consumption (in Watts) of the oven */
-    public static double AVERAGE_CONSUMPTION = 660.0; // Watts
+    public static double AVERAGE_CONSUMPTION = 2000.0; // Watts
 
     /** Nominal tension (in Volts) of the oven */
     public static double TENSION = 220.0; // Volts
@@ -232,7 +232,7 @@ public class OvenElectricityModel
         ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
         /* When this method is called, there is at least one external event,
            and for the current oven model, there must be exactly one by
-           construction. */ // TODO : adjust
+           construction. */
         assert	currentEvents != null && currentEvents.size() == 1;
 
         Event ce = (Event) currentEvents.get(0);

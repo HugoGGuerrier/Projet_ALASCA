@@ -9,14 +9,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @RequiredInterfaces(required = {WindTurbineCI.class})
 public class WindTurbineUnitTester
-    extends AbstractComponent {
+    extends AbstractComponent
+{
 
     // ========== Attributes ==========
+
+
 
     private String windTurbineInboundPortUri;
     private WindTurbineOutboundPort windTurbineOutboundPort;
 
+
     // ========== Constructors ==========
+
 
     protected WindTurbineUnitTester() throws Exception {
         this(WindTurbine.INBOUND_PORT_URI);
@@ -32,7 +37,9 @@ public class WindTurbineUnitTester
         initialise(windTurbineInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     protected void initialise(String windTurbineInboundPortURI) throws Exception {
         // Set the inbound port uri
@@ -48,7 +55,9 @@ public class WindTurbineUnitTester
         toggleTracing();
     }
 
+
     // ========== Test methods ==========
+
 
     protected void testIsTurning() {
         logMessage("Test isTurning()...");
