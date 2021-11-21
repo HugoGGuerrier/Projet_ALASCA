@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit;
  */
 @ModelExternalEvents(imported = {
         SwitchOnOven.class,
-        SwitchOffOven.class})
+        SwitchOffOven.class
+})
 public class OvenTemperatureModel
     extends AtomicHIOAwithDE
 {
@@ -131,7 +132,7 @@ public class OvenTemperatureModel
         super.initialiseState(initialTime);
         this.currentState = OvenTemperatureModel.State.OFF;
 
-        this.toggleDebugMode();
+//        this.toggleDebugMode();
         this.logMessage("simulation begins.\n");
     }
 

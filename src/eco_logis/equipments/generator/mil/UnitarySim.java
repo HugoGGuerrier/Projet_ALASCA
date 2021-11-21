@@ -2,10 +2,15 @@ package eco_logis.equipments.generator.mil;
 
 import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
 import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
+import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.ExternalTemperatureModel;
+import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.HeaterTemperatureModel;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.ArchitectureI;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
+import fr.sorbonne_u.devs_simulation.hioa.architectures.CoupledHIOA_Descriptor;
+import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSink;
+import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSource;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
@@ -93,10 +98,27 @@ public class UnitarySim {
                     }
             );
 
+            // Add the switch off when no fuel event connection
+            connections.put(
+                    new EventSource(GeneratorFuelModel.URI, SwitchOffGenerator.class),
+                    new EventSink[] {
+                            new EventSink(GeneratorElectricityModel.URI, SwitchOffGenerator.class),
+                    }
+            );
+
+            // Variable bindings
+            Map<VariableSource, VariableSink[]> bindings = new HashMap<VariableSource,VariableSink[]>();
+
+            bindings.put(
+                    new VariableSource("currentFuelLevel", Double.class, GeneratorFuelModel.URI),
+                    new VariableSink[] {
+                            new VariableSink("currentFuelLevel", Double.class, GeneratorElectricityModel.URI)
+                    });
+
             // Add the generator coupled model
             coupledModelDescriptors.put(
                     GeneratorCoupledModel.URI,
-                    new CoupledModelDescriptor(
+                    new CoupledHIOA_Descriptor(
                             GeneratorCoupledModel.class,
                             GeneratorCoupledModel.URI,
                             subModel,
@@ -104,7 +126,10 @@ public class UnitarySim {
                             null,
                             connections,
                             null,
-                            SimulationEngineCreationMode.COORDINATION_ENGINE
+                            SimulationEngineCreationMode.COORDINATION_ENGINE,
+                            null,
+                            null,
+                            bindings
                     )
             );
 
@@ -119,7 +144,7 @@ public class UnitarySim {
             // Start the simulation
             SimulationEngine engine = architecture.constructSimulator();
             SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 0L;
-            engine.doStandAloneSimulation(0.0, 100.0);
+            engine.doStandAloneSimulation(0.0, 1000.0);
             System.exit(0);
 
         } catch (Exception e) {

@@ -3,6 +3,7 @@ package eco_logis.equipments.generator.mil;
 import eco_logis.equipments.generator.mil.events.AbstractGeneratorEvent;
 import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
 import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -24,6 +25,9 @@ import java.util.concurrent.TimeUnit;
  */
 @ModelExternalEvents(imported = {
         SwitchOnGenerator.class,
+        SwitchOffGenerator.class
+},
+exported = {
         SwitchOffGenerator.class
 })
 public class GeneratorFuelModel
@@ -56,6 +60,7 @@ public class GeneratorFuelModel
     private boolean isRunning;
 
     /** The variable representing the current fuel level of the generator */
+    @ExportedVariable(type = Double.class)
     protected final Value<Double> currentFuelLevel = new Value<>(this, 0.0, 0);
 
 
@@ -137,14 +142,18 @@ public class GeneratorFuelModel
         
         isRunning = false;
         
-        toggleDebugMode();
+//        toggleDebugMode();
         logMessage("Simulations starts...\n");
     }
 
     /** @see AtomicHIOA#output() */
     @Override
     public ArrayList<EventI> output() {
-        // This model does not export events
+        if(currentFuelLevel.v <= 0.0) {
+            ArrayList<EventI> res = new ArrayList<>();
+            res.add(new SwitchOffGenerator(currentFuelLevel.time));
+            return res;
+        }
         return null;
     }
 
@@ -160,7 +169,7 @@ public class GeneratorFuelModel
         super.userDefinedInternalTransition(elapsedTime);
 
         // Update the fuel level
-        if(isRunning) {
+        if(currentFuelLevel.v > 0.0 && isRunning) {
             consume(elapsedTime);
             currentFuelLevel.time = getCurrentStateTime();
         }

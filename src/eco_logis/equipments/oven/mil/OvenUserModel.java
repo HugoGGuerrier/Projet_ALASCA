@@ -40,7 +40,7 @@ public class OvenUserModel
     public static final String URI = OvenUserModel.class.getSimpleName();
 
     /** Time interval between event outputs.								*/
-    protected static double STEP_MEAN_DURATION = 1.0;
+    protected static double STEP_MEAN_DURATION = 10;
 
 
     // ========== Attributes ==========

@@ -4,6 +4,7 @@ import eco_logis.equipments.generator.mil.events.AbstractGeneratorEvent;
 import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
 import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ImportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -49,6 +50,10 @@ public class GeneratorElectricityModel
 
     /** If the internal state has changed */
     private boolean hasChanged;
+
+    /** The current fuel level */
+    @ImportedVariable(type = Double.class)
+    protected Value<Double> currentFuelLevel;
 
     /** The current production of the generator in a shared var */
     @ExportedVariable(type = Double.class)
@@ -129,7 +134,7 @@ public class GeneratorElectricityModel
         isRunning = false;
 
         toggleDebugMode();
-        logMessage("Simulation start...\n");
+        logMessage("Simulation starts...\n");
     }
 
     /** @see AtomicHIOA#initialiseVariables(Time) */
@@ -164,7 +169,7 @@ public class GeneratorElectricityModel
 
         // Set the current production
         if(isRunning) {
-            currentProduction.v = PRODUCTION;
+            if(currentFuelLevel.v > 0.0) currentProduction.v = PRODUCTION;
         } else {
             currentProduction.v = 0.0;
         }
@@ -173,7 +178,8 @@ public class GeneratorElectricityModel
         currentProduction.time = getCurrentStateTime();
 
         // Tracing
-        logMessage("Current production " + currentProduction.v + " at " + currentProduction.time + "\n");
+        logMessage("Current production " + currentProduction.v + " at " + currentProduction.time +
+                " | Fuel level " + currentFuelLevel.v + " l" + "\n");
     }
 
     /** @see AtomicHIOA#userDefinedExternalTransition(Duration) */
