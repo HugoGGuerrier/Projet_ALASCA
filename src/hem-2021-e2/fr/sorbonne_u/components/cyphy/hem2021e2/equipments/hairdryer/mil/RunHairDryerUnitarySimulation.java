@@ -102,7 +102,7 @@ public class			RunHairDryerUnitarySimulation
 		try {
 			// map that will contain the atomic model descriptors to construct
 			// the simulation architecture
-			Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors =
+			Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
 																new HashMap<>();
 
 			// the hair dyer model simulating its electricity consumption, an
