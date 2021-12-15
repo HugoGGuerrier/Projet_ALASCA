@@ -1,4 +1,4 @@
-package eco_logis.equipments.generator.mil;
+package eco_logis.equipments.power_bank.mil;
 
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.StaticVariableDescriptor;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSink;
@@ -14,7 +14,7 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class GeneratorCoupledModel
+public class PowerBankCoupledModel
     extends CoupledModel
 {
 
@@ -22,14 +22,14 @@ public class GeneratorCoupledModel
 
 
     /** The URI of the crypto miner coupled model */
-    public static final String URI = GeneratorCoupledModel.class.getSimpleName();
+    public static final String URI = PowerBankCoupledModel.class.getSimpleName();
 
 
     // ========== Constructors ==========
 
 
     /** @see CoupledModel#CoupledModel(String, TimeUnit, SimulatorI, ModelDescriptionI[], Map, Map, Map) */
-    public GeneratorCoupledModel(
+    public PowerBankCoupledModel(
             String uri,
             TimeUnit simulatedTimeUnit,
             SimulatorI simulationEngine,
@@ -43,7 +43,7 @@ public class GeneratorCoupledModel
     }
 
     /** @see CoupledModel#CoupledModel(String, TimeUnit, SimulatorI, ModelDescriptionI[], Map, Map, Map, Map, Map, Map)  */
-    public GeneratorCoupledModel(
+    public PowerBankCoupledModel(
             String uri,
             TimeUnit simulatedTimeUnit,
             SimulatorI simulationEngine,

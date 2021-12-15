@@ -40,7 +40,7 @@ public class CryptoMinerUserModel
     public static final String URI = CryptoMinerUserModel.class.getSimpleName();
 
     /** Mean time between two outputs */
-    protected static double STEP_MEAN_DURATION = 50.0;
+    protected static double STEP_MEAN_DURATION = 20.0;
 
     /** The random data generator from the common math lib */
     protected RandomDataGenerator generator;
