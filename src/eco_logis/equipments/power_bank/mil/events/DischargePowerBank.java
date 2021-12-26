@@ -1,6 +1,8 @@
 package eco_logis.equipments.power_bank.mil.events;
 
 import eco_logis.equipments.generator.mil.events.AbstractGeneratorEvent;
+import eco_logis.equipments.power_bank.mil.PowerBankChargeModel;
+import eco_logis.equipments.power_bank.mil.PowerBankElectricityModel;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.events.EventInformationI;
@@ -20,8 +22,8 @@ public class DischargePowerBank
 
 
     /** @see AbstractPowerBankEvent#AbstractPowerBankEvent(Time, EventInformationI) */
-    public DischargePowerBank(Time timeOfOccurrence, EventInformationI content) {
-        super(timeOfOccurrence, content);
+    public DischargePowerBank(Time timeOfOccurrence) {
+        super(timeOfOccurrence, null);
     }
 
 
@@ -37,7 +39,20 @@ public class DischargePowerBank
     /** @see AbstractGeneratorEvent#executeOn(AtomicModel) */
     @Override
     public void executeOn(AtomicModel model) {
-        // TODO
+        assert model instanceof PowerBankElectricityModel || model instanceof PowerBankChargeModel;
+        if(model instanceof PowerBankElectricityModel) {
+            PowerBankElectricityModel m = (PowerBankElectricityModel) model;
+            if(m.getCurrentState() != PowerBankElectricityModel.State.DISCHARGE) {
+                m.setCurrentState(PowerBankElectricityModel.State.DISCHARGE);
+                m.setHasChanged(true);
+            }
+        }
+        else {
+            PowerBankChargeModel m = (PowerBankChargeModel) model;
+            if(m.getCurrentState() != PowerBankElectricityModel.State.DISCHARGE) {
+                m.setCurrentState(PowerBankElectricityModel.State.DISCHARGE);
+            }
+        }
     }
 
 }

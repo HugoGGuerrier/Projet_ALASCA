@@ -107,13 +107,14 @@ public class UnitarySim {
             );
 
             // Variable bindings
-            Map<VariableSource, VariableSink[]> bindings = new HashMap<VariableSource,VariableSink[]>();
+            Map<VariableSource, VariableSink[]> bindings = new HashMap<>();
 
             bindings.put(
                     new VariableSource("currentFuelLevel", Double.class, GeneratorFuelModel.URI),
                     new VariableSink[] {
                             new VariableSink("currentFuelLevel", Double.class, GeneratorElectricityModel.URI)
-                    });
+                    }
+            );
 
             // Add the generator coupled model
             coupledModelDescriptors.put(

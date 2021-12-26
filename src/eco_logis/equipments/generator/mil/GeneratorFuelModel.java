@@ -97,7 +97,7 @@ public class GeneratorFuelModel
     }
 
 
-    // ========== Getters ==========
+    // ========== Setters ==========
 
 
     /**
@@ -120,7 +120,7 @@ public class GeneratorFuelModel
      */
     private void consume(Duration d) {
         double duration = d.getSimulatedDuration();
-        currentFuelLevel.v -= (duration / 3600) * FUEL_CONSUMPTION;
+        currentFuelLevel.v -= Math.max((duration / 3600) * FUEL_CONSUMPTION, 0.0);
     }
 
 
@@ -142,7 +142,7 @@ public class GeneratorFuelModel
         
         isRunning = false;
         
-//        toggleDebugMode();
+        toggleDebugMode();
         logMessage("Simulations starts...\n");
     }
 
@@ -171,11 +171,11 @@ public class GeneratorFuelModel
         // Update the fuel level
         if(currentFuelLevel.v > 0.0 && isRunning) {
             consume(elapsedTime);
-            currentFuelLevel.time = getCurrentStateTime();
         }
+        currentFuelLevel.time = getCurrentStateTime();
 
         // Tracing
-        logMessage("Generator is " + (isRunning ? "on" : "off") + " | Fuel level " + currentFuelLevel.v + " at " + currentFuelLevel.time + "\n");
+        logMessage("Generator is " + (isRunning ? "on" : "off") + " | Fuel level : " + currentFuelLevel.v + " at " + currentFuelLevel.time + "\n");
     }
 
     /** @see AtomicHIOA#userDefinedExternalTransition(Duration) */
