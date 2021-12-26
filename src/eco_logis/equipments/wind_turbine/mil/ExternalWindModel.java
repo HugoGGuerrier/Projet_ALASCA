@@ -43,7 +43,7 @@ public class ExternalWindModel
 
 
     /** Evaluation step for the equation (assumed in seconds) */
-    protected static final double STEP = 1.0;
+    protected static final double STEP = .01;
 
     /** Evaluation step as a duration, including the time unit */
     protected final Duration evaluationStep;
@@ -92,12 +92,11 @@ public class ExternalWindModel
     protected void initialiseVariables(Time startTime) {
         super.initialiseVariables(startTime);
 
-        this.externalWindSpeed.v = 0.0;
+        this.externalWindSpeed.v = MIN_EXTERNAL_WIND_SPEED;
 
         this.toggleDebugMode();
         this.logMessage("simulation begins.\n");
-        StringBuffer message =
-                new StringBuffer("current external wind speed: ");
+        StringBuffer message = new StringBuffer("current external wind speed: ");
         message.append(this.externalWindSpeed.v);
         message.append(" at ");
         message.append(this.getCurrentStateTime());
@@ -121,8 +120,7 @@ public class ExternalWindModel
 
     /** @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedInternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration) */
     @Override
-    public void userDefinedInternalTransition(Duration elapsedTime)
-    {
+    public void userDefinedInternalTransition(Duration elapsedTime) {
         super.userDefinedInternalTransition(elapsedTime);
 
         // Compute the current time in the cycle
@@ -130,17 +128,28 @@ public class ExternalWindModel
         if (this.cycleTime > PERIOD) {
             this.cycleTime -= PERIOD;
         }
-        // compute the new temperature
+
+        // Compute the new wind speed
         double c = Math.cos((1.0 + this.cycleTime/(PERIOD/2.0))*Math.PI);
+        System.out.println("c = " + c);
+
+        // /!\ Adjust correctly
+        // simplifier equation avec sinus
+        // il faut avoir : pas d'intégration (STEP) < PERIOD !!
+        // Créer loi normale N[0 (moyenne),5 (écart)]
+        // rg = random number generator
+        // r = rg.nextGaussian(0.0, 5.0)
+        // facteur d'amplitude*sin(period) + r
+
         this.externalWindSpeed.v =
-                MIN_EXTERNAL_WIND_SPEED +
-                        (MAX_EXTERNAL_WIND_SPEED - MIN_EXTERNAL_WIND_SPEED)*
-                                ((1.0 + c)/2.0);
+                MIN_EXTERNAL_WIND_SPEED
+                + (MAX_EXTERNAL_WIND_SPEED - MIN_EXTERNAL_WIND_SPEED)
+                * ((1.0 + c) / 2.0);
+
         this.externalWindSpeed.time = this.getCurrentStateTime();
 
         // Tracing
-        StringBuffer message =
-                new StringBuffer("current external wind speed: ");
+        StringBuffer message = new StringBuffer("current external wind speed: ");
         message.append(this.externalWindSpeed.v);
         message.append(" at ");
         message.append(this.getCurrentStateTime());

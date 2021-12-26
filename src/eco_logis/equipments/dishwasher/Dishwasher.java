@@ -142,10 +142,7 @@ public class Dishwasher
         isPlanned = false;
         isWashing = false;
         program = null;
-        dishwasherProgramDuration.put(DishwasherProgram.FULL, Duration.ofMinutes(160));
-        dishwasherProgramDuration.put(DishwasherProgram.ECO, Duration.ofMinutes(180));
-        dishwasherProgramDuration.put(DishwasherProgram.FAST, Duration.ofMinutes(100));
-        dishwasherProgramDuration.put(DishwasherProgram.RINSE, Duration.ofMinutes(15));
+        if(dishwasherProgramDuration.isEmpty()) initProgamDurations();
 
         // Create the inbound port
         dwip = new DishwasherInboundPort(dishwasherInboundPortURI, this);
@@ -159,6 +156,12 @@ public class Dishwasher
         }
     }
 
+    private static void initProgamDurations() {
+        dishwasherProgramDuration.put(DishwasherProgram.FULL, Duration.ofMinutes(160));
+        dishwasherProgramDuration.put(DishwasherProgram.ECO, Duration.ofMinutes(180));
+        dishwasherProgramDuration.put(DishwasherProgram.FAST, Duration.ofMinutes(100));
+        dishwasherProgramDuration.put(DishwasherProgram.RINSE, Duration.ofMinutes(15));
+    }
 
     // ========== Override methods ==========
 

@@ -56,9 +56,9 @@ public class WindTurbineUserModel
      */
     public WindTurbineUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
+        generator = new RandomDataGenerator();
         setLogger(new StandardLogger());
     }
-
 
 
     // ========== Class methods ==========

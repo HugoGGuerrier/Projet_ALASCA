@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class is used to run a unary simulation on the wind turbine
+ * This class is used to run a unitary simulation on the wind turbine
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
@@ -51,7 +51,7 @@ public class UnitarySim {
             // Add the external wind model
             atomicModelDescriptors.put(
                     ExternalWindModel.URI,
-                    AtomicModelDescriptor.create(
+                    AtomicHIOA_Descriptor.create(
                             ExternalWindModel.class,
                             ExternalWindModel.URI,
                             TimeUnit.SECONDS,
@@ -142,7 +142,7 @@ public class UnitarySim {
             // Start the simulation
             SimulationEngine engine = architecture.constructSimulator();
             SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 0L;
-            engine.doStandAloneSimulation(0.0, 10.0);
+            engine.doStandAloneSimulation(0.0, 20.0);
             System.exit(0);
 
         } catch (Exception e) {

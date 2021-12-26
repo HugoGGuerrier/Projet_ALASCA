@@ -49,7 +49,7 @@ public class SwitchOffOven
             OvenTemperatureModel m = (OvenTemperatureModel) model;
             if (m.getState() == OvenTemperatureModel.State.ON) {
                 m.setState(OvenTemperatureModel.State.OFF);
-                m.setGoalTemperature(OvenTemperatureModel.roomTemperature);
+                m.setGoalTemperature(OvenTemperatureModel.ROOM_TEMPERATURE);
             }
         } else assert false;
     }
