@@ -3,7 +3,6 @@ package eco_logis.equipments.oven.mil;
 import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
-import fr.sorbonne_u.components.cyphy.hem2021e2.utils.Electricity;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -33,7 +32,7 @@ public class OvenElectricityModel
 
 
     /** State of the oven */
-    public static enum State {
+    public enum State {
         /** Oven is on and heating to its goal temperature */
         ON,
         /** Oven is off and getting to room temperature (does not consume electricity) */
@@ -136,7 +135,6 @@ public class OvenElectricityModel
     @Override
     protected void initialiseVariables(Time startTime) {
         super.initialiseVariables(startTime);
-
         // Initially, the oven is off, so its consumption is zero.
         this.currentConsumption.v = 0.0;
     }
@@ -163,12 +161,11 @@ public class OvenElectricityModel
 
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance() */
     @Override
-    public Duration timeAdvance()
-    {
-        /*  To trigger an internal transition after an external transition, the
-            variable consumptionHasChanged is set to true, hence when it is true
-            return a zero delay otherwise return an infinite delay (no internal
-            transition expected) */
+    public Duration timeAdvance() {
+        /* To trigger an internal transition after an external transition, the
+        variable consumptionHasChanged is set to true, hence when it is true
+        return a zero delay otherwise return an infinite delay (no internal
+        transition expected) */
         if (this.consumptionHasChanged) {
             // After triggering the internal transition, toggle the boolean to prepare for the next internal transition.
             this.toggleConsumptionHasChanged();
@@ -181,13 +178,11 @@ public class OvenElectricityModel
 
     /** @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedInternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration) */
     @Override
-    public void userDefinedInternalTransition(Duration elapsedTime)
-    {
+    public void userDefinedInternalTransition(Duration elapsedTime) {
         super.userDefinedInternalTransition(elapsedTime);
 
         // Set the current electricity consumption from the current state
-        switch (this.currentState)
-        {
+        switch (this.currentState) {
             case OFF :
                 this.currentConsumption.v = 0.0;
                 break;
@@ -203,8 +198,7 @@ public class OvenElectricityModel
 
     /** @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration) */
     @Override
-    public void userDefinedExternalTransition(Duration elapsedTime)
-    {
+    public void userDefinedExternalTransition(Duration elapsedTime) {
         // Get the vector of currently received external events
         ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
         assert currentEvents != null && currentEvents.size() == 1;
@@ -212,8 +206,7 @@ public class OvenElectricityModel
         Event ce = (Event) currentEvents.get(0);
 
         // Tracing
-        StringBuffer message =
-                new StringBuffer("executes an external transition ");
+        StringBuffer message = new StringBuffer("executes an external transition ");
         message.append(ce.getClass().getSimpleName());
         message.append("(");
         message.append(ce.getTimeOfOccurrence().getSimulatedTime());

@@ -30,6 +30,8 @@ public class Oven
 
     // ========== Macros ==========
 
+    /** URI of the oven reflection inbound port used */
+    public static final String REFLECTION_INBOUND_PORT_URI = "OVEN-rip";
 
     /** URI of the oven inbound port used in tests */
     public static final String INBOUND_PORT_URI = "OVEN-INBOUND-PORT-URI";
