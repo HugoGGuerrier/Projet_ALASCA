@@ -16,8 +16,6 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
  * The class <code>HEM</code> implements the basis for a household energy
  * management component.
  *
- * <p>Created on : 2021-10-17</p>
- *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
@@ -38,12 +36,9 @@ public class HEM
     // ========== Constructors ==========
 
 
-    /**
-     * Create a new HEM component
-     */
+    /** Create a new HEM component */
     protected HEM() {
         super(1, 0);
-
         this.tracer.get().setTitle("Home Energy Manager component");
         this.tracer.get().setRelativePosition(2, 2);
         this.toggleTracing();

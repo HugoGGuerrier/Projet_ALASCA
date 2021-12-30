@@ -44,20 +44,19 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
  * <p><strong>Description</strong></p>
  *
  * <p><strong>Invariant</strong></p>
- *
  * <pre>
  * invariant	true
  * </pre>
  *
- * <p>Created on : 2021-09-13</p>
- *
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
  */
 public class CVMUnitTest
     extends	AbstractCVM
 {
 
     // ========== Constructors ==========
+
 
     public CVMUnitTest() throws Exception { }
 
@@ -69,7 +68,7 @@ public class CVMUnitTest
      */
     @Override
     public void	deploy() throws Exception {
-        // Create the components to test the crypto miner
+        // Create the components to test the electric meter
         AbstractComponent.createComponent(ElectricMeter.class.getCanonicalName(), new Object[]{});
         AbstractComponent.createComponent(ElectricMeterUnitTester.class.getCanonicalName(), new Object[]{});
 

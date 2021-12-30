@@ -1,33 +1,21 @@
 package eco_logis;
 
+import eco_logis.equipments.electric_meter.ElectricMeter;
+import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
+import eco_logis.equipments.hem.mil.HEMCoupledModel;
 import eco_logis.equipments.oven.Oven;
 import eco_logis.equipments.oven.mil.OvenCoupledModel;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
-import fr.sorbonne_u.components.cyphy.hem2021e2.HEM_CoupledModel;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.hairdryer.mil.HairDryerCoupledModel;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.hairdryer.mil.events.SetHighHairDryer;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.hairdryer.mil.events.SetLowHairDryer;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.hairdryer.mil.events.SwitchOffHairDryer;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.hairdryer.mil.events.SwitchOnHairDryer;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.HeaterCoupledModel;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.DoNotHeat;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.Heat;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.SwitchOffHeater;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.SwitchOnHeater;
-import fr.sorbonne_u.components.cyphy.hem2021e3.CVM_SIL;
-import fr.sorbonne_u.components.cyphy.hem2021e3.SIL_Coordinator;
-import fr.sorbonne_u.components.cyphy.hem2021e3.equipments.hairdryer.HairDryer;
-import fr.sorbonne_u.components.cyphy.hem2021e3.equipments.heater.ThermostatedHeater;
-import fr.sorbonne_u.components.cyphy.hem2021e3.equipments.meter.ElectricMeter;
-import fr.sorbonne_u.components.cyphy.hem2021e3.equipments.meter.sil.ElectricMeterCoupledModel;
 import fr.sorbonne_u.components.cyphy.plugins.devs.RTCoordinatorPlugin;
 import fr.sorbonne_u.components.cyphy.plugins.devs.SupervisorPlugin;
 import fr.sorbonne_u.components.cyphy.plugins.devs.architectures.ComponentModelArchitecture;
 import fr.sorbonne_u.components.cyphy.plugins.devs.architectures.RTComponentAtomicModelDescriptor;
 import fr.sorbonne_u.components.cyphy.plugins.devs.architectures.RTComponentCoupledModelDescriptor;
 import fr.sorbonne_u.components.cyphy.plugins.devs.architectures.RTComponentModelArchitecture;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
@@ -197,7 +185,7 @@ public class HEM_SIL_Supervisor
         port URI of the component holding them in order to connect this
         component inside the component-based simulation architecture. */
 
-        // The oven simulation model held by the Oven component.
+        // The oven simulation model held by the Oven component
         atomicModelDescriptors.put(
                 OvenCoupledModel.URI,
                 RTComponentAtomicModelDescriptor.create(
@@ -222,27 +210,23 @@ public class HEM_SIL_Supervisor
                         TimeUnit.SECONDS,
                         ThermostatedHeater.REFLECTION_INBOUND_PORT_URI));
         */
-        /*
-        // The electric meter simulation model held by the ElectricMeter
-        // component.
+
+        // The electric meter simulation model held by the ElectricMeter component
         atomicModelDescriptors.put(
                 ElectricMeterCoupledModel.URI,
                 RTComponentAtomicModelDescriptor.create(
                         ElectricMeterCoupledModel.URI,
                         new Class[]{
-                                SwitchOnHeater.class, SwitchOffHeater.class,
-                                Heat.class, DoNotHeat.class,
-                                SwitchOnHairDryer.class,
-                                SwitchOffHairDryer.class,
-                                SetHighHairDryer.class, SetLowHairDryer.class},
+                                SwitchOnOven.class,
+                                SwitchOffOven.class},
                         new Class[]{},
                         TimeUnit.SECONDS,
                         ElectricMeter.REFLECTION_INBOUND_PORT_URI));
-        */
+
         Set<String> submodels = new HashSet<String>();
         submodels.add(OvenCoupledModel.URI);
         //submodels.add(HeaterCoupledModel.URI);
-        //submodels.add(ElectricMeterCoupledModel.URI);
+        submodels.add(ElectricMeterCoupledModel.URI);
 
         Map<EventSource, EventSink[]> connections = new HashMap<EventSource,EventSink[]>();
 
@@ -255,7 +239,7 @@ public class HEM_SIL_Supervisor
         connections.put(
                 new EventSource(OvenCoupledModel.URI, SwitchOnOven.class),
                 new EventSink[] {
-                        new EventSink(ElectricMeterCoupledModel.URI, SwitchOnOven.class)
+                         new EventSink(ElectricMeterCoupledModel.URI, SwitchOnOven.class)
                 });
         connections.put(
                 new EventSource(OvenCoupledModel.URI, SwitchOffOven.class),
@@ -265,10 +249,10 @@ public class HEM_SIL_Supervisor
 
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
         coupledModelDescriptors.put(
-                HEM_CoupledModel.URI,
+                HEMCoupledModel.URI,
                 RTComponentCoupledModelDescriptor.create(
-                        HEM_CoupledModel.class,
-                        HEM_CoupledModel.URI,
+                        HEMCoupledModel.class,
+                        HEMCoupledModel.URI,
                         submodels,
                         null,
                         null,
@@ -287,12 +271,39 @@ public class HEM_SIL_Supervisor
         RTComponentModelArchitecture arch =			// RT = RealTime
                 new RTComponentModelArchitecture(
                         SIM_ARCHITECTURE_URI,
-                        HEM_CoupledModel.URI,
+                        HEMCoupledModel.URI,
                         atomicModelDescriptors,
                         coupledModelDescriptors,
                         TimeUnit.SECONDS);
 
         return arch;
+    }
+
+
+
+    /** @see fr.sorbonne_u.components.AbstractComponent#start() */
+    @Override
+    public synchronized void start() throws ComponentStartException {
+        super.start();
+        this.traceMessage("Supervisor starts.\n");
+    }
+
+    /** @see fr.sorbonne_u.components.AbstractComponent#execute() */
+    @Override
+    public synchronized void execute() throws Exception {
+        this.sp.createSimulator();
+        this.sp.setSimulationRunParameters(new HashMap<String, Object>());
+        long realTimeOfStart =
+                System.currentTimeMillis() + fr.sorbonne_u.components.cyphy.hem2021e3.CVM_SIL.DELAY_TO_START_SIMULATION;
+        this.sp.startRTSimulation(realTimeOfStart, 0.0,
+                fr.sorbonne_u.components.cyphy.hem2021e3.CVM_SIL.SIMULATION_DURATION);
+    }
+
+    /** @see fr.sorbonne_u.components.AbstractComponent#shutdown() */
+    @Override
+    public synchronized void shutdown() throws ComponentShutdownException {
+        this.traceMessage("Supervisor stops.\n");
+        super.shutdown();
     }
 
 }
