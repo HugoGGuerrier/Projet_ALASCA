@@ -36,8 +36,8 @@ import java.util.concurrent.TimeUnit;
  * invariant	true
  * </pre>
  *
- * @author Emilie Siau
- * @author Hugo Guerrier
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
  */
 public class OvenRTAtomicSimulatorPlugin
     extends RTAtomicSimulatorPlugin {

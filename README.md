@@ -39,6 +39,12 @@ TODO !!!!!! ElectricMeterElectricityModel : production éolienne
 Cohérence des unités de mesure : kwh  ? amperes ? (see OvenElectricityModel - currentConsumption)
 bcp de pb au niveau d'electric meter.
 Oven : consumption = a * goalTemperature + b
+PB AVEC OVEN : goalTemperature qui met le bazar dans Oven + une autre classe avec les trucs comme :
+```java
+this.simulatorPlugin.triggerExternalEvent(
+                    OvenStateModel.URI,
+                    t -> new SwitchOnOven(t, 200));
+```
 HEM : dishwasher, electric meter
 RunHEMSim : windturbine
 wind turbine, mil : coupledModel ?...

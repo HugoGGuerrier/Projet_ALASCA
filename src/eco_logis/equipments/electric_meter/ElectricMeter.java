@@ -6,6 +6,7 @@ import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.exceptions.PreconditionException;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  */
 @OfferedInterfaces(offered={ElectricMeterCI.class})
 public class ElectricMeter
-    extends AbstractComponent
+    extends AbstractCyPhyComponent
     implements ElectricMeterImplementationI
 {
 

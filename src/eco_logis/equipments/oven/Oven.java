@@ -1,8 +1,17 @@
 package eco_logis.equipments.oven;
 
-import fr.sorbonne_u.components.AbstractComponent;
+import eco_logis.CVM_SIL;
+import eco_logis.equipments.oven.mil.OvenCoupledModel;
+import eco_logis.equipments.oven.mil.events.SwitchOffOven;
+import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.oven.sil.OvenStateModel;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.exceptions.PreconditionException;
+
+import java.util.HashMap;
 
 /**
  * The class <code>Oven</code> implements the oven component.
@@ -24,11 +33,12 @@ import fr.sorbonne_u.exceptions.PreconditionException;
 
 @OfferedInterfaces(offered = {OvenCI.class})
 public class Oven
-    extends AbstractComponent
+    extends AbstractCyPhyComponent
     implements OvenImplementationI 
 {
 
     // ========== Macros ==========
+
 
     /** URI of the oven reflection inbound port used */
     public static final String REFLECTION_INBOUND_PORT_URI = "OVEN-rip";
@@ -41,6 +51,13 @@ public class Oven
 
     /** Initial state of the oven (false -> OFF) */
     public static final boolean INITIAL_STATE = false;
+
+    /** acceleration factor used when executing as a unit test */
+    protected static final double ACC_FACTOR = 1.0;
+
+    /** URI of the executor service used to execute the real time simulation */
+    protected static final String SCHEDULED_EXECUTOR_SERVICE_URI = "ses";
+
 
 
     // ========== Attributes ==========
@@ -55,70 +72,109 @@ public class Oven
     /** Inbound port offering the <code>OvenCI</code> interface */
     private OvenInboundPort oip;
 
+    /** URI of the simulation architecture to be created or the empty string
+     *  if the component does not execute as a SIL simulation */
+    protected String simArchitectureURI;
+
+    /** Simulator plug-in that holds the SIL simulator for this component */
+    protected OvenRTAtomicSimulatorPlugin simulatorPlugin;
+
+    /** True if the component executes as a SIL simulation, false otherwise */
+    protected boolean isSILsimulated;
+
+    /** True if the component executes as a unit test, false otherwise */
+    protected boolean executesAsUnitTest;
+
 
     // ========== Constructors ==========
 
 
     /**
-     * Create an oven component
+     * Create an oven component including a SIL simulation.
      *
      * <p><strong>Contract</strong></p>
-     * 
      * <pre>
      * pre	{@code INBOUND_PORT_URI != null}
      * pre	{@code !INBOUND_PORT_URI.isEmpty()}
-     * post true
+     * pre	{@code simArchitectureURI != null}
+     * pre	{@code !simArchitectureURI.isEmpty() || !executesAsUnitTest}
+     * post {@code !isBaking}
+     * post {@code temperature == 0.0}
      * </pre>
      *
-     * @throws Exception TODO
+     * @param simArchitectureURI	URI of the simulation architecture to be created or the empty string  if the component does not execute as a SIL simulation.
+     * @param executesAsUnitTest	true if the component executes as a unit test, false otherwise.
+     * @throws Exception			<i>to do</i>.
      */
-    protected Oven() throws Exception {
-        this(INBOUND_PORT_URI);
+    protected Oven(
+            String simArchitectureURI,
+            boolean executesAsUnitTest
+    ) throws Exception {
+        super(REFLECTION_INBOUND_PORT_URI, 1, 0);
+        this.initialise(INBOUND_PORT_URI, simArchitectureURI,
+                executesAsUnitTest);
     }
 
+
     /**
-     * Create an oven component
+     * Create an oven component.
      *
      * <p><strong>Contract</strong></p>
-     * 
      * <pre>
      * pre	{@code ovenInboundPortURI != null}
      * pre	{@code !ovenInboundPortURI.isEmpty()}
-     * post	true
+     * pre	{@code simArchitectureURI != null}
+     * pre	{@code !simArchitectureURI.isEmpty() || !executesAsUnitTest}
+     * post {@code !isBaking}
+     * post {@code temperature == 0.0}
      * </pre>
-     * 
-     * @see AbstractComponent#AbstractComponent(int, int) 
      *
-     * @param ovenInboundPortURI URI of the oven inbound port.
-     * @throws Exception TODO
+     * @param ovenInboundPortURI	    URI of the oven inbound port.
+     * @param simArchitectureURI		URI of the simulation architecture to be created or the empty string  if the component does not execute as a SIL simulation.
+     * @param executesAsUnitTest		true if the component executes as a unit test, false otherwise.
+     * @throws Exception				<i>to do</i>.
      */
-    protected Oven(String ovenInboundPortURI) throws Exception {
-        super(1, 0);
-        this.initialise(ovenInboundPortURI);
+    protected Oven(
+            String ovenInboundPortURI,
+            String simArchitectureURI,
+            boolean executesAsUnitTest
+    ) throws Exception {
+        super(REFLECTION_INBOUND_PORT_URI, 1, 0);
+        this.initialise(ovenInboundPortURI, simArchitectureURI,
+                executesAsUnitTest);
     }
 
+
     /**
-     * Create a new oven with the wanted inbound port URI and the reflection inbound port URI
+     * Create an oven component with the given reflection inbound port
+     * URI.
      *
      * <p><strong>Contract</strong></p>
-     * 
      * <pre>
      * pre	{@code ovenInboundPortURI != null}
      * pre	{@code !ovenInboundPortURI.isEmpty()}
      * pre	{@code reflectionInboundPortURI != null}
-     * pre	{@code !reflectionInboundPortURI.isEmpty()}
-     * post	true
+     * pre	{@code simArchitectureURI != null}
+     * pre	{@code !simArchitectureURI.isEmpty() || !executesAsUnitTest}
+     * post {@code !isBaking}
+     * post {@code temperature == 0.0}
      * </pre>
-     * 
-     * @see AbstractComponent#AbstractComponent(String, int, int) 
      *
-     * @param reflectionInboundPortURI  The reflection inbound port URI
-     * @param ovenInboundPortURI The inbound port URI
-     * @throws Exception TODO
+     * @param reflectionInboundPortURI	URI of the reflection inbound port of the component.
+     * @param ovenInboundPortURI    	URI of the oven inbound port.
+     * @param simArchitectureURI		URI of the simulation architecture to be created or the empty string  if the component does not execute as a SIL simulation.
+     * @param executesAsUnitTest		true if the component executes as a unit test, false otherwise.
+     * @throws Exception				<i>to do</i>.
      */
-    protected Oven(String reflectionInboundPortURI, String ovenInboundPortURI) throws Exception {
+    protected Oven(
+            String reflectionInboundPortURI,
+            String ovenInboundPortURI,
+            String simArchitectureURI,
+            boolean executesAsUnitTest
+    ) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
-        initialise(ovenInboundPortURI);
+        this.initialise(ovenInboundPortURI, simArchitectureURI,
+                executesAsUnitTest);
     }
 
 
@@ -133,20 +189,34 @@ public class Oven
      * <pre>
      * pre	{@code ovenInboundPortURI != null}
      * pre	{@code !ovenInboundPortURI.isEmpty()}
+     * pre	{@code simArchitectureURI != null}
+     * pre	{@code !simArchitectureURI.isEmpty() || !executesAsUnitTest}
      * post {@code !isBaking}
      * post {@code temperature == 0.0}
      * post	{@code ovenInboundPort.isPublished()}
      * </pre>
      *
-     * @param ovenInboundPortURI The oven inbound port URI
+     * @param ovenInboundPortURI    The oven inbound port URI
+     * @param simArchitectureURI    URI of the simulation architecture to be created or the empty string  if the component does not execute as a SIL simulation.
+     * @param executesAsUnitTest    true if the component executes as a unit test, false otherwise.
+     *
      * @throws Exception TODO
      */
-    protected void initialise(String ovenInboundPortURI) throws Exception {
+    protected void initialise(
+            String ovenInboundPortURI,
+            String simArchitectureURI,
+            boolean executesAsUnitTest
+    ) throws Exception {
         // Assert the URI consistence
         assert ovenInboundPortURI != null : new PreconditionException("ovenInboundPortURI != null");
         assert !ovenInboundPortURI.isEmpty() : new PreconditionException("!ovenInboundPortURI.isEmpty()");
+        assert simArchitectureURI != null;
+        assert !simArchitectureURI.isEmpty() || !executesAsUnitTest;
 
         // Initialise the component
+        this.simArchitectureURI = simArchitectureURI;
+        this.isSILsimulated = !simArchitectureURI.isEmpty();
+        this.executesAsUnitTest = executesAsUnitTest;
         this.temperature = 0.0;
         this.isBaking = INITIAL_STATE;
 
@@ -166,6 +236,61 @@ public class Oven
     // ========== Override methods ==========
 
 
+
+    /** @see fr.sorbonne_u.components.AbstractComponent#start() */
+    @Override
+    public synchronized void start() throws ComponentStartException {
+        super.start();
+
+        this.traceMessage("Oven starts.\n");
+
+        if (this.isSILsimulated) {
+            this.createNewExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI, 1, true);
+            this.simulatorPlugin = new OvenRTAtomicSimulatorPlugin();
+            this.simulatorPlugin.setPluginURI(OvenCoupledModel.URI);
+            this.simulatorPlugin.setSimulationExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI);
+            try {
+                this.simulatorPlugin.initialiseSimulationArchitecture(
+                        this.simArchitectureURI,
+                        this.executesAsUnitTest ?
+                                ACC_FACTOR
+                                :	CVM_SIL.ACC_FACTOR
+                );
+                this.installPlugin(this.simulatorPlugin);
+            } catch (Exception e) {
+                throw new ComponentStartException(e) ;
+            }
+        }
+    }
+
+    /** @see fr.sorbonne_u.components.AbstractComponent#execute() */
+    @Override
+    public synchronized void execute() throws Exception {
+        if (this.executesAsUnitTest) {
+            this.simulatorPlugin.setSimulationRunParameters(
+                    new HashMap<String, Object>());
+            long simStart = System.currentTimeMillis() + 1000L;
+            double endTime = 10.0/ACC_FACTOR;
+            this.simulatorPlugin.startRTSimulation(simStart, 0.0, endTime);
+            this.traceMessage("real time of start = " + simStart + "\n");
+        }
+    }
+
+
+    /** @see fr.sorbonne_u.components.AbstractComponent#shutdown() */
+    @Override
+    public synchronized void shutdown() throws ComponentShutdownException {
+        this.traceMessage("Oven stops.\n");
+
+        try {
+            this.oip.unpublishPort();
+        } catch (Exception e) {
+            throw new ComponentShutdownException(e) ;
+        }
+        super.shutdown();
+    }
+
+
     /** @see OvenImplementationI#isBaking() */
     @Override
     public boolean isBaking() throws Exception {
@@ -178,21 +303,37 @@ public class Oven
     /** @see OvenImplementationI#startBaking() */
     @Override
     public void startBaking() throws Exception {
+        assert !isBaking : new PreconditionException("isBaking == false");
+
         if(Oven.VERBOSE) {
             logMessage("Oven is turned on, starts baking");
         }
-        assert !isBaking;
+
         isBaking = true;
+
+        if (this.isSILsimulated) {
+            this.simulatorPlugin.triggerExternalEvent(
+                    OvenStateModel.URI,
+                    t -> new SwitchOnOven(t, 200));
+        }
     }
 
     /** @see OvenImplementationI#stopBaking() */
     @Override
     public void stopBaking() throws Exception {
+        assert isBaking : new PreconditionException("isBaking() == true");
+
         if(Oven.VERBOSE) {
             logMessage("Oven is turned off, stops baking. The cake is ready !");
         }
-        assert isBaking;
+
         isBaking = false;
+
+        if (this.isSILsimulated) {
+            this.simulatorPlugin.triggerExternalEvent(
+                    OvenStateModel.URI,
+                    t -> new SwitchOffOven(t));
+        }
     }
 
     /** @see OvenImplementationI#getTemperature() */
