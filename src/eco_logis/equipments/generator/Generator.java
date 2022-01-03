@@ -2,6 +2,7 @@ package eco_logis.equipments.generator;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
 /**
@@ -12,7 +13,7 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  */
 @OfferedInterfaces(offered = {GeneratorCI.class})
 public class Generator
-    extends AbstractComponent
+    extends AbstractCyPhyComponent
     implements GeneratorImplementationI
 {
 

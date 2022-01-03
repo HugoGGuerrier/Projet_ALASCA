@@ -1,7 +1,7 @@
-package eco_logis.equipments.crypto_miner.sil;
+package eco_logis.equipments.generator.sil;
 
-import eco_logis.equipments.crypto_miner.CryptoMiner;
-import eco_logis.equipments.crypto_miner.CryptoMinerRTAtomicSimulatorPlugin;
+import eco_logis.equipments.generator.Generator;
+import eco_logis.equipments.generator.GeneratorRTAtomicSimulatorPlugin;
 import fr.sorbonne_u.components.cyphy.plugins.devs.utils.StandardComponentLogger;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
@@ -15,12 +15,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class represents the user action for the Crypto miner
+ * This class is the user model for the Generator test
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public class CryptoMinerUserModel
+public class GeneratorUserModel
     extends AtomicModel
 {
 
@@ -28,13 +28,13 @@ public class CryptoMinerUserModel
 
 
     /** The model unique URI */
-    public static final String URI = CryptoMinerUserModel.class.getSimpleName();
+    public static final String URI = GeneratorUserModel.class.getSimpleName();
 
     /** Run parameter name for the step mean duration */
     public static final String STEP_MEAN_DURATION_RUNPNAME = URI + ":STEP_MEAN_DURATION";
 
     /** The mean duration between two events in second */
-    protected static double STEP_MEAN_DURATION = 2.0;
+    protected static double STEP_MEAN_DURATION = 4.0;
 
 
     // ========== Attributes ==========
@@ -50,14 +50,14 @@ public class CryptoMinerUserModel
     protected Duration toNext;
 
     /** The model owner */
-    protected CryptoMiner owner;
+    protected Generator owner;
 
 
     // ========== Constructors ==========
 
 
     /** @see AtomicModel#AtomicModel(String, TimeUnit, SimulatorI) */
-    public CryptoMinerUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
+    public GeneratorUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
         rg = new RandomDataGenerator();
     }
@@ -70,7 +70,7 @@ public class CryptoMinerUserModel
      * Generate the duration to the next event
      */
     private void generateNextEvent() {
-        if(currentStep <= 4) {
+        if(currentStep <= 2) {
 
             double delay = Math.max(this.rg.nextGaussian(STEP_MEAN_DURATION, STEP_MEAN_DURATION/2.0), 0.1);
             toNext = new Duration(delay, getSimulatedTimeUnit());
@@ -91,8 +91,8 @@ public class CryptoMinerUserModel
         super.setSimulationRunParameters(simParams);
 
         // Get the owner
-        assert simParams.containsKey(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        owner = (CryptoMiner) simParams.get(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        assert simParams.containsKey(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        owner = (Generator) simParams.get(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         setLogger(new StandardComponentLogger(owner));
 
         // Get the step mean duration
@@ -144,45 +144,23 @@ public class CryptoMinerUserModel
             case 1:
                 owner.runTask(o -> {
                     try {
-                        ((CryptoMiner)o).powerOn();
+                        ((Generator)o).startGenerator();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                msg.append(" executes the operation powerOn");
+                msg.append(" executes the operation startGenerator");
                 break;
 
             case 2:
                 owner.runTask(o -> {
                     try {
-                        ((CryptoMiner)o).startMiner();
+                        ((Generator)o).stopGenerator();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                msg.append(" executes the operation startMiner");
-                break;
-
-            case 3:
-                owner.runTask(o -> {
-                    try {
-                        ((CryptoMiner)o).stopMiner();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                msg.append(" executes the operation stopMiner");
-                break;
-
-            case 4:
-                owner.runTask(o -> {
-                    try {
-                        ((CryptoMiner)o).powerOff();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                msg.append(" executes the operation powerOff");
+                msg.append(" executes the operation stopGenerator");
                 break;
 
             default:

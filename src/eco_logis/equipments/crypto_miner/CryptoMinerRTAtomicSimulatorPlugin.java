@@ -27,6 +27,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This class represents the plugin for the SIL simulation
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public class CryptoMinerRTAtomicSimulatorPlugin
     extends RTAtomicSimulatorPlugin
 {

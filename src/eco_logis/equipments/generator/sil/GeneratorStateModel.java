@@ -1,8 +1,11 @@
-package eco_logis.equipments.crypto_miner.sil;
+package eco_logis.equipments.generator.sil;
 
-import eco_logis.equipments.crypto_miner.CryptoMiner;
-import eco_logis.equipments.crypto_miner.CryptoMinerRTAtomicSimulatorPlugin;
-import eco_logis.equipments.crypto_miner.mil.events.*;
+import eco_logis.equipments.crypto_miner.mil.events.AbstractCryptoMinerEvent;
+import eco_logis.equipments.generator.Generator;
+import eco_logis.equipments.generator.GeneratorRTAtomicSimulatorPlugin;
+import eco_logis.equipments.generator.mil.events.AbstractGeneratorEvent;
+import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
+import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
 import fr.sorbonne_u.components.cyphy.plugins.devs.utils.StandardComponentLogger;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -24,19 +27,15 @@ import java.util.concurrent.TimeUnit;
  */
 @ModelExternalEvents(
         imported = {
-                MineOnCryptoMiner.class,
-                MineOffCryptoMiner.class,
-                SwitchOnCryptoMiner.class,
-                SwitchOffCryptoMiner.class
+                SwitchOnGenerator.class,
+                SwitchOffGenerator.class
         },
         exported = {
-                MineOnCryptoMiner.class,
-                MineOffCryptoMiner.class,
-                SwitchOnCryptoMiner.class,
-                SwitchOffCryptoMiner.class
+                SwitchOnGenerator.class,
+                SwitchOffGenerator.class
         }
 )
-public class CryptoMinerStateModel
+public class GeneratorStateModel
     extends AtomicModel
 {
 
@@ -44,30 +43,27 @@ public class CryptoMinerStateModel
 
 
     /** The model unique URI */
-    public static final String URI = CryptoMinerStateModel.class.getSimpleName();
+    public static final String URI = GeneratorStateModel.class.getSimpleName();
 
 
     // ========== Attributes ==========
 
 
-    /** If the miner is currently on */
-    protected boolean isOn;
-
-    /** If the miner is currently mining currency */
-    protected boolean isMining;
+    /** If the generator is currently running */
+    protected boolean isRunning;
 
     /** The last received event */
-    protected AbstractCryptoMinerEvent lastEvent;
+    protected AbstractGeneratorEvent lastEvent;
 
     /** The model owner */
-    protected CryptoMiner owner;
+    protected Generator owner;
 
 
     // ========== Constructors ==========
 
-
+    
     /** @see AtomicModel#AtomicModel(String, TimeUnit, SimulatorI) */
-    public CryptoMinerStateModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
+    public GeneratorStateModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
     }
 
@@ -82,8 +78,8 @@ public class CryptoMinerStateModel
         super.setSimulationRunParameters(simParams);
 
         // Get the model owner in the params
-        assert simParams.containsKey(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        owner = (CryptoMiner) simParams.get(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        assert simParams.containsKey(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        owner = (Generator) simParams.get(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
 
         // Set the logger in the component logger
         setLogger(new StandardComponentLogger(owner));
@@ -97,8 +93,7 @@ public class CryptoMinerStateModel
 
         // Set the initial miner state
         lastEvent = null;
-        isOn = false;
-        isMining = false;
+        isRunning = false;
 
         // Tracing
         this.toggleDebugMode();
@@ -133,7 +128,7 @@ public class CryptoMinerStateModel
         assert events != null && events.size() == 1;
 
         // Get the last received event
-        lastEvent = (AbstractCryptoMinerEvent) events.get(0);
+        lastEvent = (AbstractGeneratorEvent) events.get(0);
 
         // Trace
         logMessage(URI + " executes the external event " +
