@@ -35,16 +35,16 @@ représenter l’état dès qu’il y a plus de deux états possibles.
 
 ##############################
 
+TODO : au dessus, récap de audit 1 et surtout oral 1 + voir fiche pdf dans le mail du prof
 TODO !!!!!! ElectricMeterElectricityModel : production éolienne
+ExternalWindModel : améliorer la simulation du vent
+pas bien compris RunHEMSim, avec connections.put eventsink....
++ finir power bank dedans
+
 Cohérence des unités de mesure : kwh  ? amperes ? (see OvenElectricityModel - currentConsumption)
 bcp de pb au niveau d'electric meter.
 Oven : consumption = a * goalTemperature + b
-PB AVEC OVEN : goalTemperature qui met le bazar dans Oven + une autre classe avec les trucs comme :
-```java
-this.simulatorPlugin.triggerExternalEvent(
-                    OvenStateModel.URI,
-                    t -> new SwitchOnOven(t, 200));
-```
+Oven : régler le thermostat, prendre modèle sur le chauffage
 HEM : dishwasher, electric meter
 RunHEMSim : windturbine
 wind turbine, mil : coupledModel ?...

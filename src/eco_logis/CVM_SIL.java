@@ -1,5 +1,6 @@
 package eco_logis;
 
+import eco_logis.equipments.crypto_miner.CryptoMiner;
 import eco_logis.equipments.electric_meter.ElectricMeter;
 import eco_logis.equipments.hem.HEM;
 import eco_logis.equipments.oven.Oven;
@@ -33,7 +34,7 @@ public class CVM_SIL
      *  because of implementation constraints revolving around the precision
      *  of the Java thread scheduler, this factor must be chosen in such a way
      *  that intervals between simulation transitions or the execution of pieces
-     *  of code do not fall under 10 milliseconds approximately.			*/
+     *  of code do not fall under 10 milliseconds approximately. */
     public static final double ACC_FACTOR = 1.0;
 
     /** Delay to start the real time simulations on every model at the
@@ -42,10 +43,10 @@ public class CVM_SIL
      *  all models of their start time and to initialise them before starting,
      *  a value that depends upon the complexity of the simulation architecture
      *  to be traversed and the component deployment (deployments on several
-     *  JVM and even more several computers require a larger delay.			*/
+     *  JVM and even more several computers require a larger delay. */
     public static final long DELAY_TO_START_SIMULATION = 1000L;
 
-    /** Duration  of the simulation.										*/
+    /** Duration  of the simulation. */
     public static final double SIMULATION_DURATION = 10.0;
 
 
@@ -62,18 +63,16 @@ public class CVM_SIL
     @Override
     public void deploy() throws Exception {
         AbstractComponent.createComponent(
-                Oven.class.getCanonicalName(),
-                // the first actual parameter tells the component to create
-                // a SIL simulation architecture for integration test and the
-                // second 'false' that it must *not* be executed as a unit test.
-                new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
-        /*
+            CryptoMiner.class.getCanonicalName(),
+            // the first actual parameter tells the component to create
+            // a SIL simulation architecture for integration test and the
+            // second 'false' that it must *not* be executed as a unit test.
+            new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
+
+        /* TODO
         AbstractComponent.createComponent(
-                ThermostatedHeater.class.getCanonicalName(),
-                // the first actual parameter tells the component to create
-                // a SIL simulation architecture for integration test and the
-                // second 'true' that it must be executed as a unit test.
-                new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, true});
+                Oven.class.getCanonicalName(),
+                new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
         */
         AbstractComponent.createComponent(
                 ElectricMeter.class.getCanonicalName(),

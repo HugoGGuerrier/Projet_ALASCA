@@ -154,8 +154,7 @@ public class ElectricMeter
             int nbSchedulableThreads
     ) throws Exception {
         super(REFLECTION_INBOUND_PORT_URI, nbThreads, nbSchedulableThreads);
-        this.initialise(electricMeterInboundPortURI, simArchitectureURI,
-                executesAsUnitTest);
+        this.initialise(electricMeterInboundPortURI, simArchitectureURI, executesAsUnitTest);
     }
 
     /**
@@ -248,23 +247,18 @@ public class ElectricMeter
         this.traceMessage("Electric meter starts.\n");
 
         if (this.isSILsimulated) {
-            // create the simulator plug-in instance, attaching to it a
-            // scheduled executor service allowing it to perform the
-            // simulation steps in real time
+            /* Create the simulator plug-in instance, attaching to it a scheduled executor
+            service allowing it to perform the simulation steps in real time */
             this.createNewExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI, 1, true);
             this.simulatorPlugin = new ElectricMeterRTAtomicSimulatorPlugin();
             this.simulatorPlugin.setPluginURI(ElectricMeterCoupledModel.URI);
             this.simulatorPlugin.setSimulationExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI);
             try {
-                // the plug-in is programmed to be able to create the
-                // simulation architecture and initialise itself to be able
-                // to perform the simulations
                 this.simulatorPlugin.initialiseSimulationArchitecture(
                         this.simArchitectureURI,
                         this.executesAsUnitTest ?
                                 ACC_FACTOR
                                 :	CVM_SIL.ACC_FACTOR);
-                // lastly, install the plug-in on the component
                 this.installPlugin(this.simulatorPlugin);
             } catch (Exception e) {
                 throw new ComponentStartException(e) ;
@@ -344,7 +338,7 @@ public class ElectricMeter
     @Override
     public double getCurrentConsumption() throws Exception {
         if (VERBOSE) {
-            this.traceMessage("Electric meter returns is current consumption.\n");
+            this.traceMessage("Electric meter returns its current consumption.\n");
         }
         // TODO will need a computation.
         return 0;
@@ -354,7 +348,7 @@ public class ElectricMeter
     @Override
     public double getCurrentProduction() throws Exception {
         if (VERBOSE) {
-            this.traceMessage("Electric meter returns is current production.\n");
+            this.traceMessage("Electric meter returns its current production.\n");
         }
         // TODO will need a computation.
         return 0;

@@ -3,14 +3,24 @@ package eco_logis.equipments.wind_turbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
+/**
+ * This class starts the unit tests on the wind turbine component
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public class CVMUnitTest
-    extends AbstractCVM {
+    extends AbstractCVM
+{
 
     // ========== Constructors ==========
 
+
     public CVMUnitTest() throws Exception {}
 
+
     // ========== Class methods ==========
+
 
     @Override
     public void deploy() throws Exception {
@@ -24,8 +34,8 @@ public class CVMUnitTest
     public static void main(String[] args) {
         try {
             CVMUnitTest cvm = new CVMUnitTest();
-            cvm.startStandardLifeCycle(1000L);
-            Thread.sleep(10000L);
+            cvm.startStandardLifeCycle(15000L);
+            Thread.sleep(5000L);
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();

@@ -14,10 +14,13 @@ public class CryptoMinerUnitTester
 
     // ========== Attributes ==========
 
+
     private String cryptoMinerInboundPortUri;
     private CryptoMinerOutboundPort cmop;
 
+
     // ========== Constructors ==========
+
 
     protected CryptoMinerUnitTester() throws Exception {
         this(CryptoMiner.INBOUND_PORT_URI);
@@ -33,7 +36,9 @@ public class CryptoMinerUnitTester
         initialise(cryptoMinerInboundPortURI);
     }
 
+
     // ========== Class methods ==========
+
 
     protected void initialise(String cryptoMinerInboundPortUri) throws Exception {
         // Set the inbound port uri
@@ -49,7 +54,9 @@ public class CryptoMinerUnitTester
         toggleTracing();
     }
 
+
     // ========== Test methods ==========
+
 
     protected void testIsOn() {
         logMessage("Test isOn()...");
@@ -112,6 +119,7 @@ public class CryptoMinerUnitTester
         testStartStopMiner();
         logMessage("All tests passed !");
     }
+
 
     // ========== Lifecycle methods ==========
 

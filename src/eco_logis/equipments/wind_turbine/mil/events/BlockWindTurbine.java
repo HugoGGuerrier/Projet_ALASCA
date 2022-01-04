@@ -6,7 +6,13 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.events.EventInformationI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 
-public class SwitchOnWindTurbine
+/**
+ * This class represent a blocking event for the wind turbine
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
+public class BlockWindTurbine
     extends AbstractWindTurbineEvent
 {
 
@@ -14,7 +20,7 @@ public class SwitchOnWindTurbine
 
 
     /** @see AbstractWindTurbineEvent#AbstractWindTurbineEvent(Time, EventInformationI) */
-    public SwitchOnWindTurbine(Time timeOfOccurrence) {
+    public BlockWindTurbine(Time timeOfOccurrence) {
         super(timeOfOccurrence, null);
     }
 
@@ -25,8 +31,13 @@ public class SwitchOnWindTurbine
     /** @see AbstractWindTurbineEvent#hasPriorityOver(EventI) */
     @Override
     public boolean hasPriorityOver(EventI e) {
-        // Switching on has priority over all others events
-        return true;
+        if (WindSpeedChange.class.equals(e.getClass())) {
+            // Has priority over the wind speed change
+            return true;
+        } else {
+            // Blocking hasn't priority over any other event
+            return false;
+        }
     }
 
     /** @see AbstractWindTurbineEvent#executeOn(AtomicModel) */
@@ -34,8 +45,8 @@ public class SwitchOnWindTurbine
     public void executeOn(AtomicModel model) {
         assert model instanceof WindTurbineElectricityModel;
         WindTurbineElectricityModel m = (WindTurbineElectricityModel) model;
-        if(!m.isOn()) {
-            m.setOn(true);
+        if(m.isOn()) {
+            m.setOn(false);
             m.setHasChanged(true);
         }
     }

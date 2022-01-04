@@ -20,6 +20,12 @@ import eco_logis.equipments.oven.mil.OvenTemperatureModel;
 import eco_logis.equipments.oven.mil.OvenUserModel;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.power_bank.mil.PowerBankElectricityModel;
+import eco_logis.equipments.wind_turbine.mil.ExternalWindModel;
+import eco_logis.equipments.wind_turbine.mil.WindTurbineElectricityModel;
+import eco_logis.equipments.wind_turbine.mil.WindTurbineUserModel;
+import eco_logis.equipments.wind_turbine.mil.events.BlockWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.UnblockWindTurbine;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.ArchitectureI;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
@@ -155,8 +161,40 @@ public class RunHEMSim {
                     )
             );
 
+            // Add the power bank
+            // TODO
+
             // Add the wind turbine
-            // TODO here + after
+            atomicModelDescriptors.put(
+                    WindTurbineElectricityModel.URI,
+                    AtomicHIOA_Descriptor.create(
+                            WindTurbineElectricityModel.class,
+                            WindTurbineElectricityModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
+            atomicModelDescriptors.put(
+                    WindTurbineUserModel.URI,
+                    AtomicModelDescriptor.create(
+                            WindTurbineUserModel.class,
+                            WindTurbineUserModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
+            atomicModelDescriptors.put(
+                    ExternalWindModel.URI,
+                    AtomicModelDescriptor.create(
+                            ExternalWindModel.class,
+                            ExternalWindModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
 
             // Add the electric meter
             atomicModelDescriptors.put(
@@ -183,6 +221,10 @@ public class RunHEMSim {
             submodels.add(OvenElectricityModel.URI);
             submodels.add(OvenTemperatureModel.URI);
             submodels.add(OvenUserModel.URI);
+            // TODO powerbank
+            submodels.add(WindTurbineElectricityModel.URI);
+            submodels.add(WindTurbineUserModel.URI);
+            submodels.add(ExternalWindModel.URI);
             submodels.add(ElectricMeterElectricityModel.URI);
 
 
@@ -285,15 +327,39 @@ public class RunHEMSim {
                     }
             );
 
+            // Add the power bank events
+            // TODO
+
+            // Add the wind turbine events
+            connections.put(
+                    new EventSource(WindTurbineUserModel.URI, BlockWindTurbine.class),
+                    new EventSink[] {
+                            new EventSink(WindTurbineElectricityModel.URI, BlockWindTurbine.class)
+                    }
+            );
+            connections.put(
+                    new EventSource(WindTurbineUserModel.URI, UnblockWindTurbine.class),
+                    new EventSink[] {
+                            new EventSink(WindTurbineElectricityModel.URI, UnblockWindTurbine.class)
+                    }
+            );
 
             // --- Create the variable bindings
             Map<VariableSource, VariableSink[]> bindings = new HashMap<>();
 
-            // Bind the fuel level from the fuel model to the electricity model
+            // Bind the fuel level from the fuel model to the generator electricity model
             bindings.put(
                     new VariableSource("currentFuelLevel", Double.class, GeneratorFuelModel.URI),
                     new VariableSink[] {
                             new VariableSink("currentFuelLevel", Double.class, GeneratorElectricityModel.URI)
+                    }
+            );
+
+            // Bind the external wind speed level from the external wind model to the wind turbine electricity model
+            bindings.put(
+                    new VariableSource("externalWindSpeed", Double.class, ExternalWindModel.URI),
+                    new VariableSink[] {
+                            new VariableSink("externalWindSpeed", Double.class, WindTurbineElectricityModel.URI)
                     }
             );
 
@@ -326,6 +392,30 @@ public class RunHEMSim {
                     new VariableSource("currentConsumption", Double.class, OvenElectricityModel.URI),
                     new VariableSink[] {
                             new VariableSink("currentOvenConsumption", Double.class, ElectricMeterElectricityModel.URI)
+                    }
+            );
+/*
+            // Bind the power bank production to the electric meter
+            bindings.put(
+                    new VariableSource("currentProduction", Double.class, PowerBankElectricityModel.URI),
+                    new VariableSink[] {
+                            new VariableSink("currentPowerBankProduction", Double.class, ElectricMeterElectricityModel.URI)
+                    }
+            );
+
+            // Bind the power bank consumption to the electric meter
+            bindings.put(
+                    new VariableSource("currentConsumption", Double.class, PowerBankElectricityModel.URI),
+                    new VariableSink[] {
+                            new VariableSink("currentPowerBankConsumption", Double.class, ElectricMeterElectricityModel.URI)
+                    }
+            );
+*/
+            // Bind the wind turbine production to the electric meter
+            bindings.put(
+                    new VariableSource("currentProduction", Double.class, WindTurbineElectricityModel.URI),
+                    new VariableSink[] {
+                            new VariableSink("currentWindTurbineProduction", Double.class, ElectricMeterElectricityModel.URI)
                     }
             );
 

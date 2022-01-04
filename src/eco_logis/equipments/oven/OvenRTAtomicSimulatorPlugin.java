@@ -1,9 +1,9 @@
 package eco_logis.equipments.oven;
 
 import eco_logis.equipments.oven.mil.OvenCoupledModel;
-import eco_logis.equipments.oven.mil.OvenUserModel;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.oven.sil.OvenUserSILModel;
 import eco_logis.equipments.oven.sil.OvenElectricitySILModel;
 import eco_logis.equipments.oven.sil.OvenStateModel;
 import eco_logis.equipments.oven.sil.OvenTemperatureSILModel;
@@ -30,17 +30,12 @@ import java.util.concurrent.TimeUnit;
  * The class <code>OvenRTAtomicSimulatorPlugin</code> defines the plug-in
  * that manages the SIL simulation inside the oven component.
  *
- * <p><strong>Description</strong></p>
- * <p><strong>Invariant</strong></p>
- * <pre>
- * invariant	true
- * </pre>
- *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
 public class OvenRTAtomicSimulatorPlugin
-    extends RTAtomicSimulatorPlugin {
+    extends RTAtomicSimulatorPlugin
+{
 
     // ========== Macros ==========
 
@@ -55,22 +50,6 @@ public class OvenRTAtomicSimulatorPlugin
 
 
     // ========== Class methods ==========
-
-
-    /** @see fr.sorbonne_u.components.cyphy.plugins.devs.AbstractSimulatorPlugin#setSimulationRunParameters(java.util.Map) */
-    @Override
-    public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-        /* Initialise the simulation parameter giving the reference to the
-        owner component before passing the parameters to the simulation models */
-        simParams.put(OWNER_REFERENCE_NAME, this.getOwner());
-
-        /* This will pass the parameters to the simulation models that will
-        then be able to get their own parameters. */
-        super.setSimulationRunParameters(simParams);
-
-        // Remove the value so that the reference may not exit the context of the component
-        simParams.remove(OWNER_REFERENCE_NAME);
-    }
 
 
     /**
@@ -92,7 +71,7 @@ public class OvenRTAtomicSimulatorPlugin
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
 
         Set<String> submodels = new HashSet<String>();
-        submodels.add(OvenUserModel.URI);
+        submodels.add(OvenUserSILModel.URI);
         submodels.add(OvenStateModel.URI);
         submodels.add(OvenTemperatureSILModel.URI);
 
@@ -100,14 +79,15 @@ public class OvenRTAtomicSimulatorPlugin
         Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
 
         atomicModelDescriptors.put(
-                OvenUserModel.URI,
+                OvenUserSILModel.URI,
                 RTAtomicModelDescriptor.create(
-                        OvenUserModel.class,
-                        OvenUserModel.URI,
+                        OvenUserSILModel.class,
+                        OvenUserSILModel.URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
                         accFactor));
+
         atomicModelDescriptors.put(
                 OvenStateModel.URI,
                 RTAtomicModelDescriptor.create( // RTAtomicHIOA_Descriptor??
@@ -117,6 +97,7 @@ public class OvenRTAtomicSimulatorPlugin
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
                         accFactor));
+
         atomicModelDescriptors.put(
                 OvenTemperatureSILModel.URI,
                 RTAtomicModelDescriptor.create( // RTAtomicHIOA_Descriptor??
@@ -160,9 +141,11 @@ public class OvenRTAtomicSimulatorPlugin
             exported by the state model are reexported by the coupled model */
 
             reexported = new HashMap<Class<? extends EventI>,ReexportedEvent>();
+
             reexported.put(
                     SwitchOnOven.class,
                     new ReexportedEvent(OvenStateModel.URI, SwitchOnOven.class));
+
             reexported.put(
                     SwitchOffOven.class,
                     new ReexportedEvent(OvenStateModel.URI, SwitchOffOven.class));
@@ -190,6 +173,25 @@ public class OvenRTAtomicSimulatorPlugin
                         coupledModelDescriptors,
                         TimeUnit.SECONDS,
                         accFactor));
+    }
+
+
+    // ========== Override methods ==========
+
+
+    /** @see fr.sorbonne_u.components.cyphy.plugins.devs.AbstractSimulatorPlugin#setSimulationRunParameters(java.util.Map) */
+    @Override
+    public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
+        /* Initialise the simulation parameter giving the reference to the
+        owner component before passing the parameters to the simulation models */
+        simParams.put(OWNER_REFERENCE_NAME, this.getOwner());
+
+        /* This will pass the parameters to the simulation models that will
+        then be able to get their own parameters. */
+        super.setSimulationRunParameters(simParams);
+
+        // Remove the value so that the reference may not exit the context of the component
+        simParams.remove(OWNER_REFERENCE_NAME);
     }
 
 }

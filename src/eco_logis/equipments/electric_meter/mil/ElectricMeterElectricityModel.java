@@ -55,7 +55,17 @@ public class ElectricMeterElectricityModel
     @ImportedVariable(type = Double.class)
     protected Value<Double> currentGeneratorProduction;
 
-    // TODO windturbine. powerbank?
+    /** The current wind turbine production */
+    @ImportedVariable(type = Double.class)
+    protected Value<Double> currentWindTurbineProduction;
+
+    /** The current power bank production */
+    @ImportedVariable(type = Double.class)
+    protected Value<Double> currentPowerBankProduction;
+
+    /** The current power bank consumption */
+    @ImportedVariable(type = Double.class)
+    protected Value<Double> currentPowerBankConsumption;
 
     /** The current total consumption in the house */
     @InternalVariable(type = Double.class)
@@ -88,7 +98,11 @@ public class ElectricMeterElectricityModel
     protected boolean updateConsumption(Duration d) {
         currentConsumption.time = currentConsumption.time.add(d);
 
-        double computedCons = currentCryptoConsumption.v + currentDishwasherConsumption.v + currentOvenConsumption.v;
+        double computedCons =
+                        currentCryptoConsumption.v
+                        + currentDishwasherConsumption.v
+                        + currentOvenConsumption.v;
+                        // TODO + currentPowerBankConsumption.v;
         if(currentConsumption.v != computedCons) {
             currentConsumption.v = computedCons;
             return true;
@@ -104,7 +118,10 @@ public class ElectricMeterElectricityModel
     protected boolean updateProduction(Duration d) {
         currentProduction.time = currentProduction.time.add(d);
 
-        double computedProd = currentGeneratorProduction.v;
+        double computedProd =
+                        currentGeneratorProduction.v
+                        + currentWindTurbineProduction.v;
+                        // TODO + currentPowerBankProduction.v;
         if(currentProduction.v != computedProd) {
             currentProduction.v = computedProd;
             return true;

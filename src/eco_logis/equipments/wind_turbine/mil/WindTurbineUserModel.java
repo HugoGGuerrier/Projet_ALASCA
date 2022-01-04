@@ -1,7 +1,7 @@
 package eco_logis.equipments.wind_turbine.mil;
 
-import eco_logis.equipments.wind_turbine.mil.events.SwitchOffWindTurbine;
-import eco_logis.equipments.wind_turbine.mil.events.SwitchOnWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.BlockWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.UnblockWindTurbine;
 import fr.sorbonne_u.devs_simulation.es.events.ES_EventI;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -22,8 +22,9 @@ import java.util.concurrent.TimeUnit;
  * @author Hugo GUERRIER
  */
 @ModelExternalEvents(exported = {
-        SwitchOnWindTurbine.class,
-        SwitchOffWindTurbine.class})
+        UnblockWindTurbine.class,
+        BlockWindTurbine.class
+})
 public class WindTurbineUserModel
     extends AtomicES_Model
 {
@@ -75,11 +76,11 @@ public class WindTurbineUserModel
 
         // Create the next event
         ES_EventI next = null;
-        if(current instanceof SwitchOnWindTurbine) {
-            next = new SwitchOffWindTurbine(nextTime);
+        if(current instanceof UnblockWindTurbine) {
+            next = new BlockWindTurbine(nextTime);
         }
-        else if(current instanceof SwitchOffWindTurbine) {
-            next = new SwitchOnWindTurbine(nextTime);
+        else if(current instanceof BlockWindTurbine) {
+            next = new UnblockWindTurbine(nextTime);
         }
         scheduleEvent(next);
     }
@@ -108,7 +109,7 @@ public class WindTurbineUserModel
 
         // Create the first event
         Time nextTime = computeTimeOfNextEvent(getCurrentStateTime());
-        scheduleEvent(new SwitchOnWindTurbine(nextTime));
+        scheduleEvent(new UnblockWindTurbine(nextTime));
 
         // Reinitialize the time
         nextTimeAdvance = timeAdvance();
@@ -123,7 +124,6 @@ public class WindTurbineUserModel
     @Override
     public ArrayList<EventI> output() {
         if(eventList.peek() != null) generateNextEvent();
-
         return super.output();
     }
 

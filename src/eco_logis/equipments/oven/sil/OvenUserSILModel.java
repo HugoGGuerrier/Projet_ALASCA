@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public class OvenUserModel
+public class OvenUserSILModel
     extends AtomicModel
 {
 
@@ -44,7 +44,7 @@ public class OvenUserModel
     private static final long serialVersionUID = 1L;
 
     /** URI for an instance model; works as long as only one instance is created */
-    public static final String URI = OvenUserModel.class.getSimpleName();
+    public static final String URI = OvenUserSILModel.class.getSimpleName();
 
     /** Run parameter name for {@code STEP_MEAN_DURATION} */
     public static final String STEP_MEAN_DURATION_RUNPNAME = URI + ":STEP_MEAN_DURATION";
@@ -53,7 +53,7 @@ public class OvenUserModel
     protected static double STEP_MEAN_DURATION = 2.0;
 
     /** Last step in the test scenario */
-    protected static final int LAST_STEP = 4;
+    protected static final int LAST_STEP = 2;
 
 
     // ========== Attributes ==========
@@ -94,7 +94,7 @@ public class OvenUserModel
      * @param simulationEngine	simulation engine to which the model is attached.
      * @throws Exception		<i>to do</i>.
      */
-    public OvenUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
+    public OvenUserSILModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
         this.rg = new RandomDataGenerator();
     }
@@ -127,6 +127,10 @@ public class OvenUserModel
         }
     }
 
+
+    // ========== Override methods ==========
+
+
     /** @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map) */
     @Override
     public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
@@ -151,8 +155,6 @@ public class OvenUserModel
         this.currentStep = 1;
         // Re-initialisation of the time of occurrence of the next event
         super.initialiseState(initialTime);
-//		this.nextTimeAdvance = this.timeAdvance();
-//		this.timeOfNextEvent = this.getCurrentStateTime().add(this.getNextTimeAdvance());
 
         this.toggleDebugMode();
         this.logMessage("simulation begins.\n");
@@ -173,7 +175,6 @@ public class OvenUserModel
     }
 
 
-
     /** @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedInternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration) */
     @Override
     public void userDefinedInternalTransition(Duration elapsedTime) {
@@ -188,24 +189,29 @@ public class OvenUserModel
         accelerated) to get such coherence between code and simulation
         executions */
         switch (this.currentStep) {
+
             case 1:
-                this.owner.runTask(o -> { try {
-                    ((Oven) o).startBaking();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                this.owner.runTask(o -> {
+                    try {
+                        ((Oven) o).startBaking();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 });
                 message.append(" executes the operation startBaking.\n");
                 break;
+
             case 2:
-                this.owner.runTask(o -> {try {
-                    ((Oven) o).stopBaking();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                this.owner.runTask(o -> {
+                    try {
+                        ((Oven) o).stopBaking();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 });
                 message.append(" executes the operation stopBaking.\n");
                 break;
+
             default:
                 message.append(" ended.\n");
         }

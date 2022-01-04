@@ -1,8 +1,8 @@
 package eco_logis.equipments.wind_turbine.mil;
 
 import eco_logis.equipments.wind_turbine.mil.events.AbstractWindTurbineEvent;
-import eco_logis.equipments.wind_turbine.mil.events.SwitchOffWindTurbine;
-import eco_logis.equipments.wind_turbine.mil.events.SwitchOnWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.BlockWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.UnblockWindTurbine;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ImportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
  * @author Hugo GUERRIER
  */
 @ModelExternalEvents(imported = {
-        SwitchOnWindTurbine.class,
-        SwitchOffWindTurbine.class})
+        UnblockWindTurbine.class,
+        BlockWindTurbine.class})
 public class WindTurbineElectricityModel
     extends AtomicHIOA
 {
@@ -102,9 +102,9 @@ public class WindTurbineElectricityModel
 
 
     /**
-     * Set the wind turbine on/off
+     * Set the wind turbine on/off (unblocked/blocked)
      *
-     * @param on True if the wind turbine is on, false else
+     * @param on True if the wind turbine is on/unblocked, false else
      */
     public void setOn(boolean on) {
         isOn = on;
@@ -139,7 +139,6 @@ public class WindTurbineElectricityModel
     @Override
     protected void initialiseVariables(Time startTime) {
         super.initialiseVariables(startTime);
-
         currentProduction.v = 0.0d;
     }
 

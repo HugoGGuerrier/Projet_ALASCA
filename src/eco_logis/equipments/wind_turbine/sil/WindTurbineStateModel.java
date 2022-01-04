@@ -1,8 +1,10 @@
-package eco_logis.equipments.crypto_miner.sil;
+package eco_logis.equipments.wind_turbine.sil;
 
-import eco_logis.equipments.crypto_miner.CryptoMiner;
-import eco_logis.equipments.crypto_miner.CryptoMinerRTAtomicSimulatorPlugin;
-import eco_logis.equipments.crypto_miner.mil.events.*;
+import eco_logis.equipments.wind_turbine.WindTurbine;
+import eco_logis.equipments.wind_turbine.WindTurbineRTAtomicSimulatorPlugin;
+import eco_logis.equipments.wind_turbine.mil.events.AbstractWindTurbineEvent;
+import eco_logis.equipments.wind_turbine.mil.events.BlockWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.UnblockWindTurbine;
 import fr.sorbonne_u.components.cyphy.plugins.devs.utils.StandardComponentLogger;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -16,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class represents the state model of the crypto miner.
+ * This class represents the state model of the wind turbine.
  * It broadcast event from the component methods to the models.
  *
  * @author Emilie SIAU
@@ -24,19 +26,15 @@ import java.util.concurrent.TimeUnit;
  */
 @ModelExternalEvents(
         imported = {
-                MineOnCryptoMiner.class,
-                MineOffCryptoMiner.class,
-                SwitchOnCryptoMiner.class,
-                SwitchOffCryptoMiner.class
+                BlockWindTurbine.class,
+                UnblockWindTurbine.class
         },
         exported = {
-                MineOnCryptoMiner.class,
-                MineOffCryptoMiner.class,
-                SwitchOnCryptoMiner.class,
-                SwitchOffCryptoMiner.class
+                BlockWindTurbine.class,
+                UnblockWindTurbine.class
         }
 )
-public class CryptoMinerStateModel
+public class WindTurbineStateModel
     extends AtomicModel
 {
 
@@ -44,30 +42,27 @@ public class CryptoMinerStateModel
 
 
     /** The model unique URI */
-    public static final String URI = CryptoMinerStateModel.class.getSimpleName();
+    public static final String URI = WindTurbineStateModel.class.getSimpleName();
 
 
     // ========== Attributes ==========
 
 
-    /** If the miner is currently on */
-    protected boolean isOn;
-
-    /** If the miner is currently mining currency */
-    protected boolean isMining;
+    /** If the wind turbine is currently blocked */
+    protected boolean isBlocked;
 
     /** The last received event */
-    protected AbstractCryptoMinerEvent lastEvent;
+    protected AbstractWindTurbineEvent lastEvent;
 
     /** The model owner */
-    protected CryptoMiner owner;
+    protected WindTurbine owner;
 
 
     // ========== Constructors ==========
 
 
     /** @see AtomicModel#AtomicModel(String, TimeUnit, SimulatorI) */
-    public CryptoMinerStateModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
+    public WindTurbineStateModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
     }
 
@@ -82,8 +77,8 @@ public class CryptoMinerStateModel
         super.setSimulationRunParameters(simParams);
 
         // Get the model owner in the params
-        assert simParams.containsKey(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        owner = (CryptoMiner) simParams.get(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        assert simParams.containsKey(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        owner = (WindTurbine) simParams.get(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
 
         // Set the logger in the component logger
         setLogger(new StandardComponentLogger(owner));
@@ -97,8 +92,7 @@ public class CryptoMinerStateModel
 
         // Set the initial miner state
         lastEvent = null;
-        isOn = false;
-        isMining = false;
+        isBlocked = false;
 
         // Tracing
         this.toggleDebugMode();
@@ -125,15 +119,12 @@ public class CryptoMinerStateModel
     /** @see AtomicModel#userDefinedExternalTransition(Duration) */
     @Override
     public void	userDefinedExternalTransition(Duration elapsedTime) {
-        // Call the super
-        super.userDefinedExternalTransition(elapsedTime);
-
         // Get the current events to perform transitions
         ArrayList<EventI> events = getStoredEventAndReset();
         assert events != null && events.size() == 1;
 
         // Get the last received event
-        lastEvent = (AbstractCryptoMinerEvent) events.get(0);
+        lastEvent = (AbstractWindTurbineEvent) events.get(0);
 
         // Trace
         logMessage(URI + " executes the external event " +

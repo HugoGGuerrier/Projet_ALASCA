@@ -1,5 +1,6 @@
 package eco_logis.equipments.wind_turbine.mil;
 
+import eco_logis.equipments.wind_turbine.mil.events.WindSpeedChange;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -54,6 +55,9 @@ public class ExternalWindModel
 
     protected double cycleTime;
 
+    /** Util for triggering internal event of wind speed changing */
+    private boolean windSpeedHasChanged = false;
+
 
     // ========== Constructors ==========
 
@@ -83,7 +87,6 @@ public class ExternalWindModel
     @Override
     public void initialiseState(Time initialTime) {
         super.initialiseState(initialTime);
-
         this.cycleTime = 0.0;
     }
 
@@ -95,7 +98,7 @@ public class ExternalWindModel
         this.externalWindSpeed.v = MIN_EXTERNAL_WIND_SPEED;
 
         this.toggleDebugMode();
-        this.logMessage("simulation begins.\n");
+        this.logMessage("Simulation starts.\n");
         StringBuffer message = new StringBuffer("current external wind speed: ");
         message.append(this.externalWindSpeed.v);
         message.append(" at ");
@@ -107,8 +110,13 @@ public class ExternalWindModel
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output() */
     @Override
     public ArrayList<EventI> output() {
-        // The model does not export any event.
-        return null;
+        ArrayList<EventI> events = null;
+        if(windSpeedHasChanged) {
+            events = new ArrayList<>();
+            events.add(new WindSpeedChange(this.externalWindSpeed.time));
+            windSpeedHasChanged = false;
+        }
+        return events;
     }
 
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance() */
@@ -131,11 +139,10 @@ public class ExternalWindModel
 
         // Compute the new wind speed
         double c = Math.cos((1.0 + this.cycleTime/(PERIOD/2.0))*Math.PI);
-        System.out.println("c = " + c);
 
-        // /!\ Adjust correctly
+        // TODO Adjust correctly
         // simplifier equation avec sinus
-        // il faut avoir : pas d'intégration (STEP) < PERIOD !!
+        // il faut avoir : le pas d'intégration (STEP) < PERIOD !!
         // Créer loi normale N[0 (moyenne),5 (écart)]
         // rg = random number generator
         // r = rg.nextGaussian(0.0, 5.0)
@@ -147,6 +154,7 @@ public class ExternalWindModel
                 * ((1.0 + c) / 2.0);
 
         this.externalWindSpeed.time = this.getCurrentStateTime();
+        this.windSpeedHasChanged = true;
 
         // Tracing
         StringBuffer message = new StringBuffer("current external wind speed: ");
@@ -160,7 +168,7 @@ public class ExternalWindModel
     /** @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time) */
     @Override
     public void endSimulation(Time endTime) throws Exception {
-        this.logMessage("simulation ends.\n");
+        this.logMessage("Simulation ends!\n");
         super.endSimulation(endTime);
     }
 }

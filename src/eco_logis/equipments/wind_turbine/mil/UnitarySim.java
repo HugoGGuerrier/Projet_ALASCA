@@ -1,8 +1,8 @@
 package eco_logis.equipments.wind_turbine.mil;
 
-import eco_logis.equipments.wind_turbine.WindTurbineUnitTester;
-import eco_logis.equipments.wind_turbine.mil.events.SwitchOffWindTurbine;
-import eco_logis.equipments.wind_turbine.mil.events.SwitchOnWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.BlockWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.UnblockWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.WindSpeedChange;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.ArchitectureI;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
@@ -86,19 +86,27 @@ public class UnitarySim {
             // The wind turbine submodel connections
             Map<EventSource, EventSink[]> connections = new HashMap<>();
 
-            // Add the switch on event connection
+            // Add the unblock event connection
             connections.put(
-                    new EventSource(WindTurbineUserModel.URI, SwitchOnWindTurbine.class),
+                    new EventSource(WindTurbineUserModel.URI, UnblockWindTurbine.class),
                     new EventSink[] {
-                            new EventSink(WindTurbineElectricityModel.URI, SwitchOnWindTurbine.class)
+                            new EventSink(WindTurbineElectricityModel.URI, UnblockWindTurbine.class)
                     }
             );
 
-            // Add the switch off event connection
+            // Add the block event connection
             connections.put(
-                    new EventSource(WindTurbineUserModel.URI, SwitchOffWindTurbine.class),
+                    new EventSource(WindTurbineUserModel.URI, BlockWindTurbine.class),
                     new EventSink[] {
-                            new EventSink(WindTurbineElectricityModel.URI, SwitchOffWindTurbine.class)
+                            new EventSink(WindTurbineElectricityModel.URI, BlockWindTurbine.class)
+                    }
+            );
+
+            // Add the wind speed change internal event connection
+            connections.put(
+                    new EventSource(ExternalWindModel.URI, WindSpeedChange.class),
+                    new EventSink[] {
+                            new EventSink(WindTurbineElectricityModel.URI, WindSpeedChange.class)
                     }
             );
 
@@ -142,7 +150,7 @@ public class UnitarySim {
             // Start the simulation
             SimulationEngine engine = architecture.constructSimulator();
             SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 0L;
-            engine.doStandAloneSimulation(0.0, 20.0);
+            engine.doStandAloneSimulation(0.0, 5.0);
             System.exit(0);
 
         } catch (Exception e) {

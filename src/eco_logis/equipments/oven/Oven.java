@@ -59,18 +59,22 @@ public class Oven
     protected static final String SCHEDULED_EXECUTOR_SERVICE_URI = "ses";
 
 
-
     // ========== Attributes ==========
 
 
     /** State of the oven : baking (on) or not (off) */
     private boolean isBaking;
-    
+
+    /** Goal temperature of the oven, Celsius degrees (°C) */
+    private double goalTemperature;
+
     /** Temperature of the oven, Celsius degrees (°C) */
     private double temperature;
 
     /** Inbound port offering the <code>OvenCI</code> interface */
     private OvenInboundPort oip;
+
+    // --- For the SIL simulation
 
     /** URI of the simulation architecture to be created or the empty string
      *  if the component does not execute as a SIL simulation */
@@ -99,7 +103,7 @@ public class Oven
      * pre	{@code simArchitectureURI != null}
      * pre	{@code !simArchitectureURI.isEmpty() || !executesAsUnitTest}
      * post {@code !isBaking}
-     * post {@code temperature == 0.0}
+     * post {@code temperature == 20.0}
      * </pre>
      *
      * @param simArchitectureURI	URI of the simulation architecture to be created or the empty string  if the component does not execute as a SIL simulation.
@@ -111,8 +115,7 @@ public class Oven
             boolean executesAsUnitTest
     ) throws Exception {
         super(REFLECTION_INBOUND_PORT_URI, 1, 0);
-        this.initialise(INBOUND_PORT_URI, simArchitectureURI,
-                executesAsUnitTest);
+        this.initialise(INBOUND_PORT_URI, simArchitectureURI, executesAsUnitTest);
     }
 
 
@@ -126,7 +129,7 @@ public class Oven
      * pre	{@code simArchitectureURI != null}
      * pre	{@code !simArchitectureURI.isEmpty() || !executesAsUnitTest}
      * post {@code !isBaking}
-     * post {@code temperature == 0.0}
+     * post {@code temperature == 20.0}
      * </pre>
      *
      * @param ovenInboundPortURI	    URI of the oven inbound port.
@@ -140,8 +143,7 @@ public class Oven
             boolean executesAsUnitTest
     ) throws Exception {
         super(REFLECTION_INBOUND_PORT_URI, 1, 0);
-        this.initialise(ovenInboundPortURI, simArchitectureURI,
-                executesAsUnitTest);
+        this.initialise(ovenInboundPortURI, simArchitectureURI, executesAsUnitTest);
     }
 
 
@@ -157,7 +159,7 @@ public class Oven
      * pre	{@code simArchitectureURI != null}
      * pre	{@code !simArchitectureURI.isEmpty() || !executesAsUnitTest}
      * post {@code !isBaking}
-     * post {@code temperature == 0.0}
+     * post {@code temperature == 20.0}
      * </pre>
      *
      * @param reflectionInboundPortURI	URI of the reflection inbound port of the component.
@@ -173,8 +175,7 @@ public class Oven
             boolean executesAsUnitTest
     ) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
-        this.initialise(ovenInboundPortURI, simArchitectureURI,
-                executesAsUnitTest);
+        this.initialise(ovenInboundPortURI, simArchitectureURI, executesAsUnitTest);
     }
 
 
@@ -192,8 +193,9 @@ public class Oven
      * pre	{@code simArchitectureURI != null}
      * pre	{@code !simArchitectureURI.isEmpty() || !executesAsUnitTest}
      * post {@code !isBaking}
-     * post {@code temperature == 0.0}
-     * post	{@code ovenInboundPort.isPublished()}
+     * post {@code temperature == 20.0}
+     * post {@code goalTemperature == 100.0}
+     * post	{@code oip.isPublished()}
      * </pre>
      *
      * @param ovenInboundPortURI    The oven inbound port URI
@@ -214,11 +216,14 @@ public class Oven
         assert !simArchitectureURI.isEmpty() || !executesAsUnitTest;
 
         // Initialise the component
+        this.temperature = 20.0;
+        this.goalTemperature = 100.0;
+        this.isBaking = INITIAL_STATE;
+
+        // Initialise the SIL simulation
         this.simArchitectureURI = simArchitectureURI;
         this.isSILsimulated = !simArchitectureURI.isEmpty();
         this.executesAsUnitTest = executesAsUnitTest;
-        this.temperature = 0.0;
-        this.isBaking = INITIAL_STATE;
 
         // Create the inbound port
         this.oip = new OvenInboundPort(ovenInboundPortURI, this);
@@ -267,8 +272,7 @@ public class Oven
     @Override
     public synchronized void execute() throws Exception {
         if (this.executesAsUnitTest) {
-            this.simulatorPlugin.setSimulationRunParameters(
-                    new HashMap<String, Object>());
+            this.simulatorPlugin.setSimulationRunParameters(new HashMap<String, Object>());
             long simStart = System.currentTimeMillis() + 1000L;
             double endTime = 10.0/ACC_FACTOR;
             this.simulatorPlugin.startRTSimulation(simStart, 0.0, endTime);
@@ -309,12 +313,14 @@ public class Oven
             logMessage("Oven is turned on, starts baking");
         }
 
+        assert !isBaking : new PreconditionException("startBaking() -> !isBaking()");
+
         isBaking = true;
 
         if (this.isSILsimulated) {
             this.simulatorPlugin.triggerExternalEvent(
                     OvenStateModel.URI,
-                    t -> new SwitchOnOven(t, 200));
+                    t -> new SwitchOnOven(t, goalTemperature));
         }
     }
 
@@ -326,6 +332,8 @@ public class Oven
         if(Oven.VERBOSE) {
             logMessage("Oven is turned off, stops baking. The cake is ready !");
         }
+
+        assert isBaking : new PreconditionException("stopBaking() -> isBaking()");
 
         isBaking = false;
 

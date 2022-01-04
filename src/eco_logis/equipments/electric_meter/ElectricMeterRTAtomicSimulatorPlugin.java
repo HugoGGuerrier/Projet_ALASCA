@@ -1,12 +1,26 @@
 package eco_logis.equipments.electric_meter;
 
+import eco_logis.equipments.crypto_miner.CryptoMinerRTAtomicSimulatorPlugin;
+import eco_logis.equipments.crypto_miner.mil.events.MineOffCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
+import eco_logis.equipments.crypto_miner.sil.CryptoMinerElectricitySILModel;
+import eco_logis.equipments.dishwasher.DishwasherRTAtomicSimulatorPlugin;
+import eco_logis.equipments.dishwasher.sil.DishwasherElectricitySILModel;
 import eco_logis.equipments.electric_meter.mil.ElectricMeterElectricityModel;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterElectricitySILModel;
+import eco_logis.equipments.generator.GeneratorRTAtomicSimulatorPlugin;
+import eco_logis.equipments.generator.sil.GeneratorElectricitySILModel;
 import eco_logis.equipments.oven.OvenRTAtomicSimulatorPlugin;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import eco_logis.equipments.oven.sil.OvenElectricitySILModel;
+import eco_logis.equipments.power_bank.PowerBankRTAtomicSimulatorPlugin;
+import eco_logis.equipments.power_bank.sil.PowerBankElectricitySILModel;
+import eco_logis.equipments.wind_turbine.WindTurbineRTAtomicSimulatorPlugin;
+import eco_logis.equipments.wind_turbine.sil.WindTurbineElectricitySILModel;
 import fr.sorbonne_u.components.cyphy.plugins.devs.RTAtomicSimulatorPlugin;
 import fr.sorbonne_u.devs_simulation.architectures.RTArchitecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
@@ -48,24 +62,41 @@ public class ElectricMeterRTAtomicSimulatorPlugin
 
     private static final long serialVersionUID = 1L;
 
-    /** Simulation architectures can have URI to name them; this is the
-     *  URI used in this example for unit tests */
+    /** URI used for unit tests */
     public static final String UNIT_TEST_SIM_ARCHITECTURE_URI = "UnitTestMeter";
 
     /** Name used to pass the owner component reference as simulation parameter */
     public static final String METER_REFERENCE_NAME = "MCRN";
 
+    /** URI of the crypto miner electricity model */
+    protected static final String CRYPTO_MINER_ELECTRICITY_MODEL_URI = CryptoMinerElectricitySILModel.URI;
+    /** Class implementing the crypto miner electricity model */
+    protected static final Class<CryptoMinerElectricitySILModel> CRYPTO_MINER_ELECTRICITY_SIL_MODEL_CLASS = CryptoMinerElectricitySILModel.class;
+
+    /** URI of the dishwasher electricity model */
+    protected static final String DISHWASHER_ELECTRICITY_MODEL_URI = DishwasherElectricitySILModel.URI;
+    /** Class implementing the dishwasher electricity model */
+    protected static final Class<DishwasherElectricitySILModel> DISHWASHER_ELECTRICITY_MODEL_CLASS = DishwasherElectricitySILModel.class;
+
+    /** URI of the generator electricity model */
+    protected static final String GENERATOR_ELECTRICITY_MODEL_URI = GeneratorElectricitySILModel.URI;
+    /** Class implementing the generator electricity model */
+    protected static final Class<GeneratorElectricitySILModel> GENERATOR_ELECTRICITY_MODEL_CLASS = GeneratorElectricitySILModel.class;
+
     /** URI of the oven electricity model */
     protected static final String OVEN_ELECTRICITY_MODEL_URI = OvenElectricitySILModel.URI;
-
     /** Class implementing the oven electricity model */
     protected static final Class<OvenElectricitySILModel> OVEN_ELECTRICITY_MODEL_CLASS = OvenElectricitySILModel.class;
 
-    ///** URI of the heater electricity model */
-    //protected static final String	HEATER_ELECTRICITY_MODEL_URI = HeaterElectricitySILModel.URI;
+    /** URI of the power bank electricity model */
+    protected static final String POWER_BANK_ELECTRICITY_MODEL_URI = PowerBankElectricitySILModel.URI;
+    /** Class implementing the power bank electricity model */
+    protected static final Class<PowerBankElectricitySILModel> POWER_BANK_ELECTRICITY_SIL_MODEL_CLASS = PowerBankElectricitySILModel.class;
 
-    ///** Class implementing the heater electricity model */
-    //protected static final Class<HeaterElectricitySILModel> HEATER_ELECTRICITY_MODEL_CLASS = HeaterElectricitySILModel.class;
+    /** URI of the wind turbine electricity model */
+    protected static final String WIND_TURBINE_ELECTRICITY_MODEL_URI = WindTurbineElectricitySILModel.URI;
+    /** Class implementing the wind turbine electricity model */
+    protected static final Class<WindTurbineElectricitySILModel> WIND_TURBINE_ELECTRICITY_MODEL_CLASS = WindTurbineElectricitySILModel.class;
 
 
     // ========== Class methods ==========
@@ -80,8 +111,14 @@ public class ElectricMeterRTAtomicSimulatorPlugin
         reference to its owner component using its own parameter name,
         we must pass the reference under each different name */
         simParams.put(METER_REFERENCE_NAME, this.getOwner());
-        //simParams.put(ThermostatedHeaterRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        /* TODO
+        simParams.put(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
         simParams.put(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+         */
 
         /* This will pass the parameters to the simulation models that will
         then be able to get their own parameters */
@@ -89,8 +126,14 @@ public class ElectricMeterRTAtomicSimulatorPlugin
 
         // Remove the value so that the reference may not exit the context of the component
         simParams.remove(METER_REFERENCE_NAME);
-        //simParams.remove(ThermostatedHeaterRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        /* TODO
+        simParams.remove(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         simParams.remove(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        */
     }
 
 
@@ -118,9 +161,45 @@ public class ElectricMeterRTAtomicSimulatorPlugin
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
 
         Set<String> submodels = new HashSet<String>();
-        submodels.add(OVEN_ELECTRICITY_MODEL_URI);
-        //submodels.add(HEATER_ELECTRICITY_MODEL_URI);
         submodels.add(ElectricMeterElectricitySILModel.URI);
+        submodels.add(CRYPTO_MINER_ELECTRICITY_MODEL_URI);
+        /* TODO
+        submodels.add(DISHWASHER_ELECTRICITY_MODEL_URI);
+        submodels.add(GENERATOR_ELECTRICITY_MODEL_URI);
+        submodels.add(OVEN_ELECTRICITY_MODEL_URI);
+        submodels.add(POWER_BANK_ELECTRICITY_MODEL_URI);
+        submodels.add(WIND_TURBINE_ELECTRICITY_MODEL_URI);
+         */
+
+        atomicModelDescriptors.put(
+                CRYPTO_MINER_ELECTRICITY_MODEL_URI,
+                RTAtomicHIOA_Descriptor.create(
+                        CRYPTO_MINER_ELECTRICITY_SIL_MODEL_CLASS,
+                        CRYPTO_MINER_ELECTRICITY_MODEL_URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor));
+        /* TODO
+        atomicModelDescriptors.put(
+                DISHWASHER_ELECTRICITY_MODEL_URI,
+                RTAtomicHIOA_Descriptor.create(
+                        DISHWASHER_ELECTRICITY_MODEL_CLASS,
+                        DISHWASHER_ELECTRICITY_MODEL_URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor));
+
+        atomicModelDescriptors.put(
+                GENERATOR_ELECTRICITY_MODEL_URI,
+                RTAtomicHIOA_Descriptor.create(
+                        GENERATOR_ELECTRICITY_MODEL_CLASS,
+                        GENERATOR_ELECTRICITY_MODEL_URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor));
 
         atomicModelDescriptors.put(
                 OVEN_ELECTRICITY_MODEL_URI,
@@ -131,16 +210,27 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
                         accFactor));
-        /*atomicModelDescriptors.put(
-                HEATER_ELECTRICITY_MODEL_URI,
+
+        atomicModelDescriptors.put(
+                POWER_BANK_ELECTRICITY_MODEL_URI,
                 RTAtomicHIOA_Descriptor.create(
-                        HEATER_ELECTRICITY_MODEL_CLASS,
-                        HEATER_ELECTRICITY_MODEL_URI,
+                        POWER_BANK_ELECTRICITY_SIL_MODEL_CLASS,
+                        POWER_BANK_ELECTRICITY_MODEL_URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
                         accFactor));
-         */
+
+        atomicModelDescriptors.put(
+                WIND_TURBINE_ELECTRICITY_MODEL_URI,
+                RTAtomicHIOA_Descriptor.create(
+                        WIND_TURBINE_ELECTRICITY_MODEL_CLASS,
+                        WIND_TURBINE_ELECTRICITY_MODEL_URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor));
+
         atomicModelDescriptors.put(
                 ElectricMeterElectricitySILModel.URI,
                 RTAtomicHIOA_Descriptor.create(
@@ -150,25 +240,12 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
                         accFactor));
-
-        Map<Class<? extends EventI>, EventSink[]> imported = null;
+        */
+        Map<Class<? extends EventI>, EventSink[]> imported = new HashMap<>();
 
         if (!simArchURI.equals(UNIT_TEST_SIM_ARCHITECTURE_URI)) {
-/*
-            imported = new HashMap<>();
-            imported.put(
-                    SwitchOnHeater.class,
-                    new EventSink[] {
-                            new EventSink(HEATER_ELECTRICITY_MODEL_URI,
-                                    SwitchOnHeater.class)
-                    });
-            imported.put(
-                    SwitchOffHeater.class,
-                    new EventSink[] {
-                            new EventSink(HEATER_ELECTRICITY_MODEL_URI,
-                                    SwitchOffHeater.class)
-                    });
-*/
+
+            /* TODO
             imported.put(
                     SwitchOnOven.class,
                     new EventSink[] {
@@ -179,6 +256,27 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                     new EventSink[] {
                             new EventSink(OVEN_ELECTRICITY_MODEL_URI, SwitchOffOven.class)
                     });
+             */
+            imported.put(
+                    SwitchOnCryptoMiner.class,
+                    new EventSink[] {
+                            new EventSink(CRYPTO_MINER_ELECTRICITY_MODEL_URI, SwitchOnCryptoMiner.class)
+                    });
+            imported.put(
+                    SwitchOffCryptoMiner.class,
+                    new EventSink[] {
+                            new EventSink(CRYPTO_MINER_ELECTRICITY_MODEL_URI, SwitchOffCryptoMiner.class)
+                    });
+            imported.put(
+                    MineOnCryptoMiner.class,
+                    new EventSink[] {
+                            new EventSink(CRYPTO_MINER_ELECTRICITY_MODEL_URI, MineOnCryptoMiner.class)
+                    });
+            imported.put(
+                    MineOffCryptoMiner.class,
+                    new EventSink[] {
+                            new EventSink(CRYPTO_MINER_ELECTRICITY_MODEL_URI, MineOffCryptoMiner.class)
+                    });
         }
 
         // Variable bindings between exporting and importing models
@@ -188,23 +286,23 @@ public class ElectricMeterRTAtomicSimulatorPlugin
         bindings.put(
                 new VariableSource("currentConsumption",
                         Double.class,
+                        CRYPTO_MINER_ELECTRICITY_MODEL_URI),
+                new VariableSink[] {
+                        new VariableSink("currentCryptoConsumption",
+                                Double.class,
+                                ElectricMeterElectricityModel.URI)
+                });
+        /* TODO
+        bindings.put(
+                new VariableSource("currentConsumption",
+                        Double.class,
                         OVEN_ELECTRICITY_MODEL_URI),
                 new VariableSink[] {
                         new VariableSink("currentOvenConsumption",
                                 Double.class,
                                 ElectricMeterElectricityModel.URI)
                 });
-/*
-        bindings.put(
-                new VariableSource("currentIntensity",
-                        Double.class,
-                        HEATER_ELECTRICITY_MODEL_URI),
-                new VariableSink[] {
-                        new VariableSink("currentHeaterIntensity",
-                                Double.class,
-                                ElectricMeterElectricityModel.URI)
-                });
-*/
+        */
 
         // Coupled model descriptor: an HIOA requires a RTCoupledHIOA_Descriptor
         coupledModelDescriptors.put(

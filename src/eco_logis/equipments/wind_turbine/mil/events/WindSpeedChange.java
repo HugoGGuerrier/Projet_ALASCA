@@ -7,12 +7,13 @@ import fr.sorbonne_u.devs_simulation.models.events.EventInformationI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 
 /**
- * This class represent a switching off event for the wind turbine
+ * This class represent a wind speed change event for the wind turbine.
+ * It is used as an internal event to update the wind turbine electricity production
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public class SwitchOffWindTurbine
+public class WindSpeedChange
     extends AbstractWindTurbineEvent
 {
 
@@ -20,7 +21,7 @@ public class SwitchOffWindTurbine
 
 
     /** @see AbstractWindTurbineEvent#AbstractWindTurbineEvent(Time, EventInformationI) */
-    public SwitchOffWindTurbine(Time timeOfOccurrence) {
+    public WindSpeedChange(Time timeOfOccurrence) {
         super(timeOfOccurrence, null);
     }
 
@@ -31,7 +32,7 @@ public class SwitchOffWindTurbine
     /** @see AbstractWindTurbineEvent#hasPriorityOver(EventI) */
     @Override
     public boolean hasPriorityOver(EventI e) {
-        // Switching off has the lowest priority
+        // The wind speed change has the lowest priority
         return false;
     }
 
@@ -40,11 +41,10 @@ public class SwitchOffWindTurbine
     public void executeOn(AtomicModel model) {
         assert model instanceof WindTurbineElectricityModel;
         WindTurbineElectricityModel m = (WindTurbineElectricityModel) model;
-        if(m.isOn()) {
-            m.setOn(false);
+        if(!m.isOn()) {
+            m.setOn(true);
             m.setHasChanged(true);
         }
     }
-
 
 }

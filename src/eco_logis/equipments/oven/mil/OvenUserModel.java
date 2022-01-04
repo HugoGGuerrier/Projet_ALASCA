@@ -1,9 +1,5 @@
 package eco_logis.equipments.oven.mil;
 
-import eco_logis.equipments.crypto_miner.mil.events.MineOffCryptoMiner;
-import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
-import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
-import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.devs_simulation.es.events.ES_EventI;

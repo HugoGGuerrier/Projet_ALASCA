@@ -1,5 +1,11 @@
 package eco_logis;
 
+import eco_logis.equipments.crypto_miner.CryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.CryptoMinerCoupledModel;
+import eco_logis.equipments.crypto_miner.mil.events.MineOffCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
 import eco_logis.equipments.electric_meter.ElectricMeter;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
 import eco_logis.equipments.hem.mil.HEMCoupledModel;
@@ -185,6 +191,21 @@ public class HEM_SIL_Supervisor
         port URI of the component holding them in order to connect this
         component inside the component-based simulation architecture. */
 
+        // The crypto miner simulation model held by the CryptoMiner component
+        atomicModelDescriptors.put(
+                CryptoMinerCoupledModel.URI,
+                RTComponentAtomicModelDescriptor.create(
+                        CryptoMinerCoupledModel.URI,
+                        new Class[]{},
+                        new Class[]{
+                                SwitchOnCryptoMiner.class,
+                                SwitchOffCryptoMiner.class,
+                                MineOnCryptoMiner.class,
+                                MineOffCryptoMiner.class
+                        },
+                        TimeUnit.SECONDS,
+                        CryptoMiner.REFLECTION_INBOUND_PORT_URI));
+        /* TODO
         // The oven simulation model held by the Oven component
         atomicModelDescriptors.put(
                 OvenCoupledModel.URI,
@@ -196,20 +217,8 @@ public class HEM_SIL_Supervisor
                                 SwitchOffOven.class},
                         TimeUnit.SECONDS,
                         Oven.REFLECTION_INBOUND_PORT_URI));
-
-        /*
-        // The heater simulation model held by the ThermostatedHeater component.
-        atomicModelDescriptors.put(
-                HeaterCoupledModel.URI,
-                RTComponentAtomicModelDescriptor.create(
-                        HeaterCoupledModel.URI,
-                        new Class[]{},
-                        new Class[]{
-                                SwitchOnHeater.class, SwitchOffHeater.class,
-                                Heat.class, DoNotHeat.class},
-                        TimeUnit.SECONDS,
-                        ThermostatedHeater.REFLECTION_INBOUND_PORT_URI));
         */
+
 
         // The electric meter simulation model held by the ElectricMeter component
         atomicModelDescriptors.put(
@@ -217,15 +226,22 @@ public class HEM_SIL_Supervisor
                 RTComponentAtomicModelDescriptor.create(
                         ElectricMeterCoupledModel.URI,
                         new Class[]{
+                                SwitchOnCryptoMiner.class,
+                                SwitchOffCryptoMiner.class,
+                                MineOnCryptoMiner.class,
+                                MineOffCryptoMiner.class
+                                /* TODO
                                 SwitchOnOven.class,
-                                SwitchOffOven.class},
+                                SwitchOffOven.class,
+                                 */
+                        },
                         new Class[]{},
                         TimeUnit.SECONDS,
                         ElectricMeter.REFLECTION_INBOUND_PORT_URI));
 
         Set<String> submodels = new HashSet<String>();
-        submodels.add(OvenCoupledModel.URI);
-        //submodels.add(HeaterCoupledModel.URI);
+        submodels.add(CryptoMinerCoupledModel.URI);
+        // TODO submodels.add(OvenCoupledModel.URI);
         submodels.add(ElectricMeterCoupledModel.URI);
 
         Map<EventSource, EventSink[]> connections = new HashMap<EventSource,EventSink[]>();
@@ -237,6 +253,27 @@ public class HEM_SIL_Supervisor
         must pass from their components to the ElectricMeter component as
         shown in the next connections. */
         connections.put(
+                new EventSource(CryptoMinerCoupledModel.URI, SwitchOnCryptoMiner.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SwitchOnCryptoMiner.class)
+                });
+        connections.put(
+                new EventSource(CryptoMinerCoupledModel.URI, SwitchOffCryptoMiner.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SwitchOffCryptoMiner.class)
+                });
+        connections.put(
+                new EventSource(CryptoMinerCoupledModel.URI, MineOnCryptoMiner.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, MineOnCryptoMiner.class)
+                });
+        connections.put(
+                new EventSource(CryptoMinerCoupledModel.URI, MineOffCryptoMiner.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, MineOffCryptoMiner.class)
+                });
+        /* TODO
+        connections.put(
                 new EventSource(OvenCoupledModel.URI, SwitchOnOven.class),
                 new EventSink[] {
                          new EventSink(ElectricMeterCoupledModel.URI, SwitchOnOven.class)
@@ -246,6 +283,7 @@ public class HEM_SIL_Supervisor
                 new EventSink[] {
                         new EventSink(ElectricMeterCoupledModel.URI, SwitchOffOven.class)
                 });
+         */
 
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
         coupledModelDescriptors.put(
@@ -278,7 +316,6 @@ public class HEM_SIL_Supervisor
 
         return arch;
     }
-
 
 
     /** @see fr.sorbonne_u.components.AbstractComponent#start() */

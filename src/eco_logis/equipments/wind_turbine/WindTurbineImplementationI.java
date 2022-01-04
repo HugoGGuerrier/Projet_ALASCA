@@ -3,8 +3,8 @@ package eco_logis.equipments.wind_turbine;
 /**
  * This interface defines the wind turbine implementation
  *
- * @author Emilie Siau
- * @author Hugo Guerrier
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
  */
 public interface WindTurbineImplementationI
 {

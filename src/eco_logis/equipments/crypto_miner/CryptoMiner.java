@@ -134,7 +134,7 @@ public class CryptoMiner
      * @see AbstractComponent#AbstractComponent(String, int, int)
      *
      * @param simArchURI The simulation architecture URI
-       @param executesAsUnitTest If the component has to be executed as a unit test
+     * @param executesAsUnitTest If the component has to be executed as a unit test
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param cryptoMinerInboundPortURI The inbound port URI
      * @throws Exception TODO

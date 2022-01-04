@@ -47,7 +47,7 @@ public class OvenElectricitySILModel
     // ========== Attributes ==========
 
 
-    /** Owner component */
+    /** This is the SIL model owner */
     protected AbstractComponent owner;
 
 
@@ -68,11 +68,11 @@ public class OvenElectricitySILModel
     public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
         super.setSimulationRunParameters(simParams);
 
-        // Retrieve the reference to the owner component that must be passed as a simulation run parameter
+        // Get the owner component in the simulation params
         assert simParams.containsKey(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         this.owner = (AbstractComponent) simParams.get(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
 
-        // Replace the logger set in the superclass by the one directing logs to the owner component logger
+        // Set the logger to the component logger
         this.setLogger(new StandardComponentLogger(this.owner));
     }
 

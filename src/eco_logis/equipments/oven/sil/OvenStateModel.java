@@ -49,8 +49,14 @@ import java.util.concurrent.TimeUnit;
  * @author Hugo GUERRIER
  */
 @ModelExternalEvents(
-        imported = {SwitchOnOven.class, SwitchOffOven.class},
-        exported = {SwitchOnOven.class, SwitchOffOven.class}
+        imported = {
+                SwitchOnOven.class,
+                SwitchOffOven.class
+        },
+        exported = {
+                SwitchOnOven.class,
+                SwitchOffOven.class
+        }
 )
 public class OvenStateModel
     extends AtomicModel
@@ -68,8 +74,8 @@ public class OvenStateModel
     // ========== Attributes ==========
 
 
-    /** Current state of the oven (on/off) */
-    protected OvenElectricityModel.State currentState;
+    /** If the oven is currently on (baking) */
+    protected OvenElectricityModel.State isBaking;
 
     /** Last received event or null if none */
     protected AbstractOvenEvent lastReceived;
@@ -105,7 +111,7 @@ public class OvenStateModel
     }
 
 
-    // ========== Class methods ==========
+    // ========== Override methods ==========
 
 
     /** @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map) */
@@ -124,7 +130,7 @@ public class OvenStateModel
         super.initialiseState(initialTime);
 
         this.lastReceived = null;
-        this.currentState = OvenElectricityModel.State.OFF;
+        this.isBaking = OvenElectricityModel.State.OFF;
 
         this.toggleDebugMode();
         this.logMessage("simulation begins.\n");
@@ -157,8 +163,6 @@ public class OvenStateModel
 
         // Get the vector of current external events
         ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
-        /* When this method is called, there is at least one external event,
-        and for the oven model, there will be exactly one by construction. */
         assert currentEvents != null && currentEvents.size() == 1;
 
         this.lastReceived = (AbstractOvenEvent) currentEvents.get(0);
