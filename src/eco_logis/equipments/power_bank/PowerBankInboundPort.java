@@ -46,11 +46,11 @@ public class PowerBankInboundPort
     // ========== Override methods ==========
 
 
-    /** @see PowerBankCI#isCharging() */
+    /** @see PowerBankCI#getCurrentState() */
     @Override
-    public boolean isCharging() throws Exception {
+    public PowerBank.State getCurrentState() throws Exception {
         return getOwner().handleRequest(
-            o -> ((PowerBank) o).isCharging()
+                o -> ((PowerBank) o).getCurrentState()
         );
     }
 
@@ -65,25 +65,6 @@ public class PowerBankInboundPort
         );
     }
 
-    /** @see PowerBankCI#stopCharging() */
-    @Override
-    public void stopCharging() throws Exception {
-        getOwner().handleRequest(
-            o -> {
-                ((PowerBank) o).stopCharging();
-                return null;
-            }
-        );
-    }
-
-    /** @see PowerBankCI#isDischarging() */
-    @Override
-    public boolean isDischarging() throws Exception {
-        return getOwner().handleRequest(
-            o -> ((PowerBank) o).isDischarging()
-        );
-    }
-
     /** @see PowerBankCI#startDischarging() */
     @Override
     public void startDischarging() throws Exception {
@@ -95,33 +76,22 @@ public class PowerBankInboundPort
         );
     }
 
-    /** @see PowerBankCI#stopDischarging() */
+    /** @see PowerBankCI#standBy() */
     @Override
-    public void stopDischarging() throws Exception {
+    public void standBy() throws Exception {
         getOwner().handleRequest(
-            o -> {
-                ((PowerBank) o).stopDischarging();
-                return null;
-            }
+                o -> {
+                    ((PowerBank) o).standBy();
+                    return null;
+                }
         );
     }
 
     /** @see PowerBankCI#getBatteryLevel() */
     @Override
     public double getBatteryLevel() throws Exception {
-        return this.getOwner().handleRequest(
+        return getOwner().handleRequest(
             o -> ((PowerBank) o).getBatteryLevel()
-        );
-    }
-
-    /** @see PowerBankCI#setBatteryLevel(double) */
-    @Override
-    public void setBatteryLevel(double level) throws Exception {
-        getOwner().handleRequest(
-            o -> {
-                ((PowerBank) o).setBatteryLevel(level);
-                return null;
-            }
         );
     }
 

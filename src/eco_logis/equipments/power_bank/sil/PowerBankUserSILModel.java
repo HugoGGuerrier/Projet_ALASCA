@@ -1,7 +1,7 @@
-package eco_logis.equipments.crypto_miner.sil;
+package eco_logis.equipments.power_bank.sil;
 
-import eco_logis.equipments.crypto_miner.CryptoMiner;
-import eco_logis.equipments.crypto_miner.CryptoMinerRTAtomicSimulatorPlugin;
+import eco_logis.equipments.power_bank.PowerBank;
+import eco_logis.equipments.power_bank.PowerBankRTAtomicSimulatorPlugin;
 import fr.sorbonne_u.components.cyphy.plugins.devs.utils.StandardComponentLogger;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
@@ -15,12 +15,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class represents the user action for the Crypto miner
+ * This class represents the user which control the power bank for the tests
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public class CryptoMinerUserModel
+public class PowerBankUserSILModel
     extends AtomicModel
 {
 
@@ -28,13 +28,13 @@ public class CryptoMinerUserModel
 
 
     /** The model unique URI */
-    public static final String URI = CryptoMinerUserModel.class.getSimpleName();
+    public static final String URI = PowerBankUserSILModel.class.getSimpleName();
 
     /** Run parameter name for the step mean duration */
     public static final String STEP_MEAN_DURATION_RUNPNAME = URI + ":STEP_MEAN_DURATION";
 
     /** The mean duration between two events in second */
-    protected static double STEP_MEAN_DURATION = 2.0;
+    protected static double STEP_MEAN_DURATION = 1.5;
 
 
     // ========== Attributes ==========
@@ -50,14 +50,14 @@ public class CryptoMinerUserModel
     protected Duration toNext;
 
     /** The model owner */
-    protected CryptoMiner owner;
+    protected PowerBank owner;
 
 
     // ========== Constructors ==========
 
 
     /** @see AtomicModel#AtomicModel(String, TimeUnit, SimulatorI) */
-    public CryptoMinerUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
+    public PowerBankUserSILModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
         rg = new RandomDataGenerator();
     }
@@ -91,8 +91,8 @@ public class CryptoMinerUserModel
         super.setSimulationRunParameters(simParams);
 
         // Get the owner
-        assert simParams.containsKey(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        owner = (CryptoMiner) simParams.get(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        assert simParams.containsKey(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        owner = (PowerBank) simParams.get(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         setLogger(new StandardComponentLogger(owner));
 
         // Get the step mean duration
@@ -138,51 +138,40 @@ public class CryptoMinerUserModel
         // Prepare the log message
         StringBuilder msg = new StringBuilder(URI);
 
-        // Switch the case of the transition
         switch (currentStep) {
 
             case 1:
                 owner.runTask(o -> {
                     try {
-                        ((CryptoMiner)o).powerOn();
+                        ((PowerBank) o).startDischarging();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                msg.append(" executes the operation powerOn");
+                msg.append(" executes the operation startDischarging");
                 break;
 
             case 2:
+            case 4:
                 owner.runTask(o -> {
                     try {
-                        ((CryptoMiner)o).startMiner();
+                        ((PowerBank) o).standBy();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                msg.append(" executes the operation startMiner");
+                msg.append(" executes the operation standBy");
                 break;
 
             case 3:
                 owner.runTask(o -> {
                     try {
-                        ((CryptoMiner)o).stopMiner();
+                        ((PowerBank) o).startCharging();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                msg.append(" executes the operation stopMiner");
-                break;
-
-            case 4:
-                owner.runTask(o -> {
-                    try {
-                        ((CryptoMiner)o).powerOff();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                msg.append(" executes the operation powerOff");
+                msg.append(" executes the operation startCharging");
                 break;
 
             default:

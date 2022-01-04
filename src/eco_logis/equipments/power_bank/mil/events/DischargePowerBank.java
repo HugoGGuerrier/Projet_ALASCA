@@ -1,6 +1,7 @@
 package eco_logis.equipments.power_bank.mil.events;
 
 import eco_logis.equipments.generator.mil.events.AbstractGeneratorEvent;
+import eco_logis.equipments.power_bank.PowerBank;
 import eco_logis.equipments.power_bank.mil.PowerBankChargeModel;
 import eco_logis.equipments.power_bank.mil.PowerBankElectricityModel;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
@@ -42,15 +43,15 @@ public class DischargePowerBank
         assert model instanceof PowerBankElectricityModel || model instanceof PowerBankChargeModel;
         if(model instanceof PowerBankElectricityModel) {
             PowerBankElectricityModel m = (PowerBankElectricityModel) model;
-            if(m.getCurrentState() != PowerBankElectricityModel.State.DISCHARGE) {
-                m.setCurrentState(PowerBankElectricityModel.State.DISCHARGE);
+            if(m.getCurrentState() != PowerBank.State.DISCHARGING) {
+                m.setCurrentState(PowerBank.State.DISCHARGING);
                 m.setHasChanged(true);
             }
         }
         else {
             PowerBankChargeModel m = (PowerBankChargeModel) model;
-            if(m.getCurrentState() != PowerBankElectricityModel.State.DISCHARGE) {
-                m.setCurrentState(PowerBankElectricityModel.State.DISCHARGE);
+            if(m.getCurrentState() != PowerBank.State.DISCHARGING) {
+                m.setCurrentState(PowerBank.State.DISCHARGING);
             }
         }
     }

@@ -21,36 +21,24 @@ public interface PowerBankCI
     extends OfferedCI, RequiredCI, PowerBankImplementationI
 {
 
-    /** @see PowerBankImplementationI#isCharging() */
+    /** @see PowerBankImplementationI#getCurrentState() */
     @Override
-    boolean isCharging() throws Exception;
+    PowerBank.State getCurrentState() throws Exception;
 
     /** @see PowerBankImplementationI#startCharging() */
     @Override
     void startCharging() throws Exception;
 
-    /** @see PowerBankImplementationI#stopCharging() */
-    @Override
-    void stopCharging() throws Exception;
-
-    /** @see PowerBankImplementationI#isDischarging() */
-    @Override
-    boolean isDischarging() throws Exception;
-
     /** @see PowerBankImplementationI#startDischarging() */
     @Override
     void startDischarging() throws Exception;
 
-    /** @see PowerBankImplementationI#stopDischarging() */
+    /** @see PowerBankImplementationI#standBy() */
     @Override
-    void stopDischarging() throws Exception;
+    void standBy() throws Exception;
 
     /** @see PowerBankImplementationI#getBatteryLevel()  */
     @Override
     double getBatteryLevel() throws Exception;
-
-    /** @see PowerBankImplementationI#setBatteryLevel(double)  */
-    @Override
-    void setBatteryLevel(double level) throws Exception;
 
 }

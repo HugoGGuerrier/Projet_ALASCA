@@ -32,16 +32,8 @@ package fr.sorbonne_u.components.cyphy.hem2021e3.equipments.heater.sil;
 // The fact that you are presently reading this means that you have had
 // knowledge of the CeCILL-C license and that you accept its terms.
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.HeaterElectricityModel.State;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.DoNotHeat;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.Heat;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.HeaterEventI;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.SwitchOffHeater;
-import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.SwitchOnHeater;
+import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.*;
 import fr.sorbonne_u.components.cyphy.hem2021e3.equipments.heater.ThermostatedHeater;
 import fr.sorbonne_u.components.cyphy.hem2021e3.equipments.heater.ThermostatedHeaterRTAtomicSimulatorPlugin;
 import fr.sorbonne_u.components.cyphy.plugins.devs.utils.StandardComponentLogger;
@@ -52,13 +44,18 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 // -----------------------------------------------------------------------------
+
 /**
  * The class <code>HeaterStateModel</code> defines a SIL simulation model
  * that simulate the evolution of the state of the heater over time.
  *
  * <p><strong>Description</strong></p>
- * 
+ *
  * <p>
  * In SIL simulation, the mode changes in the heater are controlled by the
  * heater component which will issue external events into its simulation
@@ -81,180 +78,180 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
  * this new {@code HeaterStateModel} responsible for also sending the
  * events to the {@code HeaterTemperatureSILModel}.
  * </p>
- * 
+ *
  * <p><strong>Invariant</strong></p>
- * 
+ *
  * <pre>
  * invariant	true
  * </pre>
- * 
+ *
  * <p>Created on : 2021-10-05</p>
- * 
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ *
+ * @author    <a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
 // -----------------------------------------------------------------------------
 @ModelExternalEvents(
-		imported = {SwitchOnHeater.class,SwitchOffHeater.class,
-					Heat.class,DoNotHeat.class},
-		exported = {SwitchOnHeater.class,SwitchOffHeater.class,
-					Heat.class,DoNotHeat.class})
+        imported = {SwitchOnHeater.class, SwitchOffHeater.class,
+                Heat.class, DoNotHeat.class},
+        exported = {SwitchOnHeater.class, SwitchOffHeater.class,
+                Heat.class, DoNotHeat.class})
 // -----------------------------------------------------------------------------
-public class			HeaterStateModel
-extends		AtomicModel
-{
-	// -------------------------------------------------------------------------
-	// Constants and variables
-	// -------------------------------------------------------------------------
+public class HeaterStateModel
+        extends AtomicModel {
+    // -------------------------------------------------------------------------
+    // Constants and variables
+    // -------------------------------------------------------------------------
 
-	private static final long			serialVersionUID = 1L;
-	/** URI for a model; works when only one instance is created.			*/
-	public static final String			URI = HeaterStateModel.class.
-															getSimpleName();
+    private static final long serialVersionUID = 1L;
+    /**
+     * URI for a model; works when only one instance is created.
+     */
+    public static final String URI = HeaterStateModel.class.
+            getSimpleName();
 
-	/** current state of the hair dryer.									*/
-	protected State						currentState;
-	/** last received event or null if none.								*/
-	protected HeaterEventI				lastReceived;
+    /**
+     * current state of the hair dryer.
+     */
+    protected State currentState;
+    /**
+     * last received event or null if none.
+     */
+    protected HeaterEventI lastReceived;
 
-	/** owner component.													*/
-	protected ThermostatedHeater		owner;
+    /**
+     * owner component.
+     */
+    protected ThermostatedHeater owner;
 
-	// -------------------------------------------------------------------------
-	// Constructors
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
 
-	/**
-	 * create a heater state model instance.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	{@code simulatedTimeUnit != null}
-	 * pre	{@code simulationEngine == null || simulationEngine instanceof AtomicEngine}
-	 * post	{@code getURI() != null}
-	 * post	{@code uri != null implies this.getURI().equals(uri)}
-	 * post	{@code getSimulatedTimeUnit().equals(simulatedTimeUnit)}
-	 * post	{@code simulationEngine != null implies getSimulationEngine().equals(simulationEngine)}
-	 * post	{@code !isDebugModeOn()}
-	 * </pre>
-	 *
-	 * @param uri				URI of the model.
-	 * @param simulatedTimeUnit	time unit used for the simulation time.
-	 * @param simulationEngine	simulation engine to which the model is attached.
-	 * @throws Exception		<i>to do</i>.
-	 */
-	public				HeaterStateModel(
-		String uri,
-		TimeUnit simulatedTimeUnit,
-		SimulatorI simulationEngine
-		) throws Exception
-	{
-		super(uri, simulatedTimeUnit, simulationEngine);
-	}
+    /**
+     * create a heater state model instance.
+     *
+     * <p><strong>Contract</strong></p>
+     *
+     * <pre>
+     * pre	{@code simulatedTimeUnit != null}
+     * pre	{@code simulationEngine == null || simulationEngine instanceof AtomicEngine}
+     * post	{@code getURI() != null}
+     * post	{@code uri != null implies this.getURI().equals(uri)}
+     * post	{@code getSimulatedTimeUnit().equals(simulatedTimeUnit)}
+     * post	{@code simulationEngine != null implies getSimulationEngine().equals(simulationEngine)}
+     * post	{@code !isDebugModeOn()}
+     * </pre>
+     *
+     * @param uri               URI of the model.
+     * @param simulatedTimeUnit time unit used for the simulation time.
+     * @param simulationEngine  simulation engine to which the model is attached.
+     * @throws Exception <i>to do</i>.
+     */
+    public HeaterStateModel(
+            String uri,
+            TimeUnit simulatedTimeUnit,
+            SimulatorI simulationEngine
+    ) throws Exception {
+        super(uri, simulatedTimeUnit, simulationEngine);
+    }
 
-	// -------------------------------------------------------------------------
-	// DEVS simulation protocol
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // DEVS simulation protocol
+    // -------------------------------------------------------------------------
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
-	 */
-	@Override
-	public void			setSimulationRunParameters(
-		Map<String, Object> simParams
-		) throws Exception
-	{
-		super.setSimulationRunParameters(simParams);
+    /**
+     * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
+     */
+    @Override
+    public void setSimulationRunParameters(
+            Map<String, Object> simParams
+    ) throws Exception {
+        super.setSimulationRunParameters(simParams);
 
-		// retrieve the reference to the owner component that must be passed
-		// as a simulation run parameter
-		assert	simParams.containsKey(
-						ThermostatedHeaterRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-		this.owner =
-				(ThermostatedHeater) simParams.get(
-						ThermostatedHeaterRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-		this.setLogger(new StandardComponentLogger(this.owner));
-	}
+        // retrieve the reference to the owner component that must be passed
+        // as a simulation run parameter
+        assert simParams.containsKey(
+                ThermostatedHeaterRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        this.owner =
+                (ThermostatedHeater) simParams.get(
+                        ThermostatedHeaterRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        this.setLogger(new StandardComponentLogger(this.owner));
+    }
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
-	 */
-	@Override
-	public void			initialiseState(Time initialTime)
-	{
-		super.initialiseState(initialTime);
+    /**
+     * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+     */
+    @Override
+    public void initialiseState(Time initialTime) {
+        super.initialiseState(initialTime);
 
-		this.lastReceived = null;
-		this.currentState = State.OFF;
+        this.lastReceived = null;
+        this.currentState = State.OFF;
 
-		this.toggleDebugMode();
-		this.logMessage("simulation begins.\n");
-	}
+        this.toggleDebugMode();
+        this.logMessage("simulation begins.\n");
+    }
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
-	 */
-	@Override
-	public ArrayList<EventI>	output()
-	{
-		assert	this.lastReceived != null;
-		ArrayList<EventI> ret = new ArrayList<EventI>();
-		ret.add(this.lastReceived);
-		this.lastReceived = null;
-		return ret;
-	}
+    /**
+     * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
+     */
+    @Override
+    public ArrayList<EventI> output() {
+        assert this.lastReceived != null;
+        ArrayList<EventI> ret = new ArrayList<EventI>();
+        ret.add(this.lastReceived);
+        this.lastReceived = null;
+        return ret;
+    }
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
-	 */
-	@Override
-	public Duration		timeAdvance()
-	{
-		if (this.lastReceived != null) {
-			// trigger an immediate internal transition
-			return Duration.zero(this.getSimulatedTimeUnit());
-		} else {
-			// wait until the next external event that will trigger an internal
-			// transition
-			return Duration.INFINITY;
-		}
-	}
+    /**
+     * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
+     */
+    @Override
+    public Duration timeAdvance() {
+        if (this.lastReceived != null) {
+            // trigger an immediate internal transition
+            return Duration.zero(this.getSimulatedTimeUnit());
+        } else {
+            // wait until the next external event that will trigger an internal
+            // transition
+            return Duration.INFINITY;
+        }
+    }
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
-	 */
-	@Override
-	public void			userDefinedExternalTransition(Duration elapsedTime)
-	{
-		super.userDefinedExternalTransition(elapsedTime);
+    /**
+     * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+     */
+    @Override
+    public void userDefinedExternalTransition(Duration elapsedTime) {
+        super.userDefinedExternalTransition(elapsedTime);
 
-		// get the vector of current external events
-		ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
-		// when this method is called, there is at least one external event,
-		// and for the hair dryer model, there will be exactly one by
-		// construction.
-		assert	currentEvents != null && currentEvents.size() == 1;
+        // get the vector of current external events
+        ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
+        // when this method is called, there is at least one external event,
+        // and for the hair dryer model, there will be exactly one by
+        // construction.
+        assert currentEvents != null && currentEvents.size() == 1;
 
-		this.lastReceived = (HeaterEventI) currentEvents.get(0);
+        this.lastReceived = (HeaterEventI) currentEvents.get(0);
 
-		StringBuffer message = new StringBuffer(this.uri);
-		message.append(" executes the external event ");
-		message.append(this.lastReceived.getClass().getSimpleName());
-		message.append("(");
-		message.append(
-			this.lastReceived.getTimeOfOccurrence().getSimulatedTime());
-		message.append(")\n");
-		this.logMessage(message.toString());
-	}
+        StringBuffer message = new StringBuffer(this.uri);
+        message.append(" executes the external event ");
+        message.append(this.lastReceived.getClass().getSimpleName());
+        message.append("(");
+        message.append(
+                this.lastReceived.getTimeOfOccurrence().getSimulatedTime());
+        message.append(")\n");
+        this.logMessage(message.toString());
+    }
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
-	 */
-	@Override
-	public void			endSimulation(Time endTime) throws Exception
-	{
-		this.logMessage("simulation ends.\n");
-		super.endSimulation(endTime);
-	}
+    /**
+     * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
+     */
+    @Override
+    public void endSimulation(Time endTime) throws Exception {
+        this.logMessage("simulation ends.\n");
+        super.endSimulation(endTime);
+    }
 }
 // -----------------------------------------------------------------------------

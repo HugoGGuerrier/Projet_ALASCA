@@ -61,7 +61,7 @@ public class Generator
     /** The URI of the executor */
     protected static final String SCHEDULED_EXECUTOR_SERVICE_URI = "ses";
 
-    /** The prugin that contains the SIL simulation */
+    /** The plugin that contains the SIL simulation */
     protected GeneratorRTAtomicSimulatorPlugin simulatorPlugin;
 
     /** If the component is in a SIL simulation */

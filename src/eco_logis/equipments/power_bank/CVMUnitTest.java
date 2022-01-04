@@ -15,8 +15,10 @@ public class CVMUnitTest
     @Override
     public void deploy() throws Exception {
         // Create the components to test the power bank
-        AbstractComponent.createComponent(PowerBank.class.getCanonicalName(), new Object[]{});
-        AbstractComponent.createComponent(PowerBankUnitTester.class.getCanonicalName(), new Object[]{});
+        AbstractComponent.createComponent(
+                PowerBank.class.getCanonicalName(),
+                new Object[]{PowerBankRTAtomicSimulatorPlugin.UNIT_TEST_SIM_ARCHITECTURE_URI, true}
+        );
 
         super.deploy();
     }
@@ -24,8 +26,8 @@ public class CVMUnitTest
     public static void main(String[] args) {
         try {
             CVMUnitTest cvm = new CVMUnitTest();
-            cvm.startStandardLifeCycle(1000L);
-            Thread.sleep(10000L);
+            cvm.startStandardLifeCycle(15000L);
+            Thread.sleep(5000L);
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();

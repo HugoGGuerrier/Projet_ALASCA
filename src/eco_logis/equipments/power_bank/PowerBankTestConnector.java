@@ -10,24 +10,19 @@ import fr.sorbonne_u.components.connectors.AbstractConnector;
  */
 public class PowerBankTestConnector
     extends AbstractConnector
-    implements PowerBankCI {
+    implements PowerBankCI
+{
+
+    /** @see PowerBankCI#getCurrentState() */
+    @Override
+    public PowerBank.State getCurrentState() throws Exception {
+        return ((PowerBankCI) offering).getCurrentState();
+    }
 
     /** @see PowerBankCI#startCharging() */
     @Override
     public void startCharging() throws Exception {
         ((PowerBankCI) offering).startCharging();
-    }
-
-    /** @see PowerBankCI#stopCharging() */
-    @Override
-    public void stopCharging() throws Exception {
-        ((PowerBankCI) offering).stopCharging();
-    }
-
-    /** @see PowerBankCI#isCharging() */
-    @Override
-    public boolean isCharging() throws Exception {
-        return ((PowerBankCI) offering).isCharging();
     }
 
     /** @see PowerBankCI#startDischarging() */
@@ -36,16 +31,10 @@ public class PowerBankTestConnector
         ((PowerBankCI) offering).startDischarging();
     }
 
-    /** @see PowerBankCI#stopDischarging() */
+    /** @see PowerBankCI#standBy() */
     @Override
-    public void stopDischarging() throws Exception {
-        ((PowerBankCI) offering).stopDischarging();
-    }
-
-    /** @see PowerBankCI#isDischarging() */
-    @Override
-    public boolean isDischarging() throws Exception {
-        return ((PowerBankCI) offering).isDischarging();
+    public void standBy() throws Exception {
+        ((PowerBankCI) offering).standBy();
     }
 
     /** @see PowerBankCI#getBatteryLevel() () */
@@ -54,9 +43,4 @@ public class PowerBankTestConnector
         return ((PowerBankCI) offering).getBatteryLevel();
     }
 
-    /** @see PowerBankCI#setBatteryLevel(double) */
-    @Override
-    public void setBatteryLevel(double level) throws Exception {
-        ((PowerBankCI) offering).setBatteryLevel(level);
-    }
 }

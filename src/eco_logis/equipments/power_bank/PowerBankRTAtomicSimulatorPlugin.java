@@ -1,12 +1,13 @@
-package eco_logis.equipments.generator;
+package eco_logis.equipments.power_bank;
 
-import eco_logis.equipments.generator.mil.GeneratorCoupledModel;
-import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
-import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
-import eco_logis.equipments.generator.sil.GeneratorElectricitySILModel;
-import eco_logis.equipments.generator.sil.GeneratorFuelSILModel;
-import eco_logis.equipments.generator.sil.GeneratorStateModel;
-import eco_logis.equipments.generator.sil.GeneratorUserSILModel;
+import eco_logis.equipments.power_bank.mil.PowerBankCoupledModel;
+import eco_logis.equipments.power_bank.mil.events.ChargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.DischargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.StandbyPowerBank;
+import eco_logis.equipments.power_bank.sil.PowerBankChargeSILModel;
+import eco_logis.equipments.power_bank.sil.PowerBankElectricitySILModel;
+import eco_logis.equipments.power_bank.sil.PowerBankStateModel;
+import eco_logis.equipments.power_bank.sil.PowerBankUserSILModel;
 import fr.sorbonne_u.components.cyphy.plugins.devs.RTAtomicSimulatorPlugin;
 import fr.sorbonne_u.devs_simulation.architectures.RTArchitecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
@@ -14,7 +15,9 @@ import fr.sorbonne_u.devs_simulation.hioa.architectures.RTAtomicHIOA_Descriptor;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.RTCoupledHIOA_Descriptor;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSink;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSource;
-import fr.sorbonne_u.devs_simulation.models.architectures.*;
+import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
+import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
+import fr.sorbonne_u.devs_simulation.models.architectures.RTAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
@@ -26,13 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-/**
- * This class represents the SIL simulation plugin for the Generator
- *
- * @author Emilie SIAU
- * @author Hugo GUERRIER
- */
-public class GeneratorRTAtomicSimulatorPlugin
+public class PowerBankRTAtomicSimulatorPlugin
     extends RTAtomicSimulatorPlugin
 {
 
@@ -40,17 +37,17 @@ public class GeneratorRTAtomicSimulatorPlugin
 
 
     /** URI used for the unit tests */
-    public static final String UNIT_TEST_SIM_ARCHITECTURE_URI = "UnitTestGenerator";
+    public static final String UNIT_TEST_SIM_ARCHITECTURE_URI = "UnitTestPowerBank";
 
     /** Owner name used to pass the param in the model params */
-    public static final String OWNER_REFERENCE_NAME = "GCRN";
+    public static final String OWNER_REFERENCE_NAME = "PBCRN";
 
 
     // ========== Class methods ==========
 
 
     /**
-     * Create and initialise the simulation architecture for the Generator
+     * Create and initialise the simulation architecture for the power bank
      *
      * <p><strong>Contract</strong></p>
      *
@@ -71,21 +68,21 @@ public class GeneratorRTAtomicSimulatorPlugin
 
         // Create and set the sub-models set
         Set<String> submodels = new HashSet<>();
-        submodels.add(GeneratorUserSILModel.URI);
-        submodels.add(GeneratorStateModel.URI);
-        submodels.add(GeneratorFuelSILModel.URI);
+        submodels.add(PowerBankStateModel.URI);
+        submodels.add(PowerBankUserSILModel.URI);
+        submodels.add(PowerBankChargeSILModel.URI);
 
         // Declare the connections and reexported maps for the events
         Map<Class<? extends EventI>, ReexportedEvent> reexported = null;
         Map<EventSource, EventSink[]> connections = null;
         Map<VariableSource, VariableSink[]> bindings = null;
 
-        // Put the model in the descriptors
+        // Add the atomic model
         atomicModelDescriptors.put(
-                GeneratorUserSILModel.URI,
+                PowerBankStateModel.URI,
                 RTAtomicModelDescriptor.create(
-                        GeneratorUserSILModel.class,
-                        GeneratorUserSILModel.URI,
+                        PowerBankStateModel.class,
+                        PowerBankStateModel.URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
@@ -94,10 +91,10 @@ public class GeneratorRTAtomicSimulatorPlugin
         );
 
         atomicModelDescriptors.put(
-                GeneratorStateModel.URI,
+                PowerBankUserSILModel.URI,
                 RTAtomicModelDescriptor.create(
-                        GeneratorStateModel.class,
-                        GeneratorStateModel.URI,
+                        PowerBankUserSILModel.class,
+                        PowerBankUserSILModel.URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
@@ -106,10 +103,10 @@ public class GeneratorRTAtomicSimulatorPlugin
         );
 
         atomicModelDescriptors.put(
-                GeneratorFuelSILModel.URI,
+                PowerBankChargeSILModel.URI,
                 RTAtomicHIOA_Descriptor.create(
-                        GeneratorFuelSILModel.class,
-                        GeneratorFuelSILModel.URI,
+                        PowerBankChargeSILModel.class,
+                        PowerBankChargeSILModel.URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
@@ -119,14 +116,14 @@ public class GeneratorRTAtomicSimulatorPlugin
 
         if(simArchURI.equals(UNIT_TEST_SIM_ARCHITECTURE_URI)) {
 
-            // Add the electricity model to the submodels and descriptors
-            submodels.add(GeneratorElectricitySILModel.URI);
+            // Add the electricity model to the architecture
+            submodels.add(PowerBankElectricitySILModel.URI);
 
             atomicModelDescriptors.put(
-                    GeneratorElectricitySILModel.URI,
+                    PowerBankElectricitySILModel.URI,
                     RTAtomicHIOA_Descriptor.create(
-                            GeneratorElectricitySILModel.class,
-                            GeneratorElectricitySILModel.URI,
+                            PowerBankElectricitySILModel.class,
+                            PowerBankElectricitySILModel.URI,
                             TimeUnit.SECONDS,
                             null,
                             SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
@@ -134,39 +131,47 @@ public class GeneratorRTAtomicSimulatorPlugin
                     )
             );
 
-            // Create the event connections
+            // Create the event connection
             connections = new HashMap<>();
 
             connections.put(
-                    new EventSource(GeneratorStateModel.URI, SwitchOnGenerator.class),
+                    new EventSource(PowerBankStateModel.URI, ChargePowerBank.class),
                     new EventSink[] {
-                            new EventSink(GeneratorElectricitySILModel.URI, SwitchOnGenerator.class),
-                            new EventSink(GeneratorFuelSILModel.URI, SwitchOnGenerator.class)
+                            new EventSink(PowerBankElectricitySILModel.URI, ChargePowerBank.class),
+                            new EventSink(PowerBankChargeSILModel.URI, ChargePowerBank.class)
                     }
             );
 
             connections.put(
-                    new EventSource(GeneratorStateModel.URI, SwitchOffGenerator.class),
+                    new EventSource(PowerBankStateModel.URI, DischargePowerBank.class),
                     new EventSink[] {
-                            new EventSink(GeneratorElectricitySILModel.URI, SwitchOffGenerator.class),
-                            new EventSink(GeneratorFuelSILModel.URI, SwitchOffGenerator.class)
+                            new EventSink(PowerBankElectricitySILModel.URI, DischargePowerBank.class),
+                            new EventSink(PowerBankChargeSILModel.URI, DischargePowerBank.class)
                     }
             );
 
             connections.put(
-                    new EventSource(GeneratorFuelSILModel.URI, SwitchOffGenerator.class),
+                    new EventSource(PowerBankStateModel.URI, StandbyPowerBank.class),
                     new EventSink[] {
-                            new EventSink(GeneratorElectricitySILModel.URI, SwitchOffGenerator.class)
+                            new EventSink(PowerBankElectricitySILModel.URI, StandbyPowerBank.class),
+                            new EventSink(PowerBankChargeSILModel.URI, StandbyPowerBank.class)
                     }
             );
 
-            // Put the variable binding
+            connections.put(
+                    new EventSource(PowerBankChargeSILModel.URI, StandbyPowerBank.class),
+                    new EventSink[] {
+                            new EventSink(PowerBankElectricitySILModel.URI, StandbyPowerBank.class)
+                    }
+            );
+
+            // Create the variable bindings
             bindings = new HashMap<>();
 
             bindings.put(
-                    new VariableSource("currentFuelLevel", Double.class, GeneratorFuelSILModel.URI),
+                    new VariableSource("currentChargeLevel", Double.class, PowerBankChargeSILModel.URI),
                     new VariableSink[] {
-                            new VariableSink("currentFuelLevel", Double.class, GeneratorElectricitySILModel.URI)
+                            new VariableSink("currentChargeLevel", Double.class, PowerBankElectricitySILModel.URI)
                     }
             );
 
@@ -176,40 +181,52 @@ public class GeneratorRTAtomicSimulatorPlugin
             connections = new HashMap<>();
 
             connections.put(
-                    new EventSource(GeneratorStateModel.URI, SwitchOnGenerator.class),
+                    new EventSource(PowerBankStateModel.URI, ChargePowerBank.class),
                     new EventSink[] {
-                            new EventSink(GeneratorFuelSILModel.URI, SwitchOnGenerator.class)
+                            new EventSink(PowerBankChargeSILModel.URI, ChargePowerBank.class)
                     }
             );
 
             connections.put(
-                    new EventSource(GeneratorStateModel.URI, SwitchOffGenerator.class),
+                    new EventSource(PowerBankStateModel.URI, DischargePowerBank.class),
                     new EventSink[] {
-                            new EventSink(GeneratorFuelSILModel.URI, SwitchOffGenerator.class)
+                            new EventSink(PowerBankChargeSILModel.URI, DischargePowerBank.class)
                     }
             );
 
-            // Reexport the events
+            connections.put(
+                    new EventSource(PowerBankStateModel.URI, StandbyPowerBank.class),
+                    new EventSink[] {
+                            new EventSink(PowerBankChargeSILModel.URI, StandbyPowerBank.class)
+                    }
+            );
+
+            // Add the reexport
             reexported = new HashMap<>();
 
             reexported.put(
-                    SwitchOnGenerator.class,
-                    new ReexportedEvent(GeneratorStateModel.URI, SwitchOnGenerator.class)
+                    ChargePowerBank.class,
+                    new ReexportedEvent(PowerBankStateModel.URI, ChargePowerBank.class)
             );
 
             reexported.put(
-                    SwitchOffGenerator.class,
-                    new ReexportedEvent(GeneratorStateModel.URI, SwitchOffGenerator.class)
+                    DischargePowerBank.class,
+                    new ReexportedEvent(PowerBankStateModel.URI, DischargePowerBank.class)
+            );
+
+            reexported.put(
+                    StandbyPowerBank.class,
+                    new ReexportedEvent(PowerBankStateModel.URI, StandbyPowerBank.class)
             );
 
         }
 
         // Create the coupled model descriptor
         coupledModelDescriptors.put(
-                GeneratorCoupledModel.URI,
+                PowerBankCoupledModel.URI,
                 new RTCoupledHIOA_Descriptor(
-                        GeneratorCoupledModel.class,
-                        GeneratorCoupledModel.URI,
+                        PowerBankCoupledModel.class,
+                        PowerBankCoupledModel.URI,
                         submodels,
                         null,
                         reexported,
@@ -227,7 +244,7 @@ public class GeneratorRTAtomicSimulatorPlugin
         setSimulationArchitecture(
                 new RTArchitecture(
                         simArchURI,
-                        GeneratorCoupledModel.URI,
+                        PowerBankCoupledModel.URI,
                         atomicModelDescriptors,
                         coupledModelDescriptors,
                         TimeUnit.SECONDS,

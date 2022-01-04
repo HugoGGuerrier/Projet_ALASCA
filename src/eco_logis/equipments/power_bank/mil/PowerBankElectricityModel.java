@@ -1,5 +1,6 @@
 package eco_logis.equipments.power_bank.mil;
 
+import eco_logis.equipments.power_bank.PowerBank;
 import eco_logis.equipments.power_bank.mil.events.AbstractPowerBankEvent;
 import eco_logis.equipments.power_bank.mil.events.ChargePowerBank;
 import eco_logis.equipments.power_bank.mil.events.DischargePowerBank;
@@ -34,20 +35,6 @@ public class PowerBankElectricityModel
     extends AtomicHIOA
 {
 
-    // ========== Inner class and types ==========
-
-
-    public enum State {
-        /** The power bank is currently charging */
-        CHARGE,
-
-        /** The power bank is currently discharging */
-        DISCHARGE,
-
-        /** The power bank is standby */
-        STANDBY
-    }
-
 
     // ========== Macros ==========
 
@@ -65,7 +52,7 @@ public class PowerBankElectricityModel
     // ========== Attributes ==========
 
     /** The current power bank state */
-    private State currentState;
+    private PowerBank.State currentState;
 
     /** If the state has changed and you have to perform an internal transition */
     private boolean hasChanged;
@@ -110,7 +97,7 @@ public class PowerBankElectricityModel
      *
      * @return The current power bank state
      */
-    public State getCurrentState() {
+    public PowerBank.State getCurrentState() {
         return currentState;
     }
 
@@ -123,7 +110,7 @@ public class PowerBankElectricityModel
      *
      * @param currentState The new state of the power bank
      */
-    public void setCurrentState(State currentState) {
+    public void setCurrentState(PowerBank.State currentState) {
         this.currentState = currentState;
     }
 
@@ -145,7 +132,7 @@ public class PowerBankElectricityModel
     public void initialiseState(Time initialTime) {
         super.initialiseState(initialTime);
 
-        currentState = State.STANDBY;
+        currentState = PowerBank.State.STANDBY;
 
         toggleDebugMode();
         logMessage("Simulation starts...\n");
@@ -184,12 +171,12 @@ public class PowerBankElectricityModel
 
         // Set the current production and consumption
         switch (currentState) {
-            case CHARGE:
+            case CHARGING:
                 currentProduction.v = 0.0;
                 currentConsumption.v = CONSUMPTION;
                 break;
 
-            case DISCHARGE:
+            case DISCHARGING:
                 currentProduction.v = PRODUCTION;
                 currentConsumption.v = 0.0;
                 break;
@@ -213,6 +200,7 @@ public class PowerBankElectricityModel
     /** @see AtomicHIOA#userDefinedExternalTransition(Duration) */
     @Override
     public void userDefinedExternalTransition(Duration elapsedTime) {
+
         // Get the current event
         ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
         assert currentEvents != null && currentEvents.size() == 1;

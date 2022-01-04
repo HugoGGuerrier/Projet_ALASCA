@@ -1,6 +1,7 @@
 package eco_logis.equipments.hem.connectors;
 
 import eco_logis.equipments.hem.StorageEquipmentOutboundPort;
+import eco_logis.equipments.power_bank.PowerBank;
 import eco_logis.equipments.power_bank.PowerBankCI;
 import eco_logis.interfaces.StorageEquipmentControlCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
@@ -22,7 +23,7 @@ public class PowerBankConnector
     /** @see StorageEquipmentOutboundPort#isProducing() */
     @Override
     public boolean isProducing() throws Exception {
-        return ((PowerBankCI) offering).isDischarging();
+        return ((PowerBankCI) offering).getCurrentState() == PowerBank.State.DISCHARGING;
     }
 
     /** @see StorageEquipmentOutboundPort#startProducing() */
@@ -35,14 +36,14 @@ public class PowerBankConnector
     /** @see StorageEquipmentOutboundPort#stopProducing() */
     @Override
     public boolean stopProducing() throws Exception {
-        ((PowerBankCI) offering).stopDischarging();
+        ((PowerBankCI) offering).standBy();
         return true;
     }
 
     /** @see StorageEquipmentOutboundPort#isConsuming() */
     @Override
     public boolean isConsuming() throws Exception {
-        return ((PowerBankCI) offering).isCharging();
+        return ((PowerBankCI) offering).getCurrentState() == PowerBank.State.CHARGING;
     }
 
     /** @see StorageEquipmentOutboundPort#startConsuming() */
@@ -55,7 +56,7 @@ public class PowerBankConnector
     /** @see StorageEquipmentOutboundPort#stopConsuming() */
     @Override
     public boolean stopConsuming() throws Exception {
-        ((PowerBankCI) offering).stopCharging();
+        ((PowerBankCI) offering).standBy();
         return true;
     }
 

@@ -1,6 +1,5 @@
 package eco_logis.equipments.generator.sil;
 
-import eco_logis.equipments.crypto_miner.mil.events.AbstractCryptoMinerEvent;
 import eco_logis.equipments.generator.Generator;
 import eco_logis.equipments.generator.GeneratorRTAtomicSimulatorPlugin;
 import eco_logis.equipments.generator.mil.events.AbstractGeneratorEvent;

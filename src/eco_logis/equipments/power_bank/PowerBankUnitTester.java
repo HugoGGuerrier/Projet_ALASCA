@@ -54,7 +54,8 @@ public class PowerBankUnitTester
     protected void testIsCharging() {
         logMessage("Test isCharging()...");
         try {
-            assertFalse(powerBankOutboundPort.isCharging());
+            assertNotSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.CHARGING);
+            assertSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.STANDBY);
         } catch (Exception e) {
             logMessage("... FAILED!");
             fail(e);
@@ -65,7 +66,7 @@ public class PowerBankUnitTester
     protected void testIsDischarging() {
         logMessage("Test isDischarging()...");
         try {
-            assertFalse(powerBankOutboundPort.isDischarging());
+            assertNotSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.DISCHARGING);
         } catch (Exception e) {
             logMessage("... FAILED!");
             fail(e);
@@ -77,12 +78,12 @@ public class PowerBankUnitTester
     protected void testStartStopCharging() {
         logMessage("Test startCharging() and stopCharging()...");
         try {
-            assertFalse(powerBankOutboundPort.isCharging());
-            assertFalse(powerBankOutboundPort.isDischarging());
+            assertNotSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.CHARGING);
+            assertNotSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.DISCHARGING);
             powerBankOutboundPort.startCharging();
-            assertTrue(powerBankOutboundPort.isCharging());
-            powerBankOutboundPort.stopCharging();
-            assertFalse(powerBankOutboundPort.isCharging());
+            assertSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.CHARGING);
+            powerBankOutboundPort.standBy();
+            assertNotSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.CHARGING);
         } catch (Exception e) {
             logMessage("... FAILED!");
             fail(e);
@@ -93,12 +94,12 @@ public class PowerBankUnitTester
     protected void testStartStopDischarging() {
         logMessage("Test startDischarging() and stopDischarging()...");
         try {
-            assertFalse(powerBankOutboundPort.isDischarging());
-            assertFalse(powerBankOutboundPort.isCharging());
+            assertNotSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.CHARGING);
+            assertNotSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.DISCHARGING);
             powerBankOutboundPort.startDischarging();
-            assertTrue(powerBankOutboundPort.isDischarging());
-            powerBankOutboundPort.stopDischarging();
-            assertFalse(powerBankOutboundPort.isDischarging());
+            assertSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.DISCHARGING);
+            powerBankOutboundPort.standBy();
+            assertNotSame(powerBankOutboundPort.getCurrentState(), PowerBank.State.DISCHARGING);
         } catch (Exception e) {
             logMessage("... FAILED!");
             fail(e);

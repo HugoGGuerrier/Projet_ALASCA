@@ -1,5 +1,6 @@
 package eco_logis.equipments.power_bank.mil;
 
+import eco_logis.equipments.power_bank.PowerBank;
 import eco_logis.equipments.power_bank.mil.events.AbstractPowerBankEvent;
 import eco_logis.equipments.power_bank.mil.events.ChargePowerBank;
 import eco_logis.equipments.power_bank.mil.events.DischargePowerBank;
@@ -59,7 +60,7 @@ public class PowerBankChargeModel
     protected final Duration evaluationStep;
 
     /** The current state of the power bank */
-    private PowerBankElectricityModel.State currentState;
+    private PowerBank.State currentState;
 
     /** the current charge level */
     @ExportedVariable(type = Double.class)
@@ -92,7 +93,7 @@ public class PowerBankChargeModel
      *
      * @return The current state
      */
-    public PowerBankElectricityModel.State getCurrentState() {
+    public PowerBank.State getCurrentState() {
         return currentState;
     }
 
@@ -105,7 +106,7 @@ public class PowerBankChargeModel
      *
      * @param currentState The new current state of the power bank
      */
-    public void setCurrentState(PowerBankElectricityModel.State currentState) {
+    public void setCurrentState(PowerBank.State currentState) {
         this.currentState = currentState;
     }
 
@@ -150,7 +151,7 @@ public class PowerBankChargeModel
     public void initialiseState(Time initialTime) {
         super.initialiseState(initialTime);
 
-        currentState = PowerBankElectricityModel.State.STANDBY;
+        currentState = PowerBank.State.STANDBY;
 
         toggleDebugMode();
         logMessage("Simulations starts...\n");
@@ -179,16 +180,16 @@ public class PowerBankChargeModel
         super.userDefinedInternalTransition(elapsedTime);
 
         // Update the charge level
-        if(currentChargeLevel.v > 0.0 && currentState == PowerBankElectricityModel.State.DISCHARGE) {
+        if(currentChargeLevel.v > 0.0 && currentState == PowerBank.State.DISCHARGING) {
             discharge(elapsedTime);
-        } else if (currentChargeLevel.v < 1.0 && currentState == PowerBankElectricityModel.State.CHARGE) {
+        } else if (currentChargeLevel.v < 1.0 && currentState == PowerBank.State.CHARGING) {
             charge(elapsedTime);
         }
         currentChargeLevel.time = getCurrentStateTime();
 
         // Tracing
-        String stateString = currentState == PowerBankElectricityModel.State.STANDBY ? "standby" :
-                (currentState == PowerBankElectricityModel.State.CHARGE ? "charging" : "discharging");
+        String stateString = currentState == PowerBank.State.STANDBY ? "standby" :
+                (currentState == PowerBank.State.CHARGING ? "charging" : "discharging");
         logMessage("Power bank is " + stateString + " | Charge level : " + currentChargeLevel.v + " at " + currentChargeLevel.time + "\n");
     }
 

@@ -7,7 +7,7 @@ import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
 import eco_logis.equipments.crypto_miner.sil.CryptoMinerElectricitySILModel;
 import eco_logis.equipments.crypto_miner.sil.CryptoMinerStateModel;
-import eco_logis.equipments.crypto_miner.sil.CryptoMinerUserModel;
+import eco_logis.equipments.crypto_miner.sil.CryptoMinerUserSILModel;
 import fr.sorbonne_u.components.cyphy.plugins.devs.RTAtomicSimulatorPlugin;
 import fr.sorbonne_u.devs_simulation.architectures.RTArchitecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
@@ -71,7 +71,7 @@ public class CryptoMinerRTAtomicSimulatorPlugin
 
         // Create and set the sub-models set
         Set<String> submodels = new HashSet<>();
-        submodels.add(CryptoMinerUserModel.URI);
+        submodels.add(CryptoMinerUserSILModel.URI);
         submodels.add(CryptoMinerStateModel.URI);
 
         // Declare the connections and reexported maps for the events
@@ -80,10 +80,10 @@ public class CryptoMinerRTAtomicSimulatorPlugin
 
         // Put the model in the descriptors
         atomicModelDescriptors.put(
-                CryptoMinerUserModel.URI,
+                CryptoMinerUserSILModel.URI,
                 RTAtomicModelDescriptor.create(
-                        CryptoMinerUserModel.class,
-                        CryptoMinerUserModel.URI,
+                        CryptoMinerUserSILModel.class,
+                        CryptoMinerUserSILModel.URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,

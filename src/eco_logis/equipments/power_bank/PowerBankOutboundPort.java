@@ -46,10 +46,10 @@ public class PowerBankOutboundPort
     // ========== Override methods ==========
 
 
-    /** @see PowerBankCI#isCharging() */
+    /** @see PowerBankCI#getCurrentState() */
     @Override
-    public boolean isCharging() throws Exception {
-        return ((PowerBankCI) getConnector()).isCharging();
+    public PowerBank.State getCurrentState() throws Exception {
+        return ((PowerBankCI) getConnector()).getCurrentState();
     }
 
     /** @see PowerBankCI#startCharging() */
@@ -58,40 +58,22 @@ public class PowerBankOutboundPort
         ((PowerBankCI) getConnector()).startCharging();
     }
 
-    /** @see PowerBankCI#stopCharging() */
-    @Override
-    public void stopCharging() throws Exception {
-        ((PowerBankCI) getConnector()).stopCharging();
-    }
-
-    /** @see PowerBankCI#isDischarging() */
-    @Override
-    public boolean isDischarging() throws Exception {
-        return ((PowerBankCI) getConnector()).isDischarging();
-    }
-
     /** @see PowerBankCI#startDischarging() */
     @Override
     public void startDischarging() throws Exception {
         ((PowerBankCI) getConnector()).startDischarging();
     }
 
-    /** @see PowerBankCI#stopDischarging() */
+    /** @see PowerBankCI#standBy() */
     @Override
-    public void stopDischarging() throws Exception {
-        ((PowerBankCI) getConnector()).stopDischarging();
+    public void standBy() throws Exception {
+        ((PowerBankCI) getConnector()).standBy();
     }
 
     /** @see PowerBankCI#getBatteryLevel() */
     @Override
     public double getBatteryLevel() throws Exception {
         return ((PowerBankCI) getConnector()).getBatteryLevel();
-    }
-
-    /** @see PowerBankCI#setBatteryLevel(double) */
-    @Override
-    public void setBatteryLevel(double level) throws Exception {
-        ((PowerBankCI) getConnector()).setBatteryLevel(level);
     }
 
 }
