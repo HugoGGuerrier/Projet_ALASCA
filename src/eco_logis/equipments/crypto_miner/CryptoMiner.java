@@ -87,7 +87,8 @@ public class CryptoMiner
      * post	true
      * </pre>
      *
-     *
+     * @param simArchURI The simulation architecture URI
+     * @param executesAsUnitTest If the component has to be executed as a unit test
      * @throws Exception TODO
      */
     protected CryptoMiner(String simArchURI, boolean executesAsUnitTest) throws Exception {
@@ -107,6 +108,8 @@ public class CryptoMiner
      *
      * @see AbstractComponent#AbstractComponent(int, int)
      *
+     * @param simArchURI The simulation architecture URI
+     * @param executesAsUnitTest If the component has to be executed as a unit test
      * @param cryptoMinerInboundPortURI The inbound port URI
      * @throws Exception TODO
      */
@@ -130,6 +133,8 @@ public class CryptoMiner
      *
      * @see AbstractComponent#AbstractComponent(String, int, int)
      *
+     * @param simArchURI The simulation architecture URI
+       @param executesAsUnitTest If the component has to be executed as a unit test
      * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param cryptoMinerInboundPortURI The inbound port URI
      * @throws Exception TODO
@@ -156,6 +161,8 @@ public class CryptoMiner
      * </pre>
      *
      * @param cryptoMinerInboundPortURI The crypto miner inbound port URI
+     * @param simArchURI The simulation architecture URI
+     * @param executesAsUnitTest If the component has to be executed as a unit test
      * @throws Exception TODO
      */
     protected void initialise(String cryptoMinerInboundPortURI,

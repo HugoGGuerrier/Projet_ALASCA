@@ -3,6 +3,12 @@ package eco_logis.equipments.generator;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
+/**
+ * This class tests the generator unitary
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public class CVMUnitTest
     extends AbstractCVM
 {
@@ -16,9 +22,11 @@ public class CVMUnitTest
 
     @Override
     public void deploy() throws Exception {
-        // Create the components to test the crypto miner
-        AbstractComponent.createComponent(Generator.class.getCanonicalName(), new Object[]{});
-        AbstractComponent.createComponent(GeneratorUnitTester.class.getCanonicalName(), new Object[]{});
+        // Create the components to test the generator
+        AbstractComponent.createComponent(
+                Generator.class.getCanonicalName(),
+                new Object[]{GeneratorRTAtomicSimulatorPlugin.UNIT_TEST_SIM_ARCHITECTURE_URI, true}
+        );
 
         super.deploy();
     }
@@ -26,8 +34,8 @@ public class CVMUnitTest
     public static void main(String[] args) {
         try {
             CVMUnitTest cvm = new CVMUnitTest();
-            cvm.startStandardLifeCycle(1000L);
-            Thread.sleep(10000L);
+            cvm.startStandardLifeCycle(15000L);
+            Thread.sleep(1000L);
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
