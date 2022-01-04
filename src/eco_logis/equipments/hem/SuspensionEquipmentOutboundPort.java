@@ -3,7 +3,7 @@ package eco_logis.equipments.hem;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import eco_logis.interfaces.SuspensionEquipmentCI;
+import eco_logis.interfaces.SuspensionEquipmentControlCI;
 
 /**
  * This class represents an outbound port for a suspension equipment
@@ -13,7 +13,7 @@ import eco_logis.interfaces.SuspensionEquipmentCI;
  */
 public class SuspensionEquipmentOutboundPort
     extends StandardEquipmentOutboundPort
-    implements SuspensionEquipmentCI
+    implements SuspensionEquipmentControlCI
 {
 
     // ========== Constructors ==========
@@ -27,7 +27,7 @@ public class SuspensionEquipmentOutboundPort
      * @throws Exception TODO
      */
     public SuspensionEquipmentOutboundPort(ComponentI owner) throws Exception {
-        super(SuspensionEquipmentCI.class, owner);
+        super(SuspensionEquipmentControlCI.class, owner);
     }
 
     /**
@@ -40,43 +40,43 @@ public class SuspensionEquipmentOutboundPort
      * @throws Exception TODO
      */
     public SuspensionEquipmentOutboundPort(String uri, ComponentI owner) throws Exception {
-        super(uri, SuspensionEquipmentCI.class, owner);
+        super(uri, SuspensionEquipmentControlCI.class, owner);
     }
 
     // ========== Override methods ==========
 
-    /** @see SuspensionEquipmentCI#suspended() */
+    /** @see SuspensionEquipmentControlCI#suspended() */
     @Override
     public boolean suspended() throws Exception {
         assert on() : new PreconditionException("suspended() -> on()");
-        return ((SuspensionEquipmentCI) getConnector()).suspended();
+        return ((SuspensionEquipmentControlCI) getConnector()).suspended();
     }
 
-    /** @see SuspensionEquipmentCI#suspend() */
+    /** @see SuspensionEquipmentControlCI#suspend() */
     @Override
     public boolean suspend() throws Exception {
         assert on() : new PreconditionException("suspend() -> on()");
         assert !suspended() : new PreconditionException("suspend() -> !suspended()");
-        boolean res = ((SuspensionEquipmentCI) getConnector()).suspend();
+        boolean res = ((SuspensionEquipmentControlCI) getConnector()).suspend();
         assert suspended() : new PostconditionException("suspend() -> suspended()");
         return res;
     }
 
-    /** @see SuspensionEquipmentCI#resume() */
+    /** @see SuspensionEquipmentControlCI#resume() */
     @Override
     public boolean resume() throws Exception {
         assert on() : new PreconditionException("resume() -> on()");
         assert suspended() : new PreconditionException("resume() -> suspended()");
-        boolean res = ((SuspensionEquipmentCI) getConnector()).resume();
+        boolean res = ((SuspensionEquipmentControlCI) getConnector()).resume();
         assert !suspended() : new PostconditionException("resume() -> !suspended()");
         return res;
     }
 
-    /** @see SuspensionEquipmentCI#emergency() */
+    /** @see SuspensionEquipmentControlCI#emergency() */
     @Override
     public double emergency() throws Exception {
         assert on() : new PreconditionException("emergency() -> on()");
-        return ((SuspensionEquipmentCI) getConnector()).emergency();
+        return ((SuspensionEquipmentControlCI) getConnector()).emergency();
     }
 
 }

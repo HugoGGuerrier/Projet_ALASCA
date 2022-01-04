@@ -3,7 +3,7 @@ package eco_logis.equipments.hem.connectors;
 import eco_logis.equipments.hem.StandardEquipmentOutboundPort;
 import eco_logis.equipments.oven.OvenCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import eco_logis.interfaces.StandardEquipmentCI;
+import eco_logis.interfaces.StandardEquipmentControlCI;
 
 /**
  * This class is an integration test connector for the oven component
@@ -13,7 +13,7 @@ import eco_logis.interfaces.StandardEquipmentCI;
  */
 public class OvenConnector
     extends AbstractConnector
-    implements StandardEquipmentCI
+    implements StandardEquipmentControlCI
 {
 
     // ========== Override methods ==========

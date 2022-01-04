@@ -2,7 +2,7 @@ package eco_logis.equipments.hem.connectors;
 
 import eco_logis.equipments.hem.StorageEquipmentOutboundPort;
 import eco_logis.equipments.power_bank.PowerBankCI;
-import eco_logis.interfaces.StorageEquipmentCI;
+import eco_logis.interfaces.StorageEquipmentControlCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
 /**
@@ -13,7 +13,7 @@ import fr.sorbonne_u.components.connectors.AbstractConnector;
  */
 public class PowerBankConnector
     extends AbstractConnector
-    implements StorageEquipmentCI
+    implements StorageEquipmentControlCI
 {
 
     // ========== Override methods ==========

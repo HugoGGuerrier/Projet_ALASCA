@@ -3,7 +3,7 @@ package eco_logis.equipments.hem;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import eco_logis.interfaces.UnpredictableProductionEquipmentCI;
+import eco_logis.interfaces.UnpredictableProductionEquipmentControlCI;
 
 /**
  * This class represents an outbound port for an unpredictable production equipment
@@ -13,7 +13,7 @@ import eco_logis.interfaces.UnpredictableProductionEquipmentCI;
  */
 public class UnpredictableProductionEquipmentOutboundPort
         extends ProductionEquipmentOutboundPort
-        implements UnpredictableProductionEquipmentCI
+        implements UnpredictableProductionEquipmentControlCI
 {
 
     /**
@@ -25,7 +25,7 @@ public class UnpredictableProductionEquipmentOutboundPort
      * @throws Exception TODO
      */
     public UnpredictableProductionEquipmentOutboundPort(ComponentI owner) throws Exception {
-        super(UnpredictableProductionEquipmentCI.class, owner);
+        super(UnpredictableProductionEquipmentControlCI.class, owner);
     }
 
     /**
@@ -38,30 +38,30 @@ public class UnpredictableProductionEquipmentOutboundPort
      * @throws Exception TODO
      */
     public UnpredictableProductionEquipmentOutboundPort(String uri, ComponentI owner) throws Exception {
-        super(uri, UnpredictableProductionEquipmentCI.class, owner);
+        super(uri, UnpredictableProductionEquipmentControlCI.class, owner);
     }
 
 
     // ========== Override methods ==========
 
 
-    /** @see UnpredictableProductionEquipmentCI#isForbidden() */
+    /** @see UnpredictableProductionEquipmentControlCI#isForbidden() */
     @Override
     public boolean isForbidden() throws Exception {
-        return ((UnpredictableProductionEquipmentCI) getConnector()).isForbidden();
+        return ((UnpredictableProductionEquipmentControlCI) getConnector()).isForbidden();
     }
 
-    /** @see UnpredictableProductionEquipmentCI#forbidProduction() */
+    /** @see UnpredictableProductionEquipmentControlCI#forbidProduction() */
     @Override
     public boolean forbidProduction() throws Exception {
         assert !isForbidden() : new PreconditionException("forbidProduction() -> !isForbidden()");
-        return ((UnpredictableProductionEquipmentCI) getConnector()).forbidProduction();
+        return ((UnpredictableProductionEquipmentControlCI) getConnector()).forbidProduction();
     }
 
-    /** @see UnpredictableProductionEquipmentCI#allowProduction() */
+    /** @see UnpredictableProductionEquipmentControlCI#allowProduction() */
     @Override
     public boolean allowProduction() throws Exception {
         assert isForbidden() : new PreconditionException("allowProduction() -> isForbidden()");
-        return ((UnpredictableProductionEquipmentCI) getConnector()).allowProduction();
+        return ((UnpredictableProductionEquipmentControlCI) getConnector()).allowProduction();
     }
 }

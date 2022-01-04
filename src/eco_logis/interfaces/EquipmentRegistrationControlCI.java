@@ -9,7 +9,7 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
  * @author Emile SIAU
  * @author Hugo GUERRIER
  */
-public interface EquipmentRegistrationCI
+public interface EquipmentRegistrationControlCI
     extends RequiredCI, OfferedCI
 {
 

@@ -5,7 +5,7 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import eco_logis.interfaces.ProductionEquipmentCI;
+import eco_logis.interfaces.ProductionEquipmentControlCI;
 
 /**
  * This class represents an outbound port for a production equipment
@@ -15,7 +15,7 @@ import eco_logis.interfaces.ProductionEquipmentCI;
  */
 public class ProductionEquipmentOutboundPort
     extends AbstractOutboundPort
-    implements ProductionEquipmentCI
+    implements ProductionEquipmentControlCI
 {
 
     // ========== Constructors ==========
@@ -30,7 +30,7 @@ public class ProductionEquipmentOutboundPort
      * @throws Exception TODO
      */
     public ProductionEquipmentOutboundPort(ComponentI owner) throws Exception {
-        super(ProductionEquipmentCI.class, owner);
+        super(ProductionEquipmentControlCI.class, owner);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ProductionEquipmentOutboundPort
      * @throws Exception TODO
      */
     public ProductionEquipmentOutboundPort(String uri, ComponentI owner) throws Exception {
-        super(uri, ProductionEquipmentCI.class, owner);
+        super(uri, ProductionEquipmentControlCI.class, owner);
     }
 
     /**
@@ -77,26 +77,26 @@ public class ProductionEquipmentOutboundPort
     // ========== Override methods ==========
 
 
-    /** @see ProductionEquipmentCI#isProducing() */
+    /** @see ProductionEquipmentControlCI#isProducing() */
     @Override
     public boolean isProducing() throws Exception {
-        return ((ProductionEquipmentCI) getConnector()).isProducing();
+        return ((ProductionEquipmentControlCI) getConnector()).isProducing();
     }
 
-    /** @see ProductionEquipmentCI#startProducing() */
+    /** @see ProductionEquipmentControlCI#startProducing() */
     @Override
     public boolean startProducing() throws Exception {
         assert !isProducing() : new PreconditionException("startProducing() -> !isProducing()");
-        boolean res = ((ProductionEquipmentCI) getConnector()).startProducing();
+        boolean res = ((ProductionEquipmentControlCI) getConnector()).startProducing();
         assert isProducing() : new PostconditionException("startProducing() -> isProducing()");
         return res;
     }
 
-    /** @see ProductionEquipmentCI#stopProducing() */
+    /** @see ProductionEquipmentControlCI#stopProducing() */
     @Override
     public boolean stopProducing() throws Exception {
         assert isProducing() : new PreconditionException("stopProducing() -> isProducing()");
-        boolean res = ((ProductionEquipmentCI) getConnector()).stopProducing();
+        boolean res = ((ProductionEquipmentControlCI) getConnector()).stopProducing();
         assert !isProducing() : new PostconditionException("stopProducing() -> !isProducing()");
         return res;
     }

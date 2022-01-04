@@ -6,8 +6,8 @@ package eco_logis.interfaces;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public interface StorageEquipmentCI
-    extends ProductionEquipmentCI
+public interface StorageEquipmentControlCI
+    extends ProductionEquipmentControlCI
 {
 
     /**

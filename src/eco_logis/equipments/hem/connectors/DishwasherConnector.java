@@ -2,7 +2,7 @@ package eco_logis.equipments.hem.connectors;
 
 import eco_logis.equipments.hem.PlanningEquipmentOutboundPort;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import eco_logis.interfaces.PlanningEquipmentCI;
+import eco_logis.interfaces.PlanningEquipmentControlCI;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -15,7 +15,7 @@ import java.time.LocalTime;
  */
 public class DishwasherConnector
     extends AbstractConnector
-    implements PlanningEquipmentCI
+    implements PlanningEquipmentControlCI
 {
 
     // ========== Override methods ==========

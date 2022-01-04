@@ -3,7 +3,7 @@ package eco_logis.equipments.hem;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import eco_logis.interfaces.PlanningEquipmentCI;
+import eco_logis.interfaces.PlanningEquipmentControlCI;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -16,7 +16,7 @@ import java.time.LocalTime;
  */
 public class PlanningEquipmentOutboundPort
     extends StandardEquipmentOutboundPort
-    implements PlanningEquipmentCI
+    implements PlanningEquipmentControlCI
 {
 
     // ========== Constructors ==========
@@ -31,7 +31,7 @@ public class PlanningEquipmentOutboundPort
      * @throws Exception TODO
      */
     public PlanningEquipmentOutboundPort(ComponentI owner) throws Exception {
-        super(PlanningEquipmentCI.class, owner);
+        super(PlanningEquipmentControlCI.class, owner);
     }
 
     /**
@@ -44,58 +44,58 @@ public class PlanningEquipmentOutboundPort
      * @throws Exception TODO
      */
     public PlanningEquipmentOutboundPort(String uri, ComponentI owner) throws Exception {
-        super(uri, PlanningEquipmentCI.class, owner);
+        super(uri, PlanningEquipmentControlCI.class, owner);
     }
 
 
     // ========== Override methods ==========
 
 
-    /** @see PlanningEquipmentCI#hasPlan() */
+    /** @see PlanningEquipmentControlCI#hasPlan() */
     @Override
     public boolean hasPlan() throws Exception {
-        return ((PlanningEquipmentCI) getConnector()).hasPlan();
+        return ((PlanningEquipmentControlCI) getConnector()).hasPlan();
     }
 
-    /** @see PlanningEquipmentCI#startTime() */
+    /** @see PlanningEquipmentControlCI#startTime() */
     @Override
     public LocalTime startTime() throws Exception {
         assert hasPlan() : new PreconditionException("startTime() -> hasPlan()");
-        return ((PlanningEquipmentCI) getConnector()).startTime();
+        return ((PlanningEquipmentControlCI) getConnector()).startTime();
     }
 
-    /** @see PlanningEquipmentCI#duration() */
+    /** @see PlanningEquipmentControlCI#duration() */
     @Override
     public Duration duration() throws Exception {
         assert hasPlan() : new PreconditionException("duration() -> hasPlan()");
-        return ((PlanningEquipmentCI) getConnector()).duration();
+        return ((PlanningEquipmentControlCI) getConnector()).duration();
     }
 
-    /** @see PlanningEquipmentCI#deadline() */
+    /** @see PlanningEquipmentControlCI#deadline() */
     @Override
     public LocalTime deadline() throws Exception {
         assert hasPlan() : new PreconditionException("deadline() -> hasPlan()");
-        return ((PlanningEquipmentCI) getConnector()).deadline();
+        return ((PlanningEquipmentControlCI) getConnector()).deadline();
     }
 
-    /** @see PlanningEquipmentCI#postPone(Duration) */
+    /** @see PlanningEquipmentControlCI#postPone(Duration) */
     @Override
     public boolean postPone(Duration duration) throws Exception {
         assert hasPlan() : new PreconditionException("postPone(duration) -> hasPlan()");
         LocalTime nextStartTime = startTime().plusSeconds(duration.getSeconds());
         assert deadline().isAfter(nextStartTime.plusSeconds(duration().getSeconds()))
                 : new PreconditionException("postPone(duration) -> startTime() + duration + duration() < deadline()");
-        boolean res = ((PlanningEquipmentCI) getConnector()).postPone(duration);
+        boolean res = ((PlanningEquipmentControlCI) getConnector()).postPone(duration);
         assert startTime().equals(nextStartTime)
                 : new PostconditionException("postPone(duration) -> startTime() = startTime() + duration");
         return res;
     }
 
-    /** @see PlanningEquipmentCI#cancel() */
+    /** @see PlanningEquipmentControlCI#cancel() */
     @Override
     public boolean cancel() throws Exception {
         assert hasPlan() : new PreconditionException("cancel() -> hasPlan()");
-        boolean res = ((PlanningEquipmentCI) getConnector()).cancel();
+        boolean res = ((PlanningEquipmentControlCI) getConnector()).cancel();
         assert !hasPlan() : new PostconditionException("cancel() -> !hasPlan()");
         return res;
     }

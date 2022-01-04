@@ -2,7 +2,7 @@ package eco_logis.equipments.hem.connectors;
 
 import eco_logis.equipments.generator.GeneratorCI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import eco_logis.interfaces.ProductionEquipmentCI;
+import eco_logis.interfaces.ProductionEquipmentControlCI;
 
 /**
  * This class is a test connector for the generator component
@@ -12,26 +12,26 @@ import eco_logis.interfaces.ProductionEquipmentCI;
  */
 public class GeneratorConnector
     extends AbstractConnector
-    implements ProductionEquipmentCI
+    implements ProductionEquipmentControlCI
 {
 
     // ========== Override methods ==========
 
 
-    /** @see ProductionEquipmentCI#isProducing() */
+    /** @see ProductionEquipmentControlCI#isProducing() */
     @Override
     public boolean isProducing() throws Exception {
         return ((GeneratorCI) offering).isRunning();
     }
 
-    /** @see ProductionEquipmentCI#startProducing() */
+    /** @see ProductionEquipmentControlCI#startProducing() */
     @Override
     public boolean startProducing() throws Exception {
         ((GeneratorCI) offering).startGenerator();
         return true;
     }
 
-    /** @see ProductionEquipmentCI#stopProducing() */
+    /** @see ProductionEquipmentControlCI#stopProducing() */
     @Override
     public boolean stopProducing() throws Exception {
         ((GeneratorCI) offering).stopGenerator();

@@ -8,7 +8,7 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
-public interface ProductionEquipmentCI
+public interface ProductionEquipmentControlCI
     extends RequiredCI
 {
 

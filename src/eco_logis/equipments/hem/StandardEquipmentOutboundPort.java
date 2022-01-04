@@ -5,7 +5,7 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import eco_logis.interfaces.StandardEquipmentCI;
+import eco_logis.interfaces.StandardEquipmentControlCI;
 
 /**
  * This class represents an outbound port for a standard equipment
@@ -15,7 +15,7 @@ import eco_logis.interfaces.StandardEquipmentCI;
  */
 public class StandardEquipmentOutboundPort
     extends AbstractOutboundPort
-    implements StandardEquipmentCI
+    implements StandardEquipmentControlCI
 {
 
     // ========== Constructors ==========
@@ -29,7 +29,7 @@ public class StandardEquipmentOutboundPort
      * @throws Exception TODO
      */
     public StandardEquipmentOutboundPort(ComponentI owner) throws Exception {
-        super(StandardEquipmentCI.class, owner);
+        super(StandardEquipmentControlCI.class, owner);
     }
 
     /**
@@ -42,7 +42,7 @@ public class StandardEquipmentOutboundPort
      * @throws Exception TODO
      */
     public StandardEquipmentOutboundPort(String uri, ComponentI owner) throws Exception {
-        super(uri, StandardEquipmentCI.class, owner);
+        super(uri, StandardEquipmentControlCI.class, owner);
     }
 
     /**
@@ -76,26 +76,26 @@ public class StandardEquipmentOutboundPort
     // ========== Override methods ==========
 
 
-    /** @see StandardEquipmentCI#on() */
+    /** @see StandardEquipmentControlCI#on() */
     @Override
     public boolean on() throws Exception {
-        return ((StandardEquipmentCI) getConnector()).on();
+        return ((StandardEquipmentControlCI) getConnector()).on();
     }
 
-    /** @see StandardEquipmentCI#switchOn() */
+    /** @see StandardEquipmentControlCI#switchOn() */
     @Override
     public boolean switchOn() throws Exception {
         assert !on() : new PreconditionException("switchOn() -> !on()");
-        boolean res = ((StandardEquipmentCI) getConnector()).switchOn();
+        boolean res = ((StandardEquipmentControlCI) getConnector()).switchOn();
         assert on() : new PostconditionException("switchOn() -> on()");
         return res;
     }
 
-    /** @see StandardEquipmentCI#switchOff() */
+    /** @see StandardEquipmentControlCI#switchOff() */
     @Override
     public boolean switchOff() throws Exception {
         assert on() : new PreconditionException("switchOff() -> on()");
-        boolean res = ((StandardEquipmentCI) getConnector()).switchOff();
+        boolean res = ((StandardEquipmentControlCI) getConnector()).switchOff();
         assert !on() : new PostconditionException("switchOff() -> !on()");
         return res;
     }
