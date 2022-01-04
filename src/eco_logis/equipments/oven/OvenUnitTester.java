@@ -13,10 +13,13 @@ public class OvenUnitTester
 
     // ========== Attributes ==========
 
+
     private String ovenInboundPortUri;
     private OvenOutboundPort ovenOutboundPort;
 
+
     // ========== Constructors ==========
+
 
     protected OvenUnitTester() throws Exception {
         this(Oven.INBOUND_PORT_URI);
@@ -32,7 +35,9 @@ public class OvenUnitTester
         initialise(ovenInboundPortUri);
     }
 
+
     // ========== Class methods ==========
+
 
     protected void initialise(String ovenInboundPortUri) throws Exception {
         // Set the inbound port uri
@@ -48,7 +53,9 @@ public class OvenUnitTester
         toggleTracing();
     }
 
+
     // ========== Test methods ==========
+
 
     protected void testIsBaking() {
         logMessage("Test isBaking()...");
@@ -64,6 +71,9 @@ public class OvenUnitTester
     protected void testStartStopBaking() {
         logMessage("Test startBaking() and stopBaking()...");
         try {
+            ovenOutboundPort.getTemperature();
+            ovenOutboundPort.setTemperature(107.7);
+            ovenOutboundPort.getTemperature();
             assertFalse(ovenOutboundPort.isBaking());
             ovenOutboundPort.startBaking();
             assertTrue(ovenOutboundPort.isBaking());
@@ -83,7 +93,9 @@ public class OvenUnitTester
         logMessage("All tests passed !");
     }
 
+
     // ========== Lifecycle methods ==========
+
 
     /** @see fr.sorbonne_u.components.AbstractComponent#start() */
     @Override
@@ -107,7 +119,6 @@ public class OvenUnitTester
     public synchronized void execute() throws Exception {
         // Run all the tests
         runAllTests();
-
         super.execute();
     }
 
@@ -116,7 +127,6 @@ public class OvenUnitTester
     public synchronized void finalise() throws Exception {
         // Disconnect the ports
         doPortDisconnection(ovenOutboundPort.getPortURI());
-
         super.finalise();
     }
 
@@ -128,7 +138,6 @@ public class OvenUnitTester
         } catch(Exception e) {
             throw new ComponentShutdownException(e);
         }
-
         super.shutdown();
     }
 }

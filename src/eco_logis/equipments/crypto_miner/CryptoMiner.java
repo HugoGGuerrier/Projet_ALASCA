@@ -1,8 +1,20 @@
 package eco_logis.equipments.crypto_miner;
 
+import eco_logis.CVM_SIL;
+import eco_logis.equipments.crypto_miner.mil.CryptoMinerCoupledModel;
+import eco_logis.equipments.crypto_miner.mil.events.MineOffCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
+import eco_logis.equipments.crypto_miner.sil.CryptoMinerStateModel;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.exceptions.PreconditionException;
+
+import java.util.HashMap;
 
 /**
  * This class represent a crypto-currency miner which can be powered on and off
@@ -12,7 +24,7 @@ import fr.sorbonne_u.exceptions.PreconditionException;
  */
 @OfferedInterfaces(offered = {CryptoMinerCI.class})
 public class CryptoMiner
-    extends AbstractComponent
+    extends AbstractCyPhyComponent
     implements CryptoMinerImplementationI
 {
 
@@ -21,6 +33,9 @@ public class CryptoMiner
 
     /** URI of the crypto miner inbound port */
     public static final String INBOUND_PORT_URI = "CRYPTO-INBOUND-PORT-URI";
+
+    /** The URI of the reflection inbound port */
+    public static final String REFLECTION_INBOUND_PORT_URI = "CRYPTO_MINER_rip";
 
     /** When true, methods trace their actions */
     public static final boolean VERBOSE = true;
@@ -37,6 +52,26 @@ public class CryptoMiner
 
     /** The inbound port */
     private CryptoMinerInboundPort cmip;
+
+    // --- For the SIL simulation
+
+    /** The URI of the created simulation architecture */
+    protected String simArchURI;
+
+    /** The URI of the executor */
+    protected static final String SCHEDULED_EXECUTOR_SERVICE_URI = "ses";
+
+    /** The prugin that contains the SIL simulation */
+    protected CryptoMinerRTAtomicSimulatorPlugin simulatorPlugin;
+
+    /** If the component is in a SIL simulation */
+    protected boolean isSILSimulated;
+
+    /** If the component executes a unit test */
+    protected boolean executesAsUnitTest;
+
+    /** Acceleration factor for the simulation */
+    protected static final double ACC_FACT = 1.0;
 
 
     // ========== Constructors ==========
@@ -55,8 +90,8 @@ public class CryptoMiner
      *
      * @throws Exception TODO
      */
-    protected CryptoMiner() throws Exception {
-        this(INBOUND_PORT_URI);
+    protected CryptoMiner(String simArchURI, boolean executesAsUnitTest) throws Exception {
+        this(INBOUND_PORT_URI, simArchURI, executesAsUnitTest);
     }
 
     /**
@@ -75,9 +110,9 @@ public class CryptoMiner
      * @param cryptoMinerInboundPortURI The inbound port URI
      * @throws Exception TODO
      */
-    protected CryptoMiner(String cryptoMinerInboundPortURI) throws Exception {
-        super(1, 0);
-        initialise(cryptoMinerInboundPortURI);
+    protected CryptoMiner(String cryptoMinerInboundPortURI, String simArchURI, boolean executesAsUnitTest) throws Exception {
+        super(REFLECTION_INBOUND_PORT_URI, 1, 0);
+        initialise(cryptoMinerInboundPortURI, simArchURI, executesAsUnitTest);
     }
 
     /**
@@ -99,9 +134,9 @@ public class CryptoMiner
      * @param cryptoMinerInboundPortURI The inbound port URI
      * @throws Exception TODO
      */
-    protected CryptoMiner(String reflectionInboundPortURI, String cryptoMinerInboundPortURI) throws Exception {
+    protected CryptoMiner(String reflectionInboundPortURI, String cryptoMinerInboundPortURI, String simArchURI, boolean executesAsUnitTest) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
-        initialise(cryptoMinerInboundPortURI);
+        initialise(cryptoMinerInboundPortURI, simArchURI, executesAsUnitTest);
     }
 
 
@@ -123,16 +158,27 @@ public class CryptoMiner
      * @param cryptoMinerInboundPortURI The crypto miner inbound port URI
      * @throws Exception TODO
      */
-    protected void initialise(String cryptoMinerInboundPortURI) throws Exception {
+    protected void initialise(String cryptoMinerInboundPortURI,
+                              String simArchURI,
+                              boolean executesAsUnitTest
+    ) throws Exception {
         // Assert the URI consistence
         assert cryptoMinerInboundPortURI != null : new PreconditionException(
                 "cryptoMinerInboundPortURI != null");
         assert !cryptoMinerInboundPortURI.isEmpty() : new PreconditionException(
                 "!cryptoMinerInboundPortURI.isEmpty()");
 
+        assert simArchURI != null;
+        assert !simArchURI.isEmpty() || !executesAsUnitTest;
+
         // Initialise the component
         isOn = false;
         isMining = false;
+
+        // Initialise the SIL simulation
+        this.simArchURI = simArchURI;
+        this.isSILSimulated = !simArchURI.isEmpty();
+        this.executesAsUnitTest = executesAsUnitTest;
 
         // Create the inbound port
         cmip = new CryptoMinerInboundPort(cryptoMinerInboundPortURI, this);
@@ -144,6 +190,60 @@ public class CryptoMiner
             tracer.get().setRelativePosition(0, 0);
             toggleTracing();
         }
+    }
+
+
+    // ========== Component lifecycle ==========
+
+
+    /** @see AbstractCyPhyComponent#start() */
+    @Override
+    public synchronized void start() throws ComponentStartException {
+        // Call super
+        super.start();
+
+        // Trace
+        this.traceMessage("Crypto miner starts.\n");
+
+        if(isSILSimulated) {
+            createNewExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI, 1, true);
+            simulatorPlugin = new CryptoMinerRTAtomicSimulatorPlugin();
+            simulatorPlugin.setPluginURI(CryptoMinerCoupledModel.URI);
+            simulatorPlugin.setSimulationExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI);
+            try {
+
+                simulatorPlugin.initialiseSimulationArchitecture(simArchURI, executesAsUnitTest ? ACC_FACT : CVM_SIL.ACC_FACTOR);
+                installPlugin(simulatorPlugin);
+
+            } catch (Exception e) {
+                throw new ComponentStartException(e) ;
+            }
+        }
+    }
+
+    /** @see AbstractCyPhyComponent#execute() */
+    @Override
+    public synchronized void execute() throws Exception {
+        if(executesAsUnitTest) {
+            simulatorPlugin.setSimulationRunParameters(new HashMap<>());
+            long startTime = System.currentTimeMillis() + 1000L;
+            double endTime = 10.0 / ACC_FACT;
+            simulatorPlugin.startRTSimulation(startTime, 0.0, endTime);
+            this.traceMessage("real time of start = " + startTime + "\n");
+        }
+    }
+
+    /** @see AbstractCyPhyComponent#shutdown() */
+    @Override
+    public synchronized void shutdown() throws ComponentShutdownException {
+        this.traceMessage("Crypto miner stops.\n");
+
+        try {
+            cmip.unpublishPort();
+        } catch (Exception e) {
+            throw new ComponentShutdownException(e);
+        }
+        super.shutdown();
     }
 
 
@@ -170,6 +270,9 @@ public class CryptoMiner
         assert !isOn : new PreconditionException("powerOn() -> !isOn()");
 
         isOn = true;
+
+        // Trigger the event for the SIL simulation
+        if(isSILSimulated) simulatorPlugin.triggerExternalEvent(CryptoMinerStateModel.URI, SwitchOnCryptoMiner::new);
     }
 
     /** @see CryptoMinerImplementationI#powerOff() */
@@ -183,6 +286,9 @@ public class CryptoMiner
 
         isOn = false;
         isMining = false;
+
+        // Trigger the event for the SIL simulation
+        if(isSILSimulated) simulatorPlugin.triggerExternalEvent(CryptoMinerStateModel.URI, SwitchOffCryptoMiner::new);
     }
 
     /** @see CryptoMinerImplementationI#isMining() */
@@ -206,6 +312,9 @@ public class CryptoMiner
         assert !isMining : new PreconditionException("startMiner() -> !isMining()");
 
         isMining = true;
+
+        // Trigger the event for the SIL simulation
+        if(isSILSimulated) simulatorPlugin.triggerExternalEvent(CryptoMinerStateModel.URI, MineOnCryptoMiner::new);
     }
 
     /** @see CryptoMinerImplementationI#stopMiner() */
@@ -216,9 +325,12 @@ public class CryptoMiner
         }
 
         assert isOn : new PreconditionException("stopMiner() -> isOn()");
-        assert isMining : new PreconditionException("stopMiner() -> isMining()");;
+        assert isMining : new PreconditionException("stopMiner() -> isMining()");
 
         isMining = false;
+
+        // Trigger the event for the SIL simulation
+        if(isSILSimulated) simulatorPlugin.triggerExternalEvent(CryptoMinerStateModel.URI, MineOffCryptoMiner::new);
     }
 
 }

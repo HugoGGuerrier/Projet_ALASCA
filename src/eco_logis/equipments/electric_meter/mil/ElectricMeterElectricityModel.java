@@ -55,6 +55,8 @@ public class ElectricMeterElectricityModel
     @ImportedVariable(type = Double.class)
     protected Value<Double> currentGeneratorProduction;
 
+    // TODO windturbine. powerbank?
+
     /** The current total consumption in the house */
     @InternalVariable(type = Double.class)
     protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
@@ -129,7 +131,7 @@ public class ElectricMeterElectricityModel
     /** @see AtomicHIOA#output() */
     @Override
     public ArrayList<EventI> output() {
-        // The electric meter don't export events
+        // The electric meter doesn't export events
         return null;
     }
 
@@ -146,14 +148,12 @@ public class ElectricMeterElectricityModel
         if(updateConsumption(elapsedTime) || updateProduction(elapsedTime)) {
             logMessage("Current global consumption : " + currentConsumption.v + " watts | Current global production : " + currentProduction.v + " watts" + "\n");
         }
-
     }
 
     /** @see AtomicHIOA#endSimulation(Time) */
     @Override
     public void endSimulation(Time endTime) throws Exception {
         this.updateConsumption(endTime.subtract(currentConsumption.time));
-        
         logMessage("Simulation ends!\n");
         super.endSimulation(endTime);
     }

@@ -3,6 +3,7 @@ package eco_logis.equipments.oven.mil;
 import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithDE;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.Event;
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
         SwitchOffOven.class
 })
 public class OvenTemperatureModel
-    extends AtomicHIOAwithDE
+    extends AtomicHIOA
 {
 
     // ========== Macros ===========
@@ -47,7 +48,10 @@ public class OvenTemperatureModel
     protected static final double STEP = 0.1;
 
     /** Room temperature in Celsius (°C) */
-    public static final double roomTemperature = 20.0;
+    public static final double ROOM_TEMPERATURE = 20.0;
+
+    /** The oven heating/cooling in celsius/minute */
+    protected static final double TEMPERATURE_DELTA = 20.0;
 
 
     // ========== Attributes ===========
@@ -132,7 +136,7 @@ public class OvenTemperatureModel
         super.initialiseState(initialTime);
         this.currentState = OvenTemperatureModel.State.OFF;
 
-//        this.toggleDebugMode();
+        this.toggleDebugMode();
         this.logMessage("simulation begins.\n");
     }
 
@@ -142,16 +146,8 @@ public class OvenTemperatureModel
         super.initialiseVariables(startTime);
 
         this.temperatureTime = startTime;
-        this.currentTemperature = roomTemperature;
-        this.goalTemperature = roomTemperature;
-    }
-
-
-    /** @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithDE#initialiseDerivatives() */
-    @Override
-    protected void initialiseDerivatives()
-    {
-        this.computeDerivatives();
+        this.currentTemperature = ROOM_TEMPERATURE;
+        this.goalTemperature = ROOM_TEMPERATURE;
     }
 
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output() */
@@ -168,21 +164,18 @@ public class OvenTemperatureModel
         return this.integrationStep;
     }
 
-    @Override
-    protected void computeDerivatives() {
-        // TODO
-    }
-
     /** @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedInternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration) */
     @Override
     public void userDefinedInternalTransition(Duration elapsedTime) {
         this.temperatureTime = this.temperatureTime.add(elapsedTime);
 
-        // Adjust temperature (trivial method)
-        if(this.currentTemperature < this.goalTemperature)
-            this.currentTemperature *= 1.2;
-        else if (this.currentTemperature > this.goalTemperature)
-            this.currentTemperature *= 0.70;
+        // Adjust temperature (linear)
+        if(this.currentTemperature < this.goalTemperature) {
+            double duration = elapsedTime.getSimulatedDuration();
+            this.currentTemperature = Math.min(
+                    this.currentTemperature + (duration/60) * TEMPERATURE_DELTA,
+                    this.goalTemperature);
+        }
 
         // Tracing
         String mark = this.currentState == OvenTemperatureModel.State.ON ? " (h)" : " (-)";

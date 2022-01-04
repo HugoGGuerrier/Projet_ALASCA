@@ -58,7 +58,6 @@ public class RunHEMSim {
                             SimulationEngineCreationMode.ATOMIC_ENGINE
                     )
             );
-
             atomicModelDescriptors.put(
                     CryptoMinerUserModel.URI,
                     AtomicModelDescriptor.create(
@@ -81,7 +80,6 @@ public class RunHEMSim {
                             SimulationEngineCreationMode.ATOMIC_ENGINE
                     )
             );
-
             atomicModelDescriptors.put(
                     DishwasherUserModel.URI,
                     AtomicModelDescriptor.create(
@@ -104,7 +102,6 @@ public class RunHEMSim {
                             SimulationEngineCreationMode.ATOMIC_ENGINE
                     )
             );
-
             atomicModelDescriptors.put(
                     GeneratorFuelModel.URI,
                     AtomicHIOA_Descriptor.create(
@@ -115,7 +112,6 @@ public class RunHEMSim {
                             SimulationEngineCreationMode.ATOMIC_ENGINE
                     )
             );
-
             atomicModelDescriptors.put(
                     GeneratorUserModel.URI,
                     AtomicModelDescriptor.create(
@@ -138,7 +134,6 @@ public class RunHEMSim {
                             SimulationEngineCreationMode.ATOMIC_ENGINE
                     )
             );
-
             atomicModelDescriptors.put(
                     OvenTemperatureModel.URI,
                     AtomicHIOA_Descriptor.create(
@@ -149,7 +144,6 @@ public class RunHEMSim {
                             SimulationEngineCreationMode.ATOMIC_ENGINE
                     )
             );
-
             atomicModelDescriptors.put(
                     OvenUserModel.URI,
                     AtomicModelDescriptor.create(
@@ -160,6 +154,9 @@ public class RunHEMSim {
                             SimulationEngineCreationMode.ATOMIC_ENGINE
                     )
             );
+
+            // Add the wind turbine
+            // TODO here + after
 
             // Add the electric meter
             atomicModelDescriptors.put(
@@ -199,21 +196,18 @@ public class RunHEMSim {
                             new EventSink(CryptoMinerElectricityModel.URI, SwitchOnCryptoMiner.class)
                     }
             );
-
             connections.put(
                     new EventSource(CryptoMinerUserModel.URI, SwitchOffCryptoMiner.class),
                     new EventSink[] {
                             new EventSink(CryptoMinerElectricityModel.URI, SwitchOffCryptoMiner.class)
                     }
             );
-
             connections.put(
                     new EventSource(CryptoMinerUserModel.URI, MineOnCryptoMiner.class),
                     new EventSink[] {
                             new EventSink(CryptoMinerElectricityModel.URI, MineOnCryptoMiner.class)
                     }
             );
-
             connections.put(
                     new EventSource(CryptoMinerUserModel.URI, MineOffCryptoMiner.class),
                     new EventSink[] {
@@ -228,28 +222,24 @@ public class RunHEMSim {
                             new EventSink(DishwasherElectricityModel.URI, SwitchOffDishwasher.class)
                     }
             );
-
             connections.put(
                     new EventSource(DishwasherUserModel.URI, SetEcoProgram.class),
                     new EventSink[] {
                             new EventSink(DishwasherElectricityModel.URI, SetEcoProgram.class)
                     }
             );
-
             connections.put(
                     new EventSource(DishwasherUserModel.URI, SetFastProgram.class),
                     new EventSink[] {
                             new EventSink(DishwasherElectricityModel.URI, SetFastProgram.class)
                     }
             );
-
             connections.put(
                     new EventSource(DishwasherUserModel.URI, SetFullProgram.class),
                     new EventSink[] {
                             new EventSink(DishwasherElectricityModel.URI, SetFullProgram.class)
                     }
             );
-
             connections.put(
                     new EventSource(DishwasherUserModel.URI, SetRinseProgram.class),
                     new EventSink[] {
@@ -265,7 +255,6 @@ public class RunHEMSim {
                             new EventSink(GeneratorFuelModel.URI, SwitchOnGenerator.class)
                     }
             );
-
             connections.put(
                     new EventSource(GeneratorUserModel.URI, SwitchOffGenerator.class),
                     new EventSink[] {
@@ -273,7 +262,6 @@ public class RunHEMSim {
                             new EventSink(GeneratorFuelModel.URI, SwitchOffGenerator.class),
                     }
             );
-
             connections.put(
                     new EventSource(GeneratorFuelModel.URI, SwitchOffGenerator.class),
                     new EventSink[] {
@@ -289,8 +277,6 @@ public class RunHEMSim {
                             new EventSink(OvenTemperatureModel.URI, SwitchOnOven.class)
                     }
             );
-
-            // Add the switch off event connection
             connections.put(
                     new EventSource(OvenUserModel.URI, SwitchOffOven.class),
                     new EventSink[] {
