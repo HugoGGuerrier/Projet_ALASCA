@@ -3,6 +3,12 @@ package eco_logis.equipments.dishwasher;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
+/**
+ * This class starts the unit tests on the dishwasher component
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public class CVMUnitTest
         extends AbstractCVM
 {
