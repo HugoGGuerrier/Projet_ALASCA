@@ -218,5 +218,21 @@ public class DishwasherRTAtomicSimulatorPlugin
     }
 
 
+    // ========== Override methods ==========
+
+
+    /** @see RTAtomicSimulatorPlugin#setSimulationRunParameters(java.util.Map) */
+    @Override
+    public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
+        // Put the owner component in the params
+        simParams.put(OWNER_REFERENCE_NAME, getOwner());
+
+        // Call super
+        super.setSimulationRunParameters(simParams);
+
+        // Remove the owner from the params
+        simParams.remove(OWNER_REFERENCE_NAME);
+    }
+
 
 }

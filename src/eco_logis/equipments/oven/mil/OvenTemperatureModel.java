@@ -147,7 +147,7 @@ public class OvenTemperatureModel
 
         this.temperatureTime = startTime;
         this.currentTemperature = ROOM_TEMPERATURE;
-        this.goalTemperature = ROOM_TEMPERATURE;
+        this.goalTemperature = 100.0;
     }
 
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output() */

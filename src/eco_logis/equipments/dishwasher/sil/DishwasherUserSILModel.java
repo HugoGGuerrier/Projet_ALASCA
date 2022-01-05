@@ -113,7 +113,7 @@ public class DishwasherUserSILModel
 
         // Tracing
         toggleDebugMode();
-        this.logMessage("simulation begins.\n");
+        logMessage("simulation begins.\n");
     }
 
     /** @see AtomicModel#output() */

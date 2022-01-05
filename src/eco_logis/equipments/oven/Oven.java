@@ -360,6 +360,7 @@ public class Oven
         if(Oven.VERBOSE) {
             logMessage("Oven temperature is set to " + temp + "°C");
         }
+        // TODO retransmettre la valeur ici pour modif la température
         assert isBaking;
         this.temperature = temp;
     }
