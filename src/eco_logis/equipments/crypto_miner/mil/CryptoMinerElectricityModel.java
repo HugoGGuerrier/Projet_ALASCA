@@ -59,7 +59,7 @@ public class CryptoMinerElectricityModel
 
     /** The current consumption of the miner in a shared var */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentConsumption = new Value<>(this, 0.0);
 
 
     // ========== Constructors ==========

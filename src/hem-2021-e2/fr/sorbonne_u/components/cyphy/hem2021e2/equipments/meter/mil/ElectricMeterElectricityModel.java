@@ -99,11 +99,11 @@ extends		AtomicHIOA
 	/** current total intensity of the house in amperes.					*/
 	@InternalVariable(type = Double.class)
 	protected final Value<Double>	currentIntensity =
-											new Value<Double>(this, 0.0, 0);
+											new Value<Double>(this, 0.0);
 	/** current total consumption of the house in kwh.						*/
 	@InternalVariable(type = Double.class)
 	protected final Value<Double>	currentConsumption =
-											new Value<Double>(this, 0.0, 0);
+											new Value<Double>(this, 0.0);
 
 	// -------------------------------------------------------------------------
 	// Constructors

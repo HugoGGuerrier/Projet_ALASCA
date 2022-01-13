@@ -64,7 +64,7 @@ public class PowerBankChargeModel
 
     /** the current charge level */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentChargeLevel = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentChargeLevel = new Value<>(this, 0.0);
 
 
     // ========== Constructors ==========

@@ -105,7 +105,7 @@ extends		AtomicHIOA
 	/** current external temperature in Celsius.							*/
 	@ExportedVariable(type = Double.class)
 	protected final Value<Double>	externalTemperature =
-											new Value<Double>(this, 0.0, 0);
+											new Value<Double>(this, 0.0);
 	protected double				cycleTime;
 
 	// -------------------------------------------------------------------------

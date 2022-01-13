@@ -51,7 +51,7 @@ public class ExternalWindModel
 
     /** Current external wind speed in km/h */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> externalWindSpeed = new Value<>(this, 0.0, 0);
+    protected final Value<Double> externalWindSpeed = new Value<>(this, 0.0);
 
     protected double cycleTime;
 

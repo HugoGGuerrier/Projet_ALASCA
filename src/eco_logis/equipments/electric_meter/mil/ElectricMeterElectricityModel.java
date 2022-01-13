@@ -69,11 +69,11 @@ public class ElectricMeterElectricityModel
 
     /** The current total consumption in the house */
     @InternalVariable(type = Double.class)
-    protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentConsumption = new Value<>(this, 0.0);
 
     /** The current total production in the house */
     @InternalVariable(type = Double.class)
-    protected final Value<Double> currentProduction = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentProduction = new Value<>(this, 0.0);
 
 
     // ========== Constructors ==========

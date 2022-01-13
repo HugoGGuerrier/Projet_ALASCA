@@ -138,7 +138,7 @@ extends		AtomicHIOA
 	/** current intensity in amperes; intensity is power/tension.			*/
 	@ExportedVariable(type = Double.class)
 	protected final Value<Double>	currentIntensity =
-											new Value<Double>(this, 0.0, 0);
+											new Value<Double>(this, 0.0);
 	/** current state of the heater.										*/
 	protected State					currentState = State.OFF;
 	/** true when the electricity consumption of the heater has changed

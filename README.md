@@ -28,11 +28,6 @@ je vous suggère pour l’étape 3 d’enlever la méthode du composant et de le
 par une action de l’utilisateur. 
 =====> TODO
 
-Dans le composant batterie, vous utilisez deux variables booléennes pour traiter les états en chargement/en
-déchargement. Pour une meilleure lisibilité de vos programmes, il est préférable d’utiliser des énumérations pour
-représenter l’état dès qu’il y a plus de deux états possibles.
-=====> TODO si on a le temps
-
 ##############################
 
 TODO : au dessus, récap de audit 1 et surtout oral 1 + voir fiche pdf dans le mail du prof

@@ -53,7 +53,7 @@ public class WindTurbineElectricityModel
 
     /** The current production of the wind turbine in a shared var */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentProduction = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentProduction = new Value<>(this, 0.0);
 
 
     // ========== Constructors ==========
