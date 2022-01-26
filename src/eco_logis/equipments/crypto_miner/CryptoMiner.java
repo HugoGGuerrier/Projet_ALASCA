@@ -165,9 +165,10 @@ public class CryptoMiner
      * @param executesAsUnitTest If the component has to be executed as a unit test
      * @throws Exception TODO
      */
-    protected void initialise(String cryptoMinerInboundPortURI,
-                              String simArchURI,
-                              boolean executesAsUnitTest
+    protected void initialise(
+            String cryptoMinerInboundPortURI,
+            String simArchURI,
+            boolean executesAsUnitTest
     ) throws Exception {
         // Assert the URI consistence
         assert cryptoMinerInboundPortURI != null : new PreconditionException(

@@ -99,10 +99,10 @@ public class ElectricMeterElectricityModel
         currentConsumption.time = currentConsumption.time.add(d);
 
         double computedCons =
-                        currentCryptoConsumption.v
-                        + currentDishwasherConsumption.v
-                        + currentOvenConsumption.v;
-                        // TODO + currentPowerBankConsumption.v;
+                        (currentCryptoConsumption == null ? 0.0 : currentCryptoConsumption.v)
+                        + (currentDishwasherConsumption == null ? 0.0 : currentDishwasherConsumption.v)
+                        + (currentOvenConsumption == null ? 0.0 : currentOvenConsumption.v)
+                        + (currentPowerBankConsumption == null ? 0.0 : currentPowerBankConsumption.v);
         if(currentConsumption.v != computedCons) {
             currentConsumption.v = computedCons;
             return true;
@@ -119,9 +119,9 @@ public class ElectricMeterElectricityModel
         currentProduction.time = currentProduction.time.add(d);
 
         double computedProd =
-                        currentGeneratorProduction.v
-                        + currentWindTurbineProduction.v;
-                        // TODO + currentPowerBankProduction.v;
+                        (currentGeneratorProduction == null ? 0.0 : currentGeneratorProduction.v)
+                        + (currentWindTurbineProduction == null ? 0.0 : currentWindTurbineProduction.v)
+                        + (currentPowerBankProduction == null ? 0.0 : currentPowerBankProduction.v);
         if(currentProduction.v != computedProd) {
             currentProduction.v = computedProd;
             return true;

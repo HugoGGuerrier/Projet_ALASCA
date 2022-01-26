@@ -353,7 +353,7 @@ implements	ElectricMeterImplementationI
 								sp.triggerExternalEvent(
 									ElectricMeterRTAtomicSimulatorPlugin.
 												HEATER_ELECTRICITY_MODEL_URI,
-									t -> new SwitchOnHeater(t));
+										SwitchOnHeater::new);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

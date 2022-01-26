@@ -1,6 +1,10 @@
 package eco_logis.equipments.electric_meter;
 
 import eco_logis.CVM_SIL;
+import eco_logis.equipments.crypto_miner.mil.events.MineOffCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
+import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
@@ -16,15 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 // -----------------------------------------------------------------------------
 /**
- * The class <code>ElectricMeter</code> implements a simplified electric meter
- * component.
- *
- * <p><strong>Description</strong></p>
- *
- * <p><strong>Invariant</strong></p>
- * <pre>
- * invariant	true
- * </pre>
+ * This class represents the electric meter of the house
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
@@ -97,8 +93,7 @@ public class ElectricMeter
             String simArchitectureURI,
             boolean executesAsUnitTest
     ) throws Exception {
-        this(ELECTRIC_METER_INBOUND_PORT_URI, simArchitectureURI,
-                executesAsUnitTest);
+        this(ELECTRIC_METER_INBOUND_PORT_URI, simArchitectureURI, executesAsUnitTest);
     }
 
     /**
@@ -123,8 +118,7 @@ public class ElectricMeter
             String simArchitectureURI,
             boolean executesAsUnitTest
     ) throws Exception {
-        this(electricMeterInboundPortURI, simArchitectureURI,
-                executesAsUnitTest, 1, 1);
+        this(electricMeterInboundPortURI, simArchitectureURI, executesAsUnitTest, 1, 1);
     }
 
     /**
@@ -224,6 +218,8 @@ public class ElectricMeter
         this.simArchitectureURI = simArchitectureURI;
         this.executesAsUnitTest = executesAsUnitTest;
         this.isSILsimulated = !simArchitectureURI.isEmpty();
+
+        // Create the inbound port
         this.emip = new ElectricMeterInboundPort(electricMeterInboundPortURI, this);
         this.emip.publishPort();
 
@@ -246,20 +242,20 @@ public class ElectricMeter
 
         this.traceMessage("Electric meter starts.\n");
 
-        if (this.isSILsimulated) {
-            /* Create the simulator plug-in instance, attaching to it a scheduled executor
-            service allowing it to perform the simulation steps in real time */
-            this.createNewExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI, 1, true);
-            this.simulatorPlugin = new ElectricMeterRTAtomicSimulatorPlugin();
-            this.simulatorPlugin.setPluginURI(ElectricMeterCoupledModel.URI);
-            this.simulatorPlugin.setSimulationExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI);
+        if (isSILsimulated) {
+            createNewExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI, 1, true);
+            simulatorPlugin = new ElectricMeterRTAtomicSimulatorPlugin();
+            simulatorPlugin.setPluginURI(ElectricMeterCoupledModel.URI);
+            simulatorPlugin.setSimulationExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI);
             try {
-                this.simulatorPlugin.initialiseSimulationArchitecture(
-                        this.simArchitectureURI,
-                        this.executesAsUnitTest ?
+
+                simulatorPlugin.initialiseSimulationArchitecture(
+                        simArchitectureURI,
+                        executesAsUnitTest ?
                                 ACC_FACTOR
                                 :	CVM_SIL.ACC_FACTOR);
-                this.installPlugin(this.simulatorPlugin);
+                installPlugin(simulatorPlugin);
+
             } catch (Exception e) {
                 throw new ComponentStartException(e) ;
             }
@@ -270,19 +266,96 @@ public class ElectricMeter
     /** @see fr.sorbonne_u.components.AbstractComponent#execute() */
     @Override
     public synchronized void execute() throws Exception {
-        if (this.executesAsUnitTest) {
-            this.simulatorPlugin.setSimulationRunParameters(new HashMap<String, Object>());
+        if (executesAsUnitTest) {
+            simulatorPlugin.setSimulationRunParameters(new HashMap<>());
             long simStart = System.currentTimeMillis() + 1000L;
-            this.simulatorPlugin.startRTSimulation(simStart, 0.0, 10.0);
-            this.traceMessage("real time if start = " + simStart + "\n");
+            double endTime = 10.0 / ACC_FACTOR;
+            simulatorPlugin.startRTSimulation(simStart, 0.0, endTime);
+            traceMessage("real time of start = " + simStart + "\n");
 
-            /* Test scenario: code executions are scheduled to happen during
-            the simulation; SIL simulations execute in real time
-            (possibly accelerated) so that, when correctly scheduled, code
-            execution can occur on the same time reference in order to get
-            coherent exchanges between the two */
-            final ElectricMeterRTAtomicSimulatorPlugin sp = this.simulatorPlugin;
-            /* TODO
+            final ElectricMeterRTAtomicSimulatorPlugin sp = simulatorPlugin;
+
+            // --- Add the crypto miner events
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.CRYPTO_MINER_ELECTRICITY_MODEL_URI,
+                                        SwitchOnCryptoMiner::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(1.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.CRYPTO_MINER_ELECTRICITY_MODEL_URI,
+                                        MineOnCryptoMiner::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(2.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.CRYPTO_MINER_ELECTRICITY_MODEL_URI,
+                                        MineOffCryptoMiner::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(6.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.CRYPTO_MINER_ELECTRICITY_MODEL_URI,
+                                        SwitchOffCryptoMiner::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(7.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            // --- Add the oven events
+
+            /*
             this.scheduleTask(
                     AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
                     new AbstractComponent.AbstractTask() {
@@ -320,8 +393,8 @@ public class ElectricMeter
                     },
                     (long)(12.0/ACC_FACTOR),
                     TimeUnit.SECONDS);
+            */
 
-             */
         }
     }
 

@@ -106,42 +106,6 @@ public class ElectricMeterRTAtomicSimulatorPlugin
     // ========== Class methods ==========
 
 
-    /** @see fr.sorbonne_u.components.cyphy.plugins.devs.AbstractSimulatorPlugin#setSimulationRunParameters(java.util.Map) */
-    @Override
-    public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-        /* Initialise the simulation parameter giving the reference to the
-        owner component before passing the parameters to the simulation
-        models; because each model has been defined to retrieve the
-        reference to its owner component using its own parameter name,
-        we must pass the reference under each different name */
-        simParams.put(METER_REFERENCE_NAME, this.getOwner());
-        simParams.put(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-        /* TODO
-        simParams.put(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-        simParams.put(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-        simParams.put(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-        simParams.put(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-        simParams.put(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-         */
-
-        /* This will pass the parameters to the simulation models that will
-        then be able to get their own parameters */
-        super.setSimulationRunParameters(simParams);
-
-        // Remove the value so that the reference may not exit the context of the component
-        simParams.remove(METER_REFERENCE_NAME);
-        simParams.remove(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        /* TODO
-        simParams.remove(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        simParams.remove(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        simParams.remove(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        simParams.remove(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        simParams.remove(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        */
-    }
-
-
-
     /**
      * Create and set the simulation architecture internal to this component
      *
@@ -157,10 +121,6 @@ public class ElectricMeterRTAtomicSimulatorPlugin
      * @throws Exception	<i>to do</i>.
      */
     public void initialiseSimulationArchitecture(String simArchURI, double accFactor) throws Exception {
-        // For the project, the coupled model created for the electric meter
-        // will include all of the models simulating the electricity consumption
-        // and production for appliances and production units.
-
         Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
 
@@ -176,6 +136,18 @@ public class ElectricMeterRTAtomicSimulatorPlugin
          */
 
         atomicModelDescriptors.put(
+                ElectricMeterElectricitySILModel.URI,
+                RTAtomicHIOA_Descriptor.create(
+                        ElectricMeterElectricitySILModel.class,
+                        ElectricMeterElectricitySILModel.URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor
+                )
+        );
+
+        atomicModelDescriptors.put(
                 CRYPTO_MINER_ELECTRICITY_MODEL_URI,
                 RTAtomicHIOA_Descriptor.create(
                         CRYPTO_MINER_ELECTRICITY_SIL_MODEL_CLASS,
@@ -183,7 +155,9 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor));
+                        accFactor)
+        );
+
         /* TODO
         atomicModelDescriptors.put(
                 DISHWASHER_ELECTRICITY_MODEL_URI,
@@ -245,6 +219,8 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
                         accFactor));
         */
+
+
         Map<Class<? extends EventI>, EventSink[]> imported = new HashMap<>();
 
         if (!simArchURI.equals(UNIT_TEST_SIM_ARCHITECTURE_URI)) {
@@ -261,6 +237,7 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                             new EventSink(OVEN_ELECTRICITY_MODEL_URI, SwitchOffOven.class)
                     });
              */
+
             imported.put(
                     SwitchOnCryptoMiner.class,
                     new EventSink[] {
@@ -284,7 +261,7 @@ public class ElectricMeterRTAtomicSimulatorPlugin
         }
 
         // Variable bindings between exporting and importing models
-        Map<VariableSource, VariableSink[]> bindings = new HashMap<VariableSource,VariableSink[]>();
+        Map<VariableSource, VariableSink[]> bindings = new HashMap<>();
 
         // Bindings between components models to the electric meter model
         bindings.put(
@@ -295,7 +272,9 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         new VariableSink("currentCryptoConsumption",
                                 Double.class,
                                 ElectricMeterElectricityModel.URI)
-                });
+                }
+        );
+
         /* TODO
         bindings.put(
                 new VariableSource("currentConsumption",
@@ -323,7 +302,8 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         null,
                         null,
                         bindings,
-                        accFactor));
+                        accFactor)
+        );
 
         // This sets the architecture in the plug-in for further reference and use
         this.setSimulationArchitecture(
@@ -333,7 +313,38 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         atomicModelDescriptors,
                         coupledModelDescriptors,
                         TimeUnit.SECONDS,
-                        accFactor));
+                        accFactor)
+        );
+    }
+
+
+    // ========== Override methods ==========
+
+
+    /** @see fr.sorbonne_u.components.cyphy.plugins.devs.AbstractSimulatorPlugin#setSimulationRunParameters(java.util.Map) */
+    @Override
+    public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
+        simParams.put(METER_REFERENCE_NAME, this.getOwner());
+        simParams.put(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        /*
+        simParams.put(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+         */
+
+        super.setSimulationRunParameters(simParams);
+
+        simParams.remove(METER_REFERENCE_NAME);
+        simParams.remove(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        /*
+        simParams.remove(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        */
     }
 
 }

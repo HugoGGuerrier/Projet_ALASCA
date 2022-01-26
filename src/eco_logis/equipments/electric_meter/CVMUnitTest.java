@@ -5,15 +5,7 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
 
 // -----------------------------------------------------------------------------
 /**
- * The class <code>CVMUnitTest</code> performs unit tests on the electric
- * meter component.
- *
- * <p><strong>Description</strong></p>
- *
- * <p><strong>Invariant</strong></p>
- * <pre>
- * invariant	true
- * </pre>
+ * This class performs the test on the Electric meter class
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
@@ -30,23 +22,25 @@ public class CVMUnitTest
 
     // ========== Class methods ==========
 
-    /**
-     * @see fr.sorbonne_u.components.cvm.AbstractCVM#deploy()
-     */
+    /** @see fr.sorbonne_u.components.cvm.AbstractCVM#deploy() */
     @Override
     public void	deploy() throws Exception {
         // Create the components to test the electric meter
-        AbstractComponent.createComponent(ElectricMeter.class.getCanonicalName(), new Object[]{});
-        AbstractComponent.createComponent(ElectricMeterUnitTester.class.getCanonicalName(), new Object[]{});
+        // AbstractComponent.createComponent(ElectricMeter.class.getCanonicalName(), new Object[]{});
+        // AbstractComponent.createComponent(ElectricMeterUnitTester.class.getCanonicalName(), new Object[]{});
+        AbstractComponent.createComponent(
+                ElectricMeter.class.getCanonicalName(),
+                new Object[]{ElectricMeterRTAtomicSimulatorPlugin.UNIT_TEST_SIM_ARCHITECTURE_URI, true}
+        );
 
         super.deploy();
     }
 
     public static void	main(String[] args) {
         try {
-            fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.CVMUnitTest cvm = new fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.CVMUnitTest();
-            cvm.startStandardLifeCycle(15000L);
-            Thread.sleep(15000L);
+            CVMUnitTest cvm = new CVMUnitTest();
+            cvm.startStandardLifeCycle(10000L);
+            Thread.sleep(5000L);
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
