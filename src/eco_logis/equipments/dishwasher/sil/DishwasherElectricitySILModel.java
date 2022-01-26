@@ -9,6 +9,12 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This class represent the SIL model for the electricity model in the dishwasher
+ *
+ * @author Emilie SIAU
+ * @author Hugo GUERRIER
+ */
 public class DishwasherElectricitySILModel
     extends DishwasherElectricityModel {
 

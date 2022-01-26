@@ -61,7 +61,7 @@ public class GeneratorFuelModel
 
     /** The variable representing the current fuel level of the generator */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentFuelLevel = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentFuelLevel = new Value<>(this, 0.0);
 
 
     // ========== Constructors ==========

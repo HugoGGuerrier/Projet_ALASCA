@@ -49,6 +49,7 @@ public class CryptoMinerRTAtomicSimulatorPlugin
 
     // ========== Class methods ==========
 
+
     /**
      * Create and initialise the simulation architecture for the Crypto Miner
      *

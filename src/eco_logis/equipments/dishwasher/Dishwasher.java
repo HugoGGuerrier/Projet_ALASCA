@@ -1,15 +1,32 @@
 package eco_logis.equipments.dishwasher;
 
+import eco_logis.CVM_SIL;
+import eco_logis.equipments.crypto_miner.CryptoMinerCI;
+import eco_logis.equipments.dishwasher.mil.DishwasherCoupledModel;
+import eco_logis.equipments.dishwasher.mil.events.*;
+import eco_logis.equipments.dishwasher.sil.DishwasherStateModel;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represent a dishwasher which can be planned with different programs and be canceled
+ *
+ * @author Emilie Siau
+ * @author Hugo Guerrier
+ */
+@OfferedInterfaces(offered = {DishwasherCI.class})
 public class Dishwasher
-    extends AbstractComponent
+    extends AbstractCyPhyComponent
     implements DishwasherImplementationI
 {
 
@@ -18,6 +35,9 @@ public class Dishwasher
 
     /** The string representing the default dishwasher inbound port URI */
     public static final String INBOUND_PORT_URI = "DISHWASHER-INBOUND-PORT-URI";
+
+    /** The URI of the reflection inbound port */
+    public static final String REFLECTION_INBOUND_PORT_URI = "DISHWASHER_rip";
 
     /** Trace all actions on the component if true */
     public static final boolean VERBOSE = true;
@@ -47,6 +67,26 @@ public class Dishwasher
     /** The dishwasher inbound port */
     private DishwasherInboundPort dwip;
 
+    // --- For the SIL simulation
+
+    /** The URI of the created simulation architecture */
+    protected String simArchURI;
+
+    /** The URI of the executor */
+    protected static final String SCHEDULED_EXECUTOR_SERVICE_URI = "ses";
+
+    /** The plugin that contains the SIL simulation */
+    protected DishwasherRTAtomicSimulatorPlugin simulatorPlugin;
+
+    /** If the component is in a SIL simulation */
+    protected boolean isSILSimulated;
+
+    /** If the component executes a unit test */
+    protected boolean executesAsUnitTest;
+
+    /** Acceleration factor for the simulation */
+    protected static final double ACC_FACT = 1.0;
+
 
     // ========== Constructors ==========
 
@@ -62,10 +102,12 @@ public class Dishwasher
      * post	true
      * </pre>
      *
+     * @param simArchURI The simulation architecture URI
+     * @param executesAsUnitTest If the component has to be executed as a unit test
      * @throws Exception TODO
      */
-    protected Dishwasher() throws Exception {
-        this(INBOUND_PORT_URI);
+    protected Dishwasher(String simArchURI, boolean executesAsUnitTest) throws Exception {
+        this(INBOUND_PORT_URI, simArchURI, executesAsUnitTest);
     }
 
     /**
@@ -81,12 +123,14 @@ public class Dishwasher
      *
      * @see AbstractComponent#AbstractComponent(int, int)
      *
+     * @param simArchURI The simulation architecture URI
+     * @param executesAsUnitTest If the component has to be executed as a unit test
      * @param dishwasherInboundPortURI The inbound port URI
      * @throws Exception TODO
      */
-    protected Dishwasher(String dishwasherInboundPortURI) throws Exception {
-        super(1, 0);
-        initialise(dishwasherInboundPortURI);
+    protected Dishwasher(String dishwasherInboundPortURI, String simArchURI, boolean executesAsUnitTest) throws Exception {
+        super(REFLECTION_INBOUND_PORT_URI, 1, 0);
+        initialise(dishwasherInboundPortURI, simArchURI, executesAsUnitTest);
     }
 
     /**
@@ -104,13 +148,15 @@ public class Dishwasher
      *
      * @see AbstractComponent#AbstractComponent(String, int, int)
      *
-     * @param reflectionInboundPortURI The reflection inbound port URI
+     * @param simArchURI The simulation architecture URI
+     * @param executesAsUnitTest If the component has to be executed as a unit test
+     * @param reflectionInboundPortURI  The reflection inbound port URI
      * @param dishwasherInboundPortURI The inbound port URI
      * @throws Exception TODO
      */
-    protected Dishwasher(String reflectionInboundPortURI, String dishwasherInboundPortURI) throws Exception {
+    protected Dishwasher(String reflectionInboundPortURI, String dishwasherInboundPortURI, String simArchURI, boolean executesAsUnitTest) throws Exception {
         super(reflectionInboundPortURI, 1, 0);
-        initialise(dishwasherInboundPortURI);
+        initialise(dishwasherInboundPortURI, simArchURI, executesAsUnitTest);
     }
 
 
@@ -130,9 +176,15 @@ public class Dishwasher
      * </pre>
      *
      * @param dishwasherInboundPortURI The dishwasher inbound port URI
+     * @param simArchURI The simulation architecture URI
+     * @param executesAsUnitTest If the component has to be executed as a unit test
      * @throws Exception TODO
      */
-    protected void initialise(String dishwasherInboundPortURI) throws Exception {
+    protected void initialise(
+            String dishwasherInboundPortURI,
+            String simArchURI,
+            boolean executesAsUnitTest
+    ) throws Exception {
         assert dishwasherInboundPortURI != null : new PreconditionException(
                 "dishwasherInboundPortURI != null");
         assert !dishwasherInboundPortURI.isEmpty() : new PreconditionException(
@@ -142,7 +194,12 @@ public class Dishwasher
         isPlanned = false;
         isWashing = false;
         program = null;
-        if(dishwasherProgramDuration.isEmpty()) initProgamDurations();
+        if(dishwasherProgramDuration.isEmpty()) initProgramDurations();
+
+        // Initialise the SIL simulation
+        this.simArchURI = simArchURI;
+        this.isSILSimulated = !simArchURI.isEmpty();
+        this.executesAsUnitTest = executesAsUnitTest;
 
         // Create the inbound port
         dwip = new DishwasherInboundPort(dishwasherInboundPortURI, this);
@@ -156,12 +213,67 @@ public class Dishwasher
         }
     }
 
-    private static void initProgamDurations() {
+    private static void initProgramDurations() {
         dishwasherProgramDuration.put(DishwasherProgram.FULL, Duration.ofMinutes(160));
         dishwasherProgramDuration.put(DishwasherProgram.ECO, Duration.ofMinutes(180));
         dishwasherProgramDuration.put(DishwasherProgram.FAST, Duration.ofMinutes(100));
         dishwasherProgramDuration.put(DishwasherProgram.RINSE, Duration.ofMinutes(15));
     }
+
+
+    // ========== Component lifecycle ==========
+
+
+    /** @see AbstractCyPhyComponent#start() */
+    @Override
+    public synchronized void start() throws ComponentStartException {
+        // Call super
+        super.start();
+
+        // Trace
+        this.traceMessage("Dishwasher starts.\n");
+
+        if(isSILSimulated) {
+            createNewExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI, 1, true);
+            simulatorPlugin = new DishwasherRTAtomicSimulatorPlugin();
+            simulatorPlugin.setPluginURI(DishwasherCoupledModel.URI);
+            simulatorPlugin.setSimulationExecutorService(SCHEDULED_EXECUTOR_SERVICE_URI);
+            try {
+
+                simulatorPlugin.initialiseSimulationArchitecture(simArchURI, executesAsUnitTest ? ACC_FACT : CVM_SIL.ACC_FACTOR);
+                installPlugin(simulatorPlugin);
+
+            } catch (Exception e) {
+                throw new ComponentStartException(e) ;
+            }
+        }
+    }
+
+    /** @see AbstractCyPhyComponent#execute() */
+    @Override
+    public synchronized void execute() throws Exception {
+        if(executesAsUnitTest) {
+            simulatorPlugin.setSimulationRunParameters(new HashMap<>());
+            long startTime = System.currentTimeMillis() + 1000L;
+            double endTime = 10.0 / ACC_FACT;
+            simulatorPlugin.startRTSimulation(startTime, 0.0, endTime);
+            this.traceMessage("real time of start = " + startTime + "\n");
+        }
+    }
+
+    /** @see AbstractCyPhyComponent#shutdown() */
+    @Override
+    public synchronized void shutdown() throws ComponentShutdownException {
+        this.traceMessage("Dishwasher stops.\n");
+
+        try {
+            dwip.unpublishPort();
+        } catch (Exception e) {
+            throw new ComponentShutdownException(e);
+        }
+        super.shutdown();
+    }
+
 
     // ========== Override methods ==========
 
@@ -184,13 +296,12 @@ public class Dishwasher
     /** @see DishwasherImplementationI#getProgramDuration() */
     @Override
     public Duration getProgramDuration() throws Exception {
+        assert isPlanned;
         assert program != null;
 
         if(VERBOSE) {
             logMessage("Dishwasher get program duration: " + dishwasherProgramDuration.get(program));
         }
-
-        assert isPlanned;
 
         return dishwasherProgramDuration.get(program);
     }
@@ -199,12 +310,11 @@ public class Dishwasher
     @Override
     public LocalTime getDeadline() throws Exception {
         assert deadline != null;
+        assert isPlanned;
 
         if(VERBOSE) {
             logMessage("Dishwasher get deadline: " + deadline);
         }
-
-        assert isPlanned;
 
         return deadline;
     }
@@ -213,12 +323,11 @@ public class Dishwasher
     @Override
     public LocalTime getStartTime() throws Exception {
         assert startingTime != null;
+        assert isPlanned;
 
         if(VERBOSE) {
             logMessage("Dishwasher get starting time: " + startingTime);
         }
-
-        assert isPlanned;
 
         return startingTime;
     }
@@ -241,12 +350,15 @@ public class Dishwasher
             logMessage("Dishwasher planned (default prog), must be ready for " + deadline);
         }
 
-        assert !this.isPlanned;
+        assert !this.isPlanned: new PreconditionException("plan(...) -> !isPlanned()");
         assert this.program == null;
 
         this.isPlanned = true;
         this.deadline = deadline;
         this.program = DishwasherProgram.FULL;
+
+        // Trigger the event for the SIL simulation
+        if(isSILSimulated) simulatorPlugin.triggerExternalEvent(DishwasherStateModel.URI, SetFullProgram::new);
 
         return true;
     }
@@ -261,12 +373,31 @@ public class Dishwasher
             logMessage("Dishwasher planned (defined prog), must be ready for " + deadline);
         }
 
-        assert !this.isPlanned;
+        assert !this.isPlanned: new PreconditionException("plan(...) -> !isPlanned()");
         assert this.program == null;
 
         this.isPlanned = true;
         this.deadline = deadline;
         this.program = program;
+
+        // Trigger the event for the SIL simulation
+        if(isSILSimulated) {
+            switch (program) {
+                case ECO:
+                    simulatorPlugin.triggerExternalEvent(DishwasherStateModel.URI, SetEcoProgram::new);
+                    break;
+                case FAST:
+                    simulatorPlugin.triggerExternalEvent(DishwasherStateModel.URI, SetFastProgram::new);
+                    break;
+                case FULL:
+                    simulatorPlugin.triggerExternalEvent(DishwasherStateModel.URI, SetFullProgram::new);
+                    break;
+                case RINSE:
+                    simulatorPlugin.triggerExternalEvent(DishwasherStateModel.URI, SetRinseProgram::new);
+                    break;
+                default:
+            }
+        }
 
         return true;
     }
@@ -283,7 +414,7 @@ public class Dishwasher
             this.stopWashing();
 
         } else {
-            assert isPlanned;
+            assert isPlanned : new PreconditionException("cancel() -> isPlanned()");
             assert program != null;
             assert deadline != null;
 
@@ -291,6 +422,9 @@ public class Dishwasher
             program = null;
             deadline = null;
         }
+
+        // Trigger the event for the SIL simulation
+        if(isSILSimulated) simulatorPlugin.triggerExternalEvent(DishwasherStateModel.URI, SwitchOffDishwasher::new);
 
         return true;
     }

@@ -57,7 +57,7 @@ public class GeneratorElectricityModel
 
     /** The current production of the generator in a shared var */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentProduction = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentProduction = new Value<>(this, 0.0);
 
 
     // ========== Constructors ==========

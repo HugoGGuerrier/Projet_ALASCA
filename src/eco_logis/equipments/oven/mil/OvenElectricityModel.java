@@ -51,7 +51,7 @@ public class OvenElectricityModel
 
     /** Current intensity in amperes; intensity is power/tension */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentConsumption = new Value<>(this, 0.0);
 
     /** Current state (OFF,ON) of the oven */
     protected OvenElectricityModel.State currentState = OvenElectricityModel.State.OFF;

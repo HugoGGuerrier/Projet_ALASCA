@@ -282,7 +282,7 @@ public class ElectricMeter
             execution can occur on the same time reference in order to get
             coherent exchanges between the two */
             final ElectricMeterRTAtomicSimulatorPlugin sp = this.simulatorPlugin;
-
+            /* TODO
             this.scheduleTask(
                     AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
                     new AbstractComponent.AbstractTask() {
@@ -320,6 +320,8 @@ public class ElectricMeter
                     },
                     (long)(12.0/ACC_FACTOR),
                     TimeUnit.SECONDS);
+
+             */
         }
     }
 

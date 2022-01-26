@@ -155,7 +155,7 @@ extends		AtomicHIOAwithDE
 	/** current temperature in the room.									*/
 	@InternalVariable(type = Double.class)
 	protected final Value<Double>	currentTemperature =
-											new Value<Double>(this, 0.0, 0);
+											new Value<Double>(this, 0.0);
 	/** current state of the heater.										*/
 	protected State					currentState = State.NOT_HEATING;
 	/** the current derivative of the water temperature.					*/

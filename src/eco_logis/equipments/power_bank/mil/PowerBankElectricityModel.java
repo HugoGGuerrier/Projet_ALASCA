@@ -63,11 +63,11 @@ public class PowerBankElectricityModel
 
     /** The current power bank production */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentProduction = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentProduction = new Value<>(this, 0.0);
 
     /** The current power bank consumption */
     @ExportedVariable(type = Double.class)
-    protected final Value<Double> currentConsumption = new Value<>(this, 0.0, 0);
+    protected final Value<Double> currentConsumption = new Value<>(this, 0.0);
 
 
     // ========== Constructors ==========

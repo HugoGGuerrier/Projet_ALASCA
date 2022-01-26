@@ -100,18 +100,6 @@ public class WindTurbineRTAtomicSimulatorPlugin
                 )
         );
 
-        atomicModelDescriptors.put(
-                ExternalWindSILModel.URI,
-                RTAtomicModelDescriptor.create(
-                        ExternalWindSILModel.class,
-                        ExternalWindSILModel.URI,
-                        TimeUnit.SECONDS,
-                        null,
-                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor
-                )
-        );
-
         if(simArchURI.equals(UNIT_TEST_SIM_ARCHITECTURE_URI)) {
 
             // Add the electricity model to the arch
@@ -122,6 +110,18 @@ public class WindTurbineRTAtomicSimulatorPlugin
                     RTAtomicHIOA_Descriptor.create(
                             WindTurbineElectricitySILModel.class,
                             WindTurbineElectricitySILModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                            accFactor
+                    )
+            );
+
+            atomicModelDescriptors.put(
+                    ExternalWindSILModel.URI,
+                    RTAtomicHIOA_Descriptor.create(
+                            ExternalWindSILModel.class,
+                            ExternalWindSILModel.URI,
                             TimeUnit.SECONDS,
                             null,
                             SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
