@@ -52,40 +52,30 @@ import fr.sorbonne_u.components.ports.AbstractInboundPort;
  *
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class	    ElectricMeterInboundPort
-        extends		AbstractInboundPort
-        implements fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI
+public class ElectricMeterInboundPort
+        extends AbstractInboundPort
+        implements ElectricMeterCI
 {
     private static final long serialVersionUID = 1L;
 
-    public				ElectricMeterInboundPort(ComponentI owner)
-            throws Exception
-    {
-        super(fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI.class, owner);
+    public ElectricMeterInboundPort(ComponentI owner) throws Exception {
+        super(ElectricMeterCI.class, owner);
     }
 
-    public				ElectricMeterInboundPort(String uri, ComponentI owner)
-            throws Exception
-    {
+    public ElectricMeterInboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, ElectricMeterCI.class, owner);
     }
 
-    /**
-     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI#getCurrentConsumption()
-     */
+    /** @see ElectricMeterCI#getCurrentConsumption() */
     @Override
-    public double		getCurrentConsumption() throws Exception
-    {
+    public double getCurrentConsumption() throws Exception {
         return this.getOwner().handleRequest(
-                o -> ((fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterImplementationI)o).getCurrentConsumption());
+                o -> ((ElectricMeterImplementationI)o).getCurrentConsumption());
     }
 
-    /**
-     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI#getCurrentProduction()
-     */
+    /** @see ElectricMeterCI#getCurrentProduction() */
     @Override
-    public double		getCurrentProduction() throws Exception
-    {
+    public double getCurrentProduction() throws Exception {
         return this.getOwner().handleRequest(
                 o -> ((ElectricMeterImplementationI)o).getCurrentProduction());
     }

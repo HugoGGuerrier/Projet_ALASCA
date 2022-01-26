@@ -33,7 +33,6 @@ package eco_logis.equipments.electric_meter;
 // knowledge of the CeCILL-C license and that you accept its terms.
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI;
 
 // -----------------------------------------------------------------------------
 /**
@@ -52,24 +51,19 @@ import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI
  *
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class ElectricMeterTestConnector extends		AbstractConnector
-        implements fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI
+public class ElectricMeterTestConnector
+        extends AbstractConnector
+        implements ElectricMeterCI
 {
-    /**
-     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI#getCurrentConsumption()
-     */
+    /** @see ElectricMeterCI#getCurrentConsumption() */
     @Override
-    public double		getCurrentConsumption() throws Exception
-    {
-        return ((fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI)this.offering).getCurrentConsumption();
+    public double getCurrentConsumption() throws Exception {
+        return ((ElectricMeterCI)this.offering).getCurrentConsumption();
     }
 
-    /**
-     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI#getCurrentProduction()
-     */
+    /** @see ElectricMeterCI#getCurrentProduction() */
     @Override
-    public double		getCurrentProduction() throws Exception
-    {
+    public double getCurrentProduction() throws Exception {
         return ((ElectricMeterCI)this.offering).getCurrentProduction();
     }
 }

@@ -52,39 +52,29 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
  *
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class			ElectricMeterOutboundPort
-        extends		AbstractOutboundPort
-        implements fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI
+public class ElectricMeterOutboundPort
+        extends	AbstractOutboundPort
+        implements ElectricMeterCI
 {
     private static final long serialVersionUID = 1L;
 
-    public				ElectricMeterOutboundPort(ComponentI owner)
-            throws Exception
-    {
-        super(fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI.class, owner);
+    public ElectricMeterOutboundPort(ComponentI owner) throws Exception {
+        super(ElectricMeterCI.class, owner);
     }
 
-    public				ElectricMeterOutboundPort(String uri, ComponentI owner)
-            throws Exception
-    {
-        super(uri, fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI.class, owner);
+    public ElectricMeterOutboundPort(String uri, ComponentI owner) throws Exception {
+        super(uri, ElectricMeterCI.class, owner);
     }
 
-    /**
-     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI#getCurrentConsumption()
-     */
+    /** @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI#getCurrentConsumption() */
     @Override
-    public double		getCurrentConsumption() throws Exception
-    {
-        return ((fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI)this.getConnector()).getCurrentConsumption();
+    public double getCurrentConsumption() throws Exception {
+        return ((ElectricMeterCI)this.getConnector()).getCurrentConsumption();
     }
 
-    /**
-     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI#getCurrentProduction()
-     */
+    /** @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterCI#getCurrentProduction() */
     @Override
-    public double		getCurrentProduction() throws Exception
-    {
+    public double getCurrentProduction() throws Exception {
         return ((ElectricMeterCI)this.getConnector()).getCurrentProduction();
     }
 }

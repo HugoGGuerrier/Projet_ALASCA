@@ -49,36 +49,22 @@ package eco_logis.equipments.electric_meter;
  *
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public interface		ElectricMeterImplementationI
+public interface ElectricMeterImplementationI
 {
     /**
-     * return the current total electric consumption in watts.
-     *
-     * <p><strong>Contract</strong></p>
-     *
-     * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
-     * </pre>
+     * Return the current total electric consumption in watts
      *
      * @return				the current total electric consumption in watts.
      * @throws Exception	<i>to do</i>.
      */
-    public double		getCurrentConsumption() throws Exception;
+    public double getCurrentConsumption() throws Exception;
 
     /**
-     * return the current total electric power production in watts.
-     *
-     * <p><strong>Contract</strong></p>
-     *
-     * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
-     * </pre>
+     * Return the current total electric power production in watts
      *
      * @return				the current total electric power production in watts.
      * @throws Exception	<i>to do</i>.
      */
-    public double		getCurrentProduction() throws Exception;
+    public double getCurrentProduction() throws Exception;
 }
 // -----------------------------------------------------------------------------

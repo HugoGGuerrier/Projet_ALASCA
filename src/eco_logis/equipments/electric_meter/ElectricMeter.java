@@ -336,7 +336,7 @@ public class ElectricMeter
         super.shutdown();
     }
 
-    /** @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterImplementationI#getCurrentConsumption() */
+    /** @see ElectricMeterImplementationI#getCurrentConsumption() */
     @Override
     public double getCurrentConsumption() throws Exception {
         if (VERBOSE) {
@@ -346,7 +346,7 @@ public class ElectricMeter
         return 0;
     }
 
-    /** @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterImplementationI#getCurrentProduction() */
+    /** @see ElectricMeterImplementationI#getCurrentProduction() */
     @Override
     public double getCurrentProduction() throws Exception {
         if (VERBOSE) {

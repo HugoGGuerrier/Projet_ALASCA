@@ -52,21 +52,17 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
  *
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public interface		ElectricMeterCI
+public interface ElectricMeterCI
         extends ElectricMeterImplementationI,
         RequiredCI,
         OfferedCI
 {
-    /**
-     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterImplementationI#getCurrentConsumption()
-     */
+    /** @see ElectricMeterImplementationI#getCurrentConsumption() */
     @Override
-    public double		getCurrentConsumption() throws Exception;
+    public double getCurrentConsumption() throws Exception;
 
-    /**
-     * @see fr.sorbonne_u.components.cyphy.hem2021e1.equipments.meter.ElectricMeterImplementationI#getCurrentProduction()
-     */
+    /** @see ElectricMeterImplementationI#getCurrentProduction() */
     @Override
-    public double		getCurrentProduction() throws Exception;
+    public double getCurrentProduction() throws Exception;
 }
 // -----------------------------------------------------------------------------

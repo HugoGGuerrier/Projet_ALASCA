@@ -57,8 +57,8 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
 @RequiredInterfaces(required={ElectricMeterCI.class})
-public class			ElectricMeterUnitTester
-        extends		AbstractComponent
+public class ElectricMeterUnitTester
+        extends AbstractComponent
 {
     // -------------------------------------------------------------------------
     // Constants and variables
@@ -70,8 +70,7 @@ public class			ElectricMeterUnitTester
     // Constructors
     // -------------------------------------------------------------------------
 
-    protected			ElectricMeterUnitTester() throws Exception
-    {
+    protected ElectricMeterUnitTester() throws Exception {
         super(1, 0);
 
         this.emop = new ElectricMeterOutboundPort(this);
@@ -86,8 +85,7 @@ public class			ElectricMeterUnitTester
     // Component internal methods
     // -------------------------------------------------------------------------
 
-    protected void		testGetCurrentConsumption()
-    {
+    protected void testGetCurrentConsumption() {
         this.traceMessage("testGetCurrentConsumption()...\n");
         try {
             this.traceMessage("Electric meter current consumption? " +
@@ -99,8 +97,7 @@ public class			ElectricMeterUnitTester
         this.traceMessage("...done.\n");
     }
 
-    protected void		testGetCurrentProduction()
-    {
+    protected void testGetCurrentProduction() {
         this.traceMessage("testGetCurrentProduction()...\n");
         try {
             this.traceMessage("Electric meter current production? " +
@@ -112,8 +109,7 @@ public class			ElectricMeterUnitTester
         this.traceMessage("...done.\n");
     }
 
-    protected void			runAllTests()
-    {
+    protected void runAllTests() {
         this.testGetCurrentConsumption();
         this.testGetCurrentProduction();
     }
@@ -122,12 +118,9 @@ public class			ElectricMeterUnitTester
     // Component life-cycle
     // -------------------------------------------------------------------------
 
-    /**
-     * @see fr.sorbonne_u.components.AbstractComponent#start()
-     */
+    /** @see fr.sorbonne_u.components.AbstractComponent#start() */
     @Override
-    public synchronized void	start() throws ComponentStartException
-    {
+    public synchronized void start() throws ComponentStartException {
         super.start();
 
         try {
@@ -144,27 +137,20 @@ public class			ElectricMeterUnitTester
      * @see fr.sorbonne_u.components.AbstractComponent#execute()
      */
     @Override
-    public synchronized void	execute() throws Exception
-    {
+    public synchronized void execute() throws Exception {
         this.runAllTests();
     }
 
-    /**
-     * @see fr.sorbonne_u.components.AbstractComponent#finalise()
-     */
+    /** @see fr.sorbonne_u.components.AbstractComponent#finalise() */
     @Override
-    public synchronized void	finalise() throws Exception
-    {
+    public synchronized void finalise() throws Exception {
         this.doPortDisconnection(this.emop.getPortURI());
         super.finalise();
     }
 
-    /**
-     * @see fr.sorbonne_u.components.AbstractComponent#shutdown()
-     */
+    /** @see fr.sorbonne_u.components.AbstractComponent#shutdown() */
     @Override
-    public synchronized void	shutdown() throws ComponentShutdownException
-    {
+    public synchronized void shutdown() throws ComponentShutdownException {
         try {
             this.emop.unpublishPort();
         } catch (Exception e) {
