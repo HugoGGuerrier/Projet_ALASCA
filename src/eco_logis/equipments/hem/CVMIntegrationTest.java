@@ -85,8 +85,8 @@ public class CVMIntegrationTest
     public static void main(String[] args) {
         try {
             CVMIntegrationTest cvm = new CVMIntegrationTest();
-            cvm.startStandardLifeCycle(1000L);
-            Thread.sleep(100000L);
+            cvm.startStandardLifeCycle(15000L);
+            Thread.sleep(10000L);
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();

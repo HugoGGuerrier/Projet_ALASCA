@@ -60,41 +60,45 @@ public class ElectricMeterRTAtomicSimulatorPlugin
     // ========== Macros ==========
 
 
-    private static final long serialVersionUID = 1L;
-
     /** URI used for unit tests */
-    public static final String UNIT_TEST_SIM_ARCHITECTURE_URI = "UnitTestMeter";
+    public static final String UNIT_TEST_SIM_ARCHITECTURE_URI = "UnitTestElectricMeter";
 
     /** Name used to pass the owner component reference as simulation parameter */
-    public static final String METER_REFERENCE_NAME = "MCRN";
+    public static final String METER_REFERENCE_NAME = "EMCRN";
 
     /** URI of the crypto miner electricity model */
     protected static final String CRYPTO_MINER_ELECTRICITY_MODEL_URI = CryptoMinerElectricitySILModel.URI;
+
     /** Class implementing the crypto miner electricity model */
     protected static final Class<CryptoMinerElectricitySILModel> CRYPTO_MINER_ELECTRICITY_SIL_MODEL_CLASS = CryptoMinerElectricitySILModel.class;
 
     /** URI of the dishwasher electricity model */
     protected static final String DISHWASHER_ELECTRICITY_MODEL_URI = DishwasherElectricitySILModel.URI;
+
     /** Class implementing the dishwasher electricity model */
     protected static final Class<DishwasherElectricitySILModel> DISHWASHER_ELECTRICITY_MODEL_CLASS = DishwasherElectricitySILModel.class;
 
     /** URI of the generator electricity model */
     protected static final String GENERATOR_ELECTRICITY_MODEL_URI = GeneratorElectricitySILModel.URI;
+
     /** Class implementing the generator electricity model */
     protected static final Class<GeneratorElectricitySILModel> GENERATOR_ELECTRICITY_MODEL_CLASS = GeneratorElectricitySILModel.class;
 
     /** URI of the oven electricity model */
     protected static final String OVEN_ELECTRICITY_MODEL_URI = OvenElectricitySILModel.URI;
+
     /** Class implementing the oven electricity model */
     protected static final Class<OvenElectricitySILModel> OVEN_ELECTRICITY_MODEL_CLASS = OvenElectricitySILModel.class;
 
     /** URI of the power bank electricity model */
     protected static final String POWER_BANK_ELECTRICITY_MODEL_URI = PowerBankElectricitySILModel.URI;
+
     /** Class implementing the power bank electricity model */
     protected static final Class<PowerBankElectricitySILModel> POWER_BANK_ELECTRICITY_SIL_MODEL_CLASS = PowerBankElectricitySILModel.class;
 
     /** URI of the wind turbine electricity model */
     protected static final String WIND_TURBINE_ELECTRICITY_MODEL_URI = WindTurbineElectricitySILModel.URI;
+
     /** Class implementing the wind turbine electricity model */
     protected static final Class<WindTurbineElectricitySILModel> WIND_TURBINE_ELECTRICITY_MODEL_CLASS = WindTurbineElectricitySILModel.class;
 

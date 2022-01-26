@@ -1,18 +1,13 @@
 package eco_logis.equipments.hem;
 
 import eco_logis.equipments.crypto_miner.CryptoMiner;
-import eco_logis.equipments.dishwasher.Dishwasher;
 import eco_logis.equipments.electric_meter.ElectricMeter;
 import eco_logis.equipments.electric_meter.ElectricMeterOutboundPort;
-import eco_logis.equipments.generator.Generator;
-import eco_logis.equipments.hem.connectors.*;
-import eco_logis.equipments.oven.Oven;
-import eco_logis.equipments.power_bank.PowerBank;
-import eco_logis.equipments.wind_turbine.WindTurbine;
+import eco_logis.equipments.hem.connectors.CryptoMinerConnector;
+import eco_logis.equipments.hem.connectors.ElectricMeterConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,8 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @author Hugo GUERRIER
  */
 public class HEM
-    extends AbstractComponent
-{
+        extends AbstractComponent {
 
     // ========== Internal Enums and class ==========
 
@@ -46,18 +40,26 @@ public class HEM
     // ========== Attributes ==========
 
 
-    /** Period at which the HEM looks at the current consumption and makes
-     *  energy management decisions */
-    protected static final long		MANAGEMENT_PERIOD = 1;
+    /**
+     * Period at which the HEM looks at the current consumption and makes
+     * energy management decisions
+     */
+    protected static final long MANAGEMENT_PERIOD = 1;
 
-    /** Time unit to interpret {@code MANAGEMENT_PERIOD} */
+    /**
+     * Time unit to interpret {@code MANAGEMENT_PERIOD}
+     */
     protected static final TimeUnit MANAGEMENT_PERIOD_TIME_UNIT =
             TimeUnit.SECONDS;
 
-    /** true if the component executes in a unit test mode, false otherwise */
+    /**
+     * true if the component executes in a unit test mode, false otherwise
+     */
     protected boolean executesAsUnitTest;
 
-    /** Future allowing to act upon the management task */
+    /**
+     * Future allowing to act upon the management task
+     */
     protected Future<?> managementTaskFuture;
 
     private static final List<SuspensionEquipmentOutboundPort> suspOPs = new LinkedList<>();
@@ -67,17 +69,23 @@ public class HEM
     private static final List<StorageEquipmentOutboundPort> storOPs = new LinkedList<>();
     private static final List<UnpredictableProductionEquipmentOutboundPort> unpredOPs = new LinkedList<>();
 
-    /** Outbound port to call the electric meter */
+    /**
+     * Outbound port to call the electric meter
+     */
     protected ElectricMeterOutboundPort elecMeterOP;
 
-    /** Outbound port to call the crypto miner */
+    /**
+     * Outbound port to call the crypto miner
+     */
     protected SuspensionEquipmentOutboundPort cryptoOP;
 
 
     // ========== Constructors ==========
 
 
-    /** Create a new HEM component */
+    /**
+     * Create a new HEM component
+     */
     protected HEM(boolean executesAsUnitTest) {
         super(1, 0);
         this.executesAsUnitTest = executesAsUnitTest;
@@ -93,10 +101,11 @@ public class HEM
     /**
      * Register a component from its outbound port
      *
-     * @param type the outbound port type
-     * @param IP_URI URI
+     * @param type          the outbound port type
+     * @param IP_URI        URI
      * @param connectorName the connector name
      * @throws Exception
+     * @throws Exception TODO
      */
     public void register(OPType type, String IP_URI, String connectorName) throws Exception {
 
@@ -179,7 +188,7 @@ public class HEM
      * post	true		// no postcondition.
      * </pre>
      *
-     * @throws Exception	<i>to do</i>.
+     * @throws Exception <i>to do</i>.
      */
     protected void manage() throws Exception {
         this.traceMessage("Electric meter current consumption? " +
@@ -190,7 +199,9 @@ public class HEM
 
     // ========== Lifecycle methods ==========
 
-    /** @see fr.sorbonne_u.components.AbstractComponent#start() */
+    /**
+     * @see fr.sorbonne_u.components.AbstractComponent#start()
+     */
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
@@ -212,11 +223,13 @@ public class HEM
                     CryptoMiner.INBOUND_PORT_URI,
                     CryptoMinerConnector.class.getCanonicalName());
         } catch (Exception e) {
-            throw new ComponentStartException(e) ;
+            throw new ComponentStartException(e);
         }
     }
 
-    /** @see AbstractComponent#execute() */
+    /**
+     * @see AbstractComponent#execute()
+     */
     @Override
     public synchronized void execute() throws Exception {
         if (this.executesAsUnitTest) {
@@ -261,7 +274,8 @@ public class HEM
                             MANAGEMENT_PERIOD,
                             MANAGEMENT_PERIOD,
                             MANAGEMENT_PERIOD_TIME_UNIT);
-        }    }
+        }
+    }
 
     @Override
     public synchronized void finalise() throws Exception {
