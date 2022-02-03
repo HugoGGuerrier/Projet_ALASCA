@@ -12,12 +12,19 @@ import eco_logis.equipments.electric_meter.mil.ElectricMeterElectricityModel;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterElectricitySILModel;
 import eco_logis.equipments.generator.GeneratorRTAtomicSimulatorPlugin;
+import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
+import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
 import eco_logis.equipments.generator.sil.GeneratorElectricitySILModel;
+import eco_logis.equipments.generator.sil.GeneratorFuelSILModel;
 import eco_logis.equipments.oven.OvenRTAtomicSimulatorPlugin;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import eco_logis.equipments.oven.sil.OvenElectricitySILModel;
 import eco_logis.equipments.power_bank.PowerBankRTAtomicSimulatorPlugin;
+import eco_logis.equipments.power_bank.mil.events.ChargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.DischargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.StandbyPowerBank;
+import eco_logis.equipments.power_bank.sil.PowerBankChargeSILModel;
 import eco_logis.equipments.power_bank.sil.PowerBankElectricitySILModel;
 import eco_logis.equipments.wind_turbine.WindTurbineRTAtomicSimulatorPlugin;
 import eco_logis.equipments.wind_turbine.sil.WindTurbineElectricitySILModel;
@@ -81,8 +88,14 @@ public class ElectricMeterRTAtomicSimulatorPlugin
     /** URI of the generator electricity model */
     protected static final String GENERATOR_ELECTRICITY_MODEL_URI = GeneratorElectricitySILModel.URI;
 
+    /** URI of the generator fuel model */
+    protected static final String GENERATOR_FUEL_MODEL_URI = GeneratorFuelSILModel.URI;
+
     /** Class implementing the generator electricity model */
     protected static final Class<GeneratorElectricitySILModel> GENERATOR_ELECTRICITY_MODEL_CLASS = GeneratorElectricitySILModel.class;
+
+    /** Class implementing the generator fuel model */
+    protected static final Class<GeneratorFuelSILModel> GENERATOR_FUEL_SIL_MODEL_CLASS = GeneratorFuelSILModel.class;
 
     /** URI of the oven electricity model */
     protected static final String OVEN_ELECTRICITY_MODEL_URI = OvenElectricitySILModel.URI;
@@ -93,8 +106,14 @@ public class ElectricMeterRTAtomicSimulatorPlugin
     /** URI of the power bank electricity model */
     protected static final String POWER_BANK_ELECTRICITY_MODEL_URI = PowerBankElectricitySILModel.URI;
 
+    /** URI of the power bank charge model */
+    protected static final String POWER_BANK_CHARGE_MODEL_URI = PowerBankChargeSILModel.URI;
+
     /** Class implementing the power bank electricity model */
     protected static final Class<PowerBankElectricitySILModel> POWER_BANK_ELECTRICITY_SIL_MODEL_CLASS = PowerBankElectricitySILModel.class;
+
+    /** Class implementing the power bank charge model */
+    protected static final Class<PowerBankChargeSILModel> POWER_BANK_CHARGE_SIL_MODEL_CLASS = PowerBankChargeSILModel.class;
 
     /** URI of the wind turbine electricity model */
     protected static final String WIND_TURBINE_ELECTRICITY_MODEL_URI = WindTurbineElectricitySILModel.URI;
@@ -127,11 +146,13 @@ public class ElectricMeterRTAtomicSimulatorPlugin
         Set<String> submodels = new HashSet<String>();
         submodels.add(ElectricMeterElectricitySILModel.URI);
         submodels.add(CRYPTO_MINER_ELECTRICITY_MODEL_URI);
+        submodels.add(GENERATOR_ELECTRICITY_MODEL_URI);
+        submodels.add(GENERATOR_FUEL_MODEL_URI);
+        submodels.add(POWER_BANK_ELECTRICITY_MODEL_URI);
+        submodels.add(POWER_BANK_CHARGE_MODEL_URI);
         /* TODO
         submodels.add(DISHWASHER_ELECTRICITY_MODEL_URI);
-        submodels.add(GENERATOR_ELECTRICITY_MODEL_URI);
         submodels.add(OVEN_ELECTRICITY_MODEL_URI);
-        submodels.add(POWER_BANK_ELECTRICITY_MODEL_URI);
         submodels.add(WIND_TURBINE_ELECTRICITY_MODEL_URI);
          */
 
@@ -158,22 +179,60 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         accFactor)
         );
 
+        atomicModelDescriptors.put(
+                GENERATOR_ELECTRICITY_MODEL_URI,
+                RTAtomicHIOA_Descriptor.create(
+                        GENERATOR_ELECTRICITY_MODEL_CLASS,
+                        GENERATOR_ELECTRICITY_MODEL_URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor
+                )
+        );
+
+        atomicModelDescriptors.put(
+                GENERATOR_FUEL_MODEL_URI,
+                RTAtomicHIOA_Descriptor.create(
+                        GENERATOR_FUEL_SIL_MODEL_CLASS,
+                        GENERATOR_FUEL_MODEL_URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor
+                )
+        );
+
+        atomicModelDescriptors.put(
+                POWER_BANK_ELECTRICITY_MODEL_URI,
+                RTAtomicHIOA_Descriptor.create(
+                        POWER_BANK_ELECTRICITY_SIL_MODEL_CLASS,
+                        POWER_BANK_ELECTRICITY_MODEL_URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor
+                )
+        );
+
+        atomicModelDescriptors.put(
+                POWER_BANK_CHARGE_MODEL_URI,
+                RTAtomicHIOA_Descriptor.create(
+                        POWER_BANK_CHARGE_SIL_MODEL_CLASS,
+                        POWER_BANK_CHARGE_MODEL_URI,
+                        TimeUnit.SECONDS,
+                        null,
+                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
+                        accFactor
+                )
+        );
+
         /* TODO
         atomicModelDescriptors.put(
                 DISHWASHER_ELECTRICITY_MODEL_URI,
                 RTAtomicHIOA_Descriptor.create(
                         DISHWASHER_ELECTRICITY_MODEL_CLASS,
                         DISHWASHER_ELECTRICITY_MODEL_URI,
-                        TimeUnit.SECONDS,
-                        null,
-                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor));
-
-        atomicModelDescriptors.put(
-                GENERATOR_ELECTRICITY_MODEL_URI,
-                RTAtomicHIOA_Descriptor.create(
-                        GENERATOR_ELECTRICITY_MODEL_CLASS,
-                        GENERATOR_ELECTRICITY_MODEL_URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
@@ -190,30 +249,10 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         accFactor));
 
         atomicModelDescriptors.put(
-                POWER_BANK_ELECTRICITY_MODEL_URI,
-                RTAtomicHIOA_Descriptor.create(
-                        POWER_BANK_ELECTRICITY_SIL_MODEL_CLASS,
-                        POWER_BANK_ELECTRICITY_MODEL_URI,
-                        TimeUnit.SECONDS,
-                        null,
-                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor));
-
-        atomicModelDescriptors.put(
                 WIND_TURBINE_ELECTRICITY_MODEL_URI,
                 RTAtomicHIOA_Descriptor.create(
                         WIND_TURBINE_ELECTRICITY_MODEL_CLASS,
                         WIND_TURBINE_ELECTRICITY_MODEL_URI,
-                        TimeUnit.SECONDS,
-                        null,
-                        SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor));
-
-        atomicModelDescriptors.put(
-                ElectricMeterElectricitySILModel.URI,
-                RTAtomicHIOA_Descriptor.create(
-                        ElectricMeterElectricitySILModel.class,
-                        ElectricMeterElectricitySILModel.URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
@@ -238,6 +277,8 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                     });
              */
 
+            // --- Crypto miner events
+
             imported.put(
                     SwitchOnCryptoMiner.class,
                     new EventSink[] {
@@ -258,12 +299,57 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                     new EventSink[] {
                             new EventSink(CRYPTO_MINER_ELECTRICITY_MODEL_URI, MineOffCryptoMiner.class)
                     });
+
+            // --- Generator events
+
+            imported.put(
+                    SwitchOnGenerator.class,
+                    new EventSink[] {
+                            new EventSink(GENERATOR_ELECTRICITY_MODEL_URI, SwitchOnGenerator.class),
+                            new EventSink(GENERATOR_FUEL_MODEL_URI, SwitchOnGenerator.class)
+                    }
+            );
+
+            imported.put(
+                    SwitchOffGenerator.class,
+                    new EventSink[] {
+                            new EventSink(GENERATOR_ELECTRICITY_MODEL_URI, SwitchOffGenerator.class),
+                            new EventSink(GENERATOR_FUEL_MODEL_URI, SwitchOffGenerator.class)
+                    }
+            );
+
+            // -- Power bank evens
+
+            imported.put(
+                    StandbyPowerBank.class,
+                    new EventSink[] {
+                            new EventSink(POWER_BANK_ELECTRICITY_MODEL_URI, StandbyPowerBank.class),
+                            new EventSink(POWER_BANK_CHARGE_MODEL_URI, StandbyPowerBank.class)
+                    }
+            );
+
+            imported.put(
+                    ChargePowerBank.class,
+                    new EventSink[] {
+                            new EventSink(POWER_BANK_ELECTRICITY_MODEL_URI, ChargePowerBank.class),
+                            new EventSink(POWER_BANK_CHARGE_MODEL_URI, ChargePowerBank.class)
+                    }
+            );
+
+            imported.put(
+                    DischargePowerBank.class,
+                    new EventSink[] {
+                            new EventSink(POWER_BANK_ELECTRICITY_MODEL_URI, DischargePowerBank.class),
+                            new EventSink(POWER_BANK_CHARGE_MODEL_URI, DischargePowerBank.class)
+                    }
+            );
         }
 
         // Variable bindings between exporting and importing models
         Map<VariableSource, VariableSink[]> bindings = new HashMap<>();
 
-        // Bindings between components models to the electric meter model
+        // --- Bindings for the crypto miner
+
         bindings.put(
                 new VariableSource("currentConsumption",
                         Double.class,
@@ -271,7 +357,66 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                 new VariableSink[] {
                         new VariableSink("currentCryptoConsumption",
                                 Double.class,
-                                ElectricMeterElectricityModel.URI)
+                                ElectricMeterElectricitySILModel.URI)
+                }
+        );
+
+        // --- Bindings for the generator
+
+        bindings.put(
+                new VariableSource("currentProduction",
+                        Double.class,
+                        GENERATOR_ELECTRICITY_MODEL_URI),
+                new VariableSink[] {
+                        new VariableSink("currentGeneratorProduction",
+                                Double.class,
+                                ElectricMeterElectricitySILModel.URI)
+                }
+        );
+
+        bindings.put(
+                new VariableSource("currentFuelLevel",
+                        Double.class,
+                        GENERATOR_FUEL_MODEL_URI),
+                new VariableSink[] {
+                        new VariableSink("currentFuelLevel",
+                                Double.class,
+                                GENERATOR_ELECTRICITY_MODEL_URI)
+                }
+        );
+
+        // -- Bindings for the power bank
+
+        bindings.put(
+                new VariableSource("currentConsumption",
+                        Double.class,
+                        POWER_BANK_ELECTRICITY_MODEL_URI),
+                new VariableSink[] {
+                        new VariableSink("currentPowerBankConsumption",
+                                Double.class,
+                                ElectricMeterElectricitySILModel.URI)
+                }
+        );
+
+        bindings.put(
+                new VariableSource("currentProduction",
+                        Double.class,
+                        POWER_BANK_ELECTRICITY_MODEL_URI),
+                new VariableSink[] {
+                        new VariableSink("currentPowerBankProduction",
+                                Double.class,
+                                ElectricMeterElectricitySILModel.URI)
+                }
+        );
+
+        bindings.put(
+                new VariableSource("currentChargeLevel",
+                        Double.class,
+                        POWER_BANK_CHARGE_MODEL_URI),
+                new VariableSink[] {
+                        new VariableSink("currentChargeLevel",
+                                Double.class,
+                                POWER_BANK_ELECTRICITY_MODEL_URI)
                 }
         );
 
@@ -326,11 +471,11 @@ public class ElectricMeterRTAtomicSimulatorPlugin
     public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
         simParams.put(METER_REFERENCE_NAME, this.getOwner());
         simParams.put(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        simParams.put(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
         /*
         simParams.put(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-        simParams.put(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
         simParams.put(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-        simParams.put(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
         simParams.put(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
          */
 
@@ -338,11 +483,11 @@ public class ElectricMeterRTAtomicSimulatorPlugin
 
         simParams.remove(METER_REFERENCE_NAME);
         simParams.remove(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        simParams.remove(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         /*
         simParams.remove(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        simParams.remove(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         simParams.remove(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        simParams.remove(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         simParams.remove(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         */
     }

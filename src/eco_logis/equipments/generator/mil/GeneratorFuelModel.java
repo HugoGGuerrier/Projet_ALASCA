@@ -168,14 +168,16 @@ public class GeneratorFuelModel
     public void userDefinedInternalTransition(Duration elapsedTime) {
         super.userDefinedInternalTransition(elapsedTime);
 
-        // Update the fuel level
-        if(currentFuelLevel.v > 0.0 && isRunning) {
-            consume(elapsedTime);
-        }
-        currentFuelLevel.time = getCurrentStateTime();
+        if(isRunning) {
+            // Update the fuel level
+            if(currentFuelLevel.v > 0.0) {
+                consume(elapsedTime);
+            }
+            currentFuelLevel.time = getCurrentStateTime();
 
-        // Tracing
-        logMessage("Generator is " + (isRunning ? "on" : "off") + " | Fuel level : " + currentFuelLevel.v + " at " + currentFuelLevel.time + "\n");
+            // Tracing
+            logMessage("Generator is " + (isRunning ? "on" : "off") + " | Fuel level : " + currentFuelLevel.v + " at " + currentFuelLevel.time + "\n");
+        }
     }
 
     /** @see AtomicHIOA#userDefinedExternalTransition(Duration) */

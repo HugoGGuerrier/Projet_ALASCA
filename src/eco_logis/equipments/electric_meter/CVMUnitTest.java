@@ -26,8 +26,6 @@ public class CVMUnitTest
     @Override
     public void	deploy() throws Exception {
         // Create the components to test the electric meter
-        // AbstractComponent.createComponent(ElectricMeter.class.getCanonicalName(), new Object[]{});
-        // AbstractComponent.createComponent(ElectricMeterUnitTester.class.getCanonicalName(), new Object[]{});
         AbstractComponent.createComponent(
                 ElectricMeter.class.getCanonicalName(),
                 new Object[]{ElectricMeterRTAtomicSimulatorPlugin.UNIT_TEST_SIM_ARCHITECTURE_URI, true}
@@ -39,7 +37,7 @@ public class CVMUnitTest
     public static void	main(String[] args) {
         try {
             CVMUnitTest cvm = new CVMUnitTest();
-            cvm.startStandardLifeCycle(10000L);
+            cvm.startStandardLifeCycle(30000L);
             Thread.sleep(5000L);
             System.exit(0);
         } catch (Exception e) {

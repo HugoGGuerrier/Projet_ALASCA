@@ -6,8 +6,13 @@ import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
+import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
+import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.power_bank.mil.events.ChargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.DischargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.StandbyPowerBank;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
@@ -269,7 +274,7 @@ public class ElectricMeter
         if (executesAsUnitTest) {
             simulatorPlugin.setSimulationRunParameters(new HashMap<>());
             long simStart = System.currentTimeMillis() + 1000L;
-            double endTime = 10.0 / ACC_FACTOR;
+            double endTime = 30.0 / ACC_FACTOR;
             simulatorPlugin.startRTSimulation(simStart, 0.0, endTime);
             traceMessage("real time of start = " + simStart + "\n");
 
@@ -350,6 +355,148 @@ public class ElectricMeter
                         }
                     },
                     (long)(7.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            // --- Add the generator events
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.GENERATOR_ELECTRICITY_MODEL_URI,
+                                        SwitchOnGenerator::new
+                                );
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.GENERATOR_FUEL_MODEL_URI,
+                                        SwitchOnGenerator::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(11.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.GENERATOR_ELECTRICITY_MODEL_URI,
+                                        SwitchOffGenerator::new
+                                );
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.GENERATOR_FUEL_MODEL_URI,
+                                        SwitchOffGenerator::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(18.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            // --- Add the power bank events
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.POWER_BANK_ELECTRICITY_MODEL_URI,
+                                        DischargePowerBank::new
+                                );
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.POWER_BANK_CHARGE_MODEL_URI,
+                                        DischargePowerBank::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(20.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.POWER_BANK_ELECTRICITY_MODEL_URI,
+                                        StandbyPowerBank::new
+                                );
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.POWER_BANK_CHARGE_MODEL_URI,
+                                        StandbyPowerBank::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(25.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.POWER_BANK_ELECTRICITY_MODEL_URI,
+                                        ChargePowerBank::new
+                                );
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.POWER_BANK_CHARGE_MODEL_URI,
+                                        ChargePowerBank::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(26.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.POWER_BANK_ELECTRICITY_MODEL_URI,
+                                        StandbyPowerBank::new
+                                );
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.POWER_BANK_CHARGE_MODEL_URI,
+                                        StandbyPowerBank::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(30.0/ACC_FACTOR),
                     TimeUnit.SECONDS
             );
 

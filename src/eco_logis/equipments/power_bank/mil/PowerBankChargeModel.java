@@ -179,18 +179,20 @@ public class PowerBankChargeModel
     public void userDefinedInternalTransition(Duration elapsedTime) {
         super.userDefinedInternalTransition(elapsedTime);
 
-        // Update the charge level
-        if(currentChargeLevel.v > 0.0 && currentState == PowerBank.State.DISCHARGING) {
-            discharge(elapsedTime);
-        } else if (currentChargeLevel.v < 1.0 && currentState == PowerBank.State.CHARGING) {
-            charge(elapsedTime);
-        }
-        currentChargeLevel.time = getCurrentStateTime();
+        if(currentState != PowerBank.State.STANDBY) {
+            // Update the charge level
+            if(currentChargeLevel.v > 0.0 && currentState == PowerBank.State.DISCHARGING) {
+                discharge(elapsedTime);
+            } else if (currentChargeLevel.v < 1.0 && currentState == PowerBank.State.CHARGING) {
+                charge(elapsedTime);
+            }
+            currentChargeLevel.time = getCurrentStateTime();
 
-        // Tracing
-        String stateString = currentState == PowerBank.State.STANDBY ? "standby" :
-                (currentState == PowerBank.State.CHARGING ? "charging" : "discharging");
-        logMessage("Power bank is " + stateString + " | Charge level : " + currentChargeLevel.v + " at " + currentChargeLevel.time + "\n");
+            // Tracing
+            String stateString = currentState == PowerBank.State.CHARGING ? "charging" : "discharging";
+            logMessage("Power bank is " + stateString + " | Charge level : " + currentChargeLevel.v + " at " + currentChargeLevel.time + "\n");
+        }
+
     }
 
     /** @see AtomicHIOA#userDefinedExternalTransition(Duration) */
