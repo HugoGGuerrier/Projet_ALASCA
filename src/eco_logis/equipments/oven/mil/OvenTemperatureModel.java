@@ -4,6 +4,7 @@ import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
+import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
@@ -137,7 +138,6 @@ public class OvenTemperatureModel
         super.initialiseVariables(startTime);
 
         this.temperatureTime = startTime;
-        this.currentTemperature = ROOM_TEMPERATURE;
         this.targetTemperature = 150.0;
     }
 
@@ -157,11 +157,10 @@ public class OvenTemperatureModel
         this.temperatureTime = this.temperatureTime.add(elapsedTime);
 
         // Adjust temperature (linear)
-        if(this.currentTemperature < this.targetTemperature) {
-            double duration = elapsedTime.getSimulatedDuration();
-            this.currentTemperature = Math.min(
-                    this.currentTemperature + (duration/60) * TEMPERATURE_DELTA,
-                    this.targetTemperature);
+        if(this.currentState == State.HEATING) {
+            this.currentTemperature.v = this.currentTemperature.v + (duration/60) * TEMPERATURE_DELTA;
+        } else {
+            this.currentTemperature.v = Math.max(this.currentTemperature.v - (duration/60) * TEMPERATURE_DELTA, ROOM_TEMPERATURE);
         }
 
         // Tracing
@@ -170,7 +169,7 @@ public class OvenTemperatureModel
         message.append(this.temperatureTime);
         message.append(mark);
         message.append(" : ");
-        message.append(this.currentTemperature);
+        message.append(this.currentTemperature.v);
         message.append('\n');
         this.logMessage(message.toString());
 

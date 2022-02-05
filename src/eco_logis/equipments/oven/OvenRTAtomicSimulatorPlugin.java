@@ -1,6 +1,8 @@
 package eco_logis.equipments.oven;
 
 import eco_logis.equipments.oven.mil.OvenCoupledModel;
+import eco_logis.equipments.oven.mil.events.DoNotHeatOven;
+import eco_logis.equipments.oven.mil.events.HeatOven;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import eco_logis.equipments.oven.sil.OvenUserSILModel;
@@ -137,21 +139,40 @@ public class OvenRTAtomicSimulatorPlugin
                     new EventSink[] {
                             new EventSink(OvenElectricitySILModel.URI, SwitchOffOven.class)
                     });
+            connections.put(
+                    new EventSource(OvenStateModel.URI, DoNotHeatOven.class),
+                    new EventSink[] {
+                            new EventSink(OvenElectricitySILModel.URI, DoNotHeatOven.class),
+                            new EventSink(OvenTemperatureSILModel.URI, DoNotHeatOven.class)
+                    });
+            connections.put(
+                    new EventSource(OvenStateModel.URI, HeatOven.class),
+                    new EventSink[] {
+                            new EventSink(OvenElectricitySILModel.URI, HeatOven.class),
+                            new EventSink(OvenTemperatureSILModel.URI, HeatOven.class)
+                    });
 
         } else {
             /* When *not* executed as a unit test, the simulation architecture
             does not include the oven electricity model and events
             exported by the state model are reexported by the coupled model */
 
-            reexported = new HashMap<Class<? extends EventI>,ReexportedEvent>();
+            // TODO
+
+            reexported = new HashMap<>();
 
             reexported.put(
                     SwitchOnOven.class,
                     new ReexportedEvent(OvenStateModel.URI, SwitchOnOven.class));
-
             reexported.put(
                     SwitchOffOven.class,
                     new ReexportedEvent(OvenStateModel.URI, SwitchOffOven.class));
+            reexported.put(
+                    DoNotHeatOven.class,
+                    new ReexportedEvent(OvenStateModel.URI, DoNotHeatOven.class));
+            reexported.put(
+                    HeatOven.class,
+                    new ReexportedEvent(OvenStateModel.URI, HeatOven.class));
         }
 
         coupledModelDescriptors.put(

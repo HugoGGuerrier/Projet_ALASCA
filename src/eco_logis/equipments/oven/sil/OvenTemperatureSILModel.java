@@ -89,7 +89,7 @@ public class OvenTemperatureSILModel
      */
     public double getCurrentTemperature()
     {
-        return this.currentTemperature;
+        return this.currentTemperature.v;
     }
 
 

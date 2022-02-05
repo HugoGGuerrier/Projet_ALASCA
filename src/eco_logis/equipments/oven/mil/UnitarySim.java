@@ -86,8 +86,7 @@ public class UnitarySim {
             connections.put(
                     new EventSource(OvenUserModel.URI, SwitchOnOven.class),
                     new EventSink[] {
-                            new EventSink(OvenElectricityModel.URI, SwitchOnOven.class),
-                            new EventSink(OvenTemperatureModel.URI, SwitchOnOven.class)
+                            new EventSink(OvenElectricityModel.URI, SwitchOnOven.class)
                     }
             );
 
@@ -95,8 +94,7 @@ public class UnitarySim {
             connections.put(
                     new EventSource(OvenUserModel.URI, SwitchOffOven.class),
                     new EventSink[] {
-                            new EventSink(OvenElectricityModel.URI, SwitchOffOven.class),
-                            new EventSink(OvenTemperatureModel.URI, SwitchOffOven.class)
+                            new EventSink(OvenElectricityModel.URI, SwitchOffOven.class)
                     }
             );
 
