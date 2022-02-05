@@ -207,7 +207,7 @@ public class HEM_SIL_Supervisor
                         },
                         TimeUnit.SECONDS,
                         CryptoMiner.REFLECTION_INBOUND_PORT_URI));
-
+/*
         // The oven simulation model held by the Oven component
         atomicModelDescriptors.put(
                 OvenCoupledModel.URI,
@@ -221,7 +221,7 @@ public class HEM_SIL_Supervisor
                                 DoNotHeatOven.class},
                         TimeUnit.SECONDS,
                         Oven.REFLECTION_INBOUND_PORT_URI));
-
+*/
 
         // The electric meter simulation model held by the ElectricMeter component
         atomicModelDescriptors.put(
@@ -232,12 +232,12 @@ public class HEM_SIL_Supervisor
                                 SwitchOnCryptoMiner.class,
                                 SwitchOffCryptoMiner.class,
                                 MineOnCryptoMiner.class,
-                                MineOffCryptoMiner.class,
+                                MineOffCryptoMiner.class/*,
 
                                 SwitchOnOven.class,
                                 SwitchOffOven.class,
                                 HeatOven.class,
-                                DoNotHeatOven.class
+                                DoNotHeatOven.class*/
                         },
                         new Class[]{},
                         TimeUnit.SECONDS,
@@ -245,7 +245,7 @@ public class HEM_SIL_Supervisor
 
         Set<String> submodels = new HashSet<String>();
         submodels.add(CryptoMinerCoupledModel.URI);
-        submodels.add(OvenCoupledModel.URI);
+        //submodels.add(OvenCoupledModel.URI);
         submodels.add(ElectricMeterCoupledModel.URI);
 
         Map<EventSource, EventSink[]> connections = new HashMap<EventSource,EventSink[]>();
@@ -276,7 +276,7 @@ public class HEM_SIL_Supervisor
                 new EventSink[] {
                         new EventSink(ElectricMeterCoupledModel.URI, MineOffCryptoMiner.class)
                 });
-
+/*
         connections.put(
                 new EventSource(OvenCoupledModel.URI, SwitchOnOven.class),
                 new EventSink[] {
@@ -298,7 +298,7 @@ public class HEM_SIL_Supervisor
                         new EventSink(ElectricMeterCoupledModel.URI, DoNotHeatOven.class)
                 });
 
-
+*/
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
         coupledModelDescriptors.put(
                 HEMCoupledModel.URI,

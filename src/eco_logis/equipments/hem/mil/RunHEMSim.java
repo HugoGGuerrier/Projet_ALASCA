@@ -22,7 +22,12 @@ import eco_logis.equipments.oven.mil.events.DoNotHeatOven;
 import eco_logis.equipments.oven.mil.events.HeatOven;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.power_bank.mil.PowerBankChargeModel;
 import eco_logis.equipments.power_bank.mil.PowerBankElectricityModel;
+import eco_logis.equipments.power_bank.mil.PowerBankUserModel;
+import eco_logis.equipments.power_bank.mil.events.ChargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.DischargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.StandbyPowerBank;
 import eco_logis.equipments.wind_turbine.mil.ExternalWindModel;
 import eco_logis.equipments.wind_turbine.mil.WindTurbineElectricityModel;
 import eco_logis.equipments.wind_turbine.mil.WindTurbineUserModel;
@@ -164,8 +169,39 @@ public class RunHEMSim {
             );
 
             // Add the power bank
-            // TODO
+            atomicModelDescriptors.put(
+                    PowerBankElectricityModel.URI,
+                    AtomicHIOA_Descriptor.create(
+                            PowerBankElectricityModel.class,
+                            PowerBankElectricityModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
+            atomicModelDescriptors.put(
+                    PowerBankChargeModel.URI,
+                    AtomicHIOA_Descriptor.create(
+                            PowerBankChargeModel.class,
+                            PowerBankChargeModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
+            atomicModelDescriptors.put(
+                    PowerBankUserModel.URI,
+                    AtomicModelDescriptor.create(
+                            PowerBankUserModel.class,
+                            PowerBankUserModel.URI,
+                            TimeUnit.SECONDS,
+                            null,
+                            SimulationEngineCreationMode.ATOMIC_ENGINE
+                    )
+            );
 
+
+/*
             // Add the wind turbine
             atomicModelDescriptors.put(
                     WindTurbineElectricityModel.URI,
@@ -197,7 +233,7 @@ public class RunHEMSim {
                             SimulationEngineCreationMode.ATOMIC_ENGINE
                     )
             );
-
+*/
             // Add the electric meter
             atomicModelDescriptors.put(
                     ElectricMeterElectricityModel.URI,
@@ -223,10 +259,14 @@ public class RunHEMSim {
             submodels.add(OvenElectricityModel.URI);
             submodels.add(OvenTemperatureModel.URI);
             submodels.add(OvenUserModel.URI);
-            // TODO powerbank
+            submodels.add(PowerBankElectricityModel.URI);
+            submodels.add(PowerBankChargeModel.URI);
+            submodels.add(PowerBankUserModel.URI);
+/*
             submodels.add(WindTurbineElectricityModel.URI);
             submodels.add(WindTurbineUserModel.URI);
             submodels.add(ExternalWindModel.URI);
+*/
             submodels.add(ElectricMeterElectricityModel.URI);
 
 
@@ -344,8 +384,29 @@ public class RunHEMSim {
             );
 
             // Add the power bank events
-            // TODO
+            connections.put(
+                    new EventSource(PowerBankUserModel.URI, ChargePowerBank.class),
+                    new EventSink[] {
+                            new EventSink(PowerBankElectricityModel.URI, ChargePowerBank.class),
+                            new EventSink(PowerBankChargeModel.URI, ChargePowerBank.class)
+                    }
+            );
+            connections.put(
+                    new EventSource(PowerBankUserModel.URI, DischargePowerBank.class),
+                    new EventSink[] {
+                            new EventSink(PowerBankElectricityModel.URI, DischargePowerBank.class),
+                            new EventSink(PowerBankChargeModel.URI, DischargePowerBank.class)
+                    }
+            );
+            connections.put(
+                    new EventSource(PowerBankUserModel.URI, StandbyPowerBank.class),
+                    new EventSink[] {
+                            new EventSink(PowerBankElectricityModel.URI, HeatOven.class),
+                            new EventSink(PowerBankChargeModel.URI, HeatOven.class)
+                    }
+            );
 
+/*
             // Add the wind turbine events
             connections.put(
                     new EventSource(WindTurbineUserModel.URI, BlockWindTurbine.class),
@@ -359,8 +420,9 @@ public class RunHEMSim {
                             new EventSink(WindTurbineElectricityModel.URI, UnblockWindTurbine.class)
                     }
             );
-
+*/
             // --- Create the variable bindings
+
             Map<VariableSource, VariableSink[]> bindings = new HashMap<>();
 
             // Bind the fuel level from the fuel model to the generator electricity model
@@ -370,7 +432,7 @@ public class RunHEMSim {
                             new VariableSink("currentFuelLevel", Double.class, GeneratorElectricityModel.URI)
                     }
             );
-
+/*
             // Bind the external wind speed level from the external wind model to the wind turbine electricity model
             bindings.put(
                     new VariableSource("externalWindSpeed", Double.class, ExternalWindModel.URI),
@@ -378,7 +440,7 @@ public class RunHEMSim {
                             new VariableSink("externalWindSpeed", Double.class, WindTurbineElectricityModel.URI)
                     }
             );
-
+*/
             // Bind the crypto miner consumption to the electric meter
             bindings.put(
                     new VariableSource("currentConsumption", Double.class, CryptoMinerElectricityModel.URI),
@@ -410,7 +472,7 @@ public class RunHEMSim {
                             new VariableSink("currentOvenConsumption", Double.class, ElectricMeterElectricityModel.URI)
                     }
             );
-/*
+
             // Bind the power bank production to the electric meter
             bindings.put(
                     new VariableSource("currentProduction", Double.class, PowerBankElectricityModel.URI),
@@ -426,7 +488,16 @@ public class RunHEMSim {
                             new VariableSink("currentPowerBankConsumption", Double.class, ElectricMeterElectricityModel.URI)
                     }
             );
-*/
+
+            // Bind the variable from the charge level in the charge model to the charge level in the electricity model
+            bindings.put(
+                    new VariableSource("currentChargeLevel", Double.class, PowerBankChargeModel.URI),
+                    new VariableSink[] {
+                            new VariableSink("currentChargeLevel", Double.class, PowerBankElectricityModel.URI)
+                    }
+            );
+
+/*
             // Bind the wind turbine production to the electric meter
             bindings.put(
                     new VariableSource("currentProduction", Double.class, WindTurbineElectricityModel.URI),
@@ -434,7 +505,7 @@ public class RunHEMSim {
                             new VariableSink("currentWindTurbineProduction", Double.class, ElectricMeterElectricityModel.URI)
                     }
             );
-
+*/
 
             // --- Create the coupled model descriptor
             Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
