@@ -91,7 +91,9 @@ public class OvenRTAtomicSimulatorPlugin
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor));
+                        accFactor
+                )
+        );
 
         atomicModelDescriptors.put(
                 OvenStateModel.URI,
@@ -101,22 +103,25 @@ public class OvenRTAtomicSimulatorPlugin
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor));
+                        accFactor
+                )
+        );
 
         atomicModelDescriptors.put(
                 OvenTemperatureSILModel.URI,
-                RTAtomicModelDescriptor.create( // RTAtomicHIOA_Descriptor??
+                RTAtomicHIOA_Descriptor.create(
                         OvenTemperatureSILModel.class,
                         OvenTemperatureSILModel.URI,
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor));
+                        accFactor
+                )
+        );
 
         if (simArchURI.equals(UNIT_TEST_SIM_ARCHITECTURE_URI)) {
-            /* When executed as a unit test, the simulation architecture
-            includes the oven electricity model and events exported
-            by the state model are directed to the electricity model */
+
+            // Add the electricity model
             submodels.add(OvenElectricitySILModel.URI);
 
             atomicModelDescriptors.put(
@@ -127,7 +132,9 @@ public class OvenRTAtomicSimulatorPlugin
                             TimeUnit.SECONDS,
                             null,
                             SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                            accFactor));
+                            accFactor
+                    )
+            );
 
             connections.put(
                     new EventSource(OvenStateModel.URI, SwitchOnOven.class),
@@ -153,26 +160,25 @@ public class OvenRTAtomicSimulatorPlugin
                     });
 
         } else {
-            /* When *not* executed as a unit test, the simulation architecture
-            does not include the oven electricity model and events
-            exported by the state model are reexported by the coupled model */
-
-            // TODO
 
             reexported = new HashMap<>();
 
             reexported.put(
                     SwitchOnOven.class,
-                    new ReexportedEvent(OvenStateModel.URI, SwitchOnOven.class));
+                    new ReexportedEvent(OvenStateModel.URI, SwitchOnOven.class)
+            );
             reexported.put(
                     SwitchOffOven.class,
-                    new ReexportedEvent(OvenStateModel.URI, SwitchOffOven.class));
+                    new ReexportedEvent(OvenStateModel.URI, SwitchOffOven.class)
+            );
             reexported.put(
                     DoNotHeatOven.class,
-                    new ReexportedEvent(OvenStateModel.URI, DoNotHeatOven.class));
+                    new ReexportedEvent(OvenStateModel.URI, DoNotHeatOven.class)
+            );
             reexported.put(
                     HeatOven.class,
-                    new ReexportedEvent(OvenStateModel.URI, HeatOven.class));
+                    new ReexportedEvent(OvenStateModel.URI, HeatOven.class)
+            );
         }
 
         coupledModelDescriptors.put(
@@ -186,7 +192,9 @@ public class OvenRTAtomicSimulatorPlugin
                         connections,
                         null,
                         SimulationEngineCreationMode.COORDINATION_RT_ENGINE,
-                        accFactor));
+                        accFactor
+                )
+        );
 
         // This sets the architecture in the plug-in for further reference and use
         this.setSimulationArchitecture(
@@ -196,7 +204,9 @@ public class OvenRTAtomicSimulatorPlugin
                         atomicModelDescriptors,
                         coupledModelDescriptors,
                         TimeUnit.SECONDS,
-                        accFactor));
+                        accFactor
+                )
+        );
     }
 
 
