@@ -162,7 +162,7 @@ public class			RunHeaterUnitarySimulation
 			// event exchanging connections between exporting and importing
 			// models
 			Map<EventSource,EventSink[]> connections =
-										new HashMap<EventSource,EventSink[]>();
+										new HashMap<>();
 
 			connections.put(
 					new EventSource(HeaterUnitTesterModel.URI,

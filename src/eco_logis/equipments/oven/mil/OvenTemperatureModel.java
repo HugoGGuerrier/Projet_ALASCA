@@ -1,8 +1,7 @@
 package eco_logis.equipments.oven.mil;
 
-import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
-import eco_logis.equipments.oven.mil.events.SwitchOffOven;
-import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.oven.mil.events.*;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -23,8 +22,8 @@ import java.util.concurrent.TimeUnit;
  * @author Hugo GUERRIER
  */
 @ModelExternalEvents(imported = {
-        SwitchOnOven.class,
-        SwitchOffOven.class
+        HeatOven.class,
+        DoNotHeatOven.class
 })
 public class OvenTemperatureModel
     extends AtomicHIOA
@@ -63,7 +62,8 @@ public class OvenTemperatureModel
     protected final Duration integrationStep;
 
     /** Current temperature in the oven (°C) */
-    protected double currentTemperature;
+    @ExportedVariable(type = Double.class)
+    protected final Value<Double> currentTemperature = new Value<>(this, ROOM_TEMPERATURE);
 
     /** Target temperature of the oven (°C) */
     protected double targetTemperature;
@@ -155,6 +155,8 @@ public class OvenTemperatureModel
     @Override
     public void userDefinedInternalTransition(Duration elapsedTime) {
         this.temperatureTime = this.temperatureTime.add(elapsedTime);
+
+        double duration = elapsedTime.getSimulatedDuration();
 
         // Adjust temperature (linear)
         if(this.currentState == State.HEATING) {

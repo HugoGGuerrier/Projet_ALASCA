@@ -4,6 +4,7 @@ import eco_logis.equipments.oven.mil.events.DoNotHeatOven;
 import eco_logis.equipments.oven.mil.events.HeatOven;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import fr.sorbonne_u.components.cyphy.hem2021e2.equipments.heater.mil.events.Heat;
 import fr.sorbonne_u.devs_simulation.es.events.ES_EventI;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -98,6 +99,12 @@ public class OvenUserModel
         // Compute the next event type given the current event
         ES_EventI nextEvent = null;
         if(current instanceof SwitchOnOven) {
+            nextEvent = new HeatOven(nextTime);
+        }
+        else if(current instanceof HeatOven) {
+            nextEvent = new DoNotHeatOven(nextTime);
+        }
+        else if(current instanceof DoNotHeatOven) {
             nextEvent = new SwitchOffOven(nextTime);
         }
         else if(current instanceof SwitchOffOven) {

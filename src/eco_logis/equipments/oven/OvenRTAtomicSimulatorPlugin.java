@@ -75,13 +75,13 @@ public class OvenRTAtomicSimulatorPlugin
         Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
 
-        Set<String> submodels = new HashSet<String>();
+        Set<String> submodels = new HashSet<>();
         submodels.add(OvenUserSILModel.URI);
         submodels.add(OvenStateModel.URI);
         submodels.add(OvenTemperatureSILModel.URI);
 
         Map<Class<? extends EventI>, ReexportedEvent> reexported = null;
-        Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
+        Map<EventSource, EventSink[]> connections = new HashMap<>();
 
         atomicModelDescriptors.put(
                 OvenUserSILModel.URI,
