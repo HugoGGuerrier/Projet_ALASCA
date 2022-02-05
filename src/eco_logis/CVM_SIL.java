@@ -69,16 +69,12 @@ public class CVM_SIL
             // second 'false' that it must *not* be executed as a unit test.
             new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
 
-        /* TODO
         AbstractComponent.createComponent(
                 Oven.class.getCanonicalName(),
                 new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
-        */
+
         AbstractComponent.createComponent(
                 ElectricMeter.class.getCanonicalName(),
-                // the first actual parameter tells the component to create
-                // a SIL simulation architecture for integration test and the
-                // second 'false' that it must *not* be executed as a unit test.
                 new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
 
         AbstractComponent.createComponent(

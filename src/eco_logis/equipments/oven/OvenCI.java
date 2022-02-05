@@ -21,24 +21,28 @@ public interface OvenCI
         extends OfferedCI, RequiredCI, OvenImplementationI
 {
 
-    /** @see OvenImplementationI#isBaking() */
+    /** @see OvenImplementationI#isOn() */
     @Override
-    boolean isBaking() throws Exception;
+    boolean isOn() throws Exception;
 
-    /** @see OvenImplementationI#startBaking() */
+    /** @see OvenImplementationI#powerOn() */
     @Override
-    void startBaking() throws Exception;
+    void powerOn() throws Exception;
 
-    /** @see OvenImplementationI#stopBaking() */
+    /** @see OvenImplementationI#powerOff() */
     @Override
-    void stopBaking() throws Exception;
+    void powerOff() throws Exception;
 
-    /** @see OvenImplementationI#getTemperature() */
+    /** @see OvenImplementationI#getCurrentTemperature() */
     @Override
-    double getTemperature() throws Exception;
+    double getCurrentTemperature() throws Exception;
 
-    /** @see OvenImplementationI#setTemperature(double) */
+    /** @see OvenImplementationI#getTargetTemperature() */
     @Override
-    void setTemperature(double temp) throws Exception;
+    double getTargetTemperature() throws Exception;
+
+    /** @see OvenImplementationI#setTargetTemperature(double) */
+    @Override
+    void setTargetTemperature(double temp) throws Exception;
 
 }

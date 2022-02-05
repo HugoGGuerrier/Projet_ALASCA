@@ -4,7 +4,6 @@ import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
-import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithDE;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
@@ -17,6 +16,8 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * The OvenTemperatureModel defines a simulation model for the temperature inside the oven.
+ *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
  */
@@ -32,11 +33,11 @@ public class OvenTemperatureModel
 
 
     /** State of the oven */
-    public static enum State {
-        /** Oven is on and heating to its goal temperature */
-        ON,
-        /** Oven is off and getting to room temperature */
-        OFF
+    public enum State {
+        /** Oven is heating */
+        HEATING,
+        /** Oven is not heating */
+        NOT_HEATING
     }
 
     private static final long serialVersionUID = 1L;
@@ -63,17 +64,18 @@ public class OvenTemperatureModel
     /** Current temperature in the oven (°C) */
     protected double currentTemperature;
 
-    /** Current goal temperature of the oven (°C) */
-    protected double goalTemperature;
+    /** Target temperature of the oven (°C) */
+    protected double targetTemperature;
 
     /** Current state of the oven */
-    protected OvenTemperatureModel.State currentState = OvenTemperatureModel.State.OFF;
+    protected OvenTemperatureModel.State currentState = State.NOT_HEATING;
 
     /** Time that has passed since the first temperature */
     protected Time temperatureTime;
 
 
     // ========== Constructors ==========
+
 
     /**
      * Create a <code>OvenTemperatureModel</code> instance
@@ -87,25 +89,14 @@ public class OvenTemperatureModel
             String uri,
             TimeUnit simulatedTimeUnit,
             SimulatorI simulationEngine
-    ) throws Exception
-    {
+    ) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
         this.integrationStep = new Duration(STEP, simulatedTimeUnit);
         this.setLogger(new StandardLogger());
     }
 
 
-    // ========== Class methods ===========
-
-
-    /**
-     * Set the goal temperature of the oven
-     *
-     * @param goalTemperature the goal temperature
-     */
-    public void setGoalTemperature(double goalTemperature) {
-        this.goalTemperature = goalTemperature;
-    }
+    // ========== Getters & setters ===========
 
 
     /**
@@ -134,7 +125,7 @@ public class OvenTemperatureModel
     @Override
     public void initialiseState(Time initialTime) {
         super.initialiseState(initialTime);
-        this.currentState = OvenTemperatureModel.State.OFF;
+        this.currentState = State.NOT_HEATING;
 
         this.toggleDebugMode();
         this.logMessage("simulation begins.\n");
@@ -147,20 +138,16 @@ public class OvenTemperatureModel
 
         this.temperatureTime = startTime;
         this.currentTemperature = ROOM_TEMPERATURE;
-        this.goalTemperature = 100.0;
+        this.targetTemperature = 150.0;
     }
 
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output() */
     @Override
-    public ArrayList<EventI> output()
-    {
-        return null;
-    }
+    public ArrayList<EventI> output() { return null; }
 
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance() */
     @Override
-    public Duration timeAdvance()
-    {
+    public Duration timeAdvance() {
         return this.integrationStep;
     }
 
@@ -170,15 +157,15 @@ public class OvenTemperatureModel
         this.temperatureTime = this.temperatureTime.add(elapsedTime);
 
         // Adjust temperature (linear)
-        if(this.currentTemperature < this.goalTemperature) {
+        if(this.currentTemperature < this.targetTemperature) {
             double duration = elapsedTime.getSimulatedDuration();
             this.currentTemperature = Math.min(
                     this.currentTemperature + (duration/60) * TEMPERATURE_DELTA,
-                    this.goalTemperature);
+                    this.targetTemperature);
         }
 
         // Tracing
-        String mark = this.currentState == OvenTemperatureModel.State.ON ? " (h)" : " (-)";
+        String mark = this.currentState == State.HEATING ? " (h)" : " (-)";
         StringBuffer message = new StringBuffer();
         message.append(this.temperatureTime);
         message.append(mark);
@@ -196,9 +183,7 @@ public class OvenTemperatureModel
         // Get the vector of current external events
         ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
 
-        /* When this method is called, there is at least one external event,
-           and for the oven model, there will be exactly one by construction. */
-        assert currentEvents != null && currentEvents.size() == 1; // TODO
+        assert currentEvents != null && currentEvents.size() == 1;
 
         Event ce = (Event) currentEvents.get(0);
         assert ce instanceof AbstractOvenEvent;
@@ -208,11 +193,6 @@ public class OvenTemperatureModel
         sb.append(".\n");
         this.logMessage(sb.toString());
 
-        /* The next call will update the current state of the heater and if
-           this state has changed, it will toggle the boolean
-           consumptionHasChanged, which in turn will trigger an immediate
-           internal transition to update the current intensity of the
-           heater electricity consumption. */
         ce.executeOn(this);
 
         super.userDefinedExternalTransition(elapsedTime);

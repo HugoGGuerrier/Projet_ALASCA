@@ -15,21 +15,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The class <code>OvenUserModel</code> defines a very simple user
- * model for the oven.
- *
- * <p><strong>Description</strong></p>
- * <p>
- * This model is meant to illustrate how to program user SIL models that
- * triggers code executions in the owner component to simulate user actions.
- * Using simulation models to do so ensure the time coherence between the
- * real time simulation of SIL models and the code executions.
- * </p>
- *
- * <p><strong>Invariant</strong></p>
- * <pre>
- * invariant	true
- * </pre>
+ * This class represents the user action for the oven
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
@@ -41,8 +27,6 @@ public class OvenUserSILModel
     // ========== Macros ==========
 
 
-    private static final long serialVersionUID = 1L;
-
     /** URI for an instance model; works as long as only one instance is created */
     public static final String URI = OvenUserSILModel.class.getSimpleName();
 
@@ -50,7 +34,7 @@ public class OvenUserSILModel
     public static final String STEP_MEAN_DURATION_RUNPNAME = URI + ":STEP_MEAN_DURATION";
 
     /** Time interval between event outputs */
-    protected static double STEP_MEAN_DURATION = 2.0;
+    protected static double STEP_MEAN_DURATION = 10.0;
 
     /** Last step in the test scenario */
     protected static final int LAST_STEP = 2;
@@ -75,25 +59,7 @@ public class OvenUserSILModel
     // ========== Constructors ==========
 
 
-    /**
-     * Create an oven user MIL model instance.
-     *
-     * <p><strong>Contract</strong></p>
-     * <pre>
-     * pre	{@code simulatedTimeUnit != null}
-     * pre	{@code simulationEngine != null implies simulationEngine instanceof AtomicEngine}
-     * post	{@code getURI() != null}
-     * post	{@code uri != null implies getURI().equals(uri)}
-     * post	{@code getSimulatedTimeUnit().equals(simulatedTimeUnit)}
-     * post	{@code simulationEngine != null implies getSimulationEngine().equals(simulationEngine)}
-     * post	{@code !isDebugModeOn()}
-     * </pre>
-     *
-     * @param uri				URI of the model.
-     * @param simulatedTimeUnit	time unit used for the simulation time.
-     * @param simulationEngine	simulation engine to which the model is attached.
-     * @throws Exception		<i>to do</i>.
-     */
+    /** @see AtomicModel#AtomicModel(String, TimeUnit, SimulatorI) */
     public OvenUserSILModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
         super(uri, simulatedTimeUnit, simulationEngine);
         this.rg = new RandomDataGenerator();
@@ -103,19 +69,7 @@ public class OvenUserSILModel
     // ========== Class methods ==========
 
 
-    /**
-     * Generate the next event in the test scenario; current implementation
-     * cycles through {@code SwitchOnOven} and {@code SwitchOffOven} in this order
-     * at a random time interval following a gaussian distribution with
-     * mean {@code STEP_MEAN_DURATION} and standard deviation
-     * {@code STEP_MEAN_DURATION/2.0}.
-     *
-     * <p><strong>Contract</strong></p>
-     * <pre>
-     * pre	true		// no precondition.
-     * post	true		// no postcondition.
-     * </pre>
-     */
+    /** Generate the duration to the next event */
     protected void generateNextEvent() {
         if (this.currentStep <= LAST_STEP) {
             double delay = Math.max(
@@ -139,6 +93,7 @@ public class OvenUserSILModel
         if (simParams.containsKey(STEP_MEAN_DURATION_RUNPNAME)) {
             STEP_MEAN_DURATION = (double) simParams.get(STEP_MEAN_DURATION_RUNPNAME);
         }
+
         // Retrieve the reference to the owner component that must be passed as a simulation run parameter
         assert simParams.containsKey(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         this.owner = (Oven) simParams.get(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
@@ -182,34 +137,29 @@ public class OvenUserSILModel
 
         StringBuffer message = new StringBuffer(this.uri);
 
-        /* Simple way to implement a test scenario
-        notice that the simulation model will drive code executions so
-        that they occur at coherent times compared to the real time
-        simulation; SIL simulation are executed in real time (possibly
-        accelerated) to get such coherence between code and simulation
-        executions */
+        // Switch the case of the transition
         switch (this.currentStep) {
 
             case 1:
                 this.owner.runTask(o -> {
                     try {
-                        ((Oven) o).startBaking();
+                        ((Oven) o).powerOn();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                message.append(" executes the operation startBaking.\n");
+                message.append(" executes the operation powerOn\n");
                 break;
 
             case 2:
                 this.owner.runTask(o -> {
                     try {
-                        ((Oven) o).stopBaking();
+                        ((Oven) o).powerOff();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
-                message.append(" executes the operation stopBaking.\n");
+                message.append(" executes the operation powerOff\n");
                 break;
 
             default:

@@ -57,10 +57,10 @@ public class OvenUnitTester
     // ========== Test methods ==========
 
 
-    protected void testIsBaking() {
-        logMessage("Test isBaking()...");
+    protected void testIsOn() {
+        logMessage("Test isOn()...");
         try {
-            assertFalse(ovenOutboundPort.isBaking());
+            assertFalse(ovenOutboundPort.isOn());
         } catch (Exception e) {
             logMessage("... FAILED!");
             fail(e);
@@ -68,17 +68,18 @@ public class OvenUnitTester
         logMessage("... Done!");
     }
 
-    protected void testStartStopBaking() {
+    protected void testPowerOnOff() {
         logMessage("Test startBaking() and stopBaking()...");
         try {
-            ovenOutboundPort.getTemperature();
-            ovenOutboundPort.setTemperature(107.7);
-            ovenOutboundPort.getTemperature();
-            assertFalse(ovenOutboundPort.isBaking());
-            ovenOutboundPort.startBaking();
-            assertTrue(ovenOutboundPort.isBaking());
-            ovenOutboundPort.stopBaking();
-            assertFalse(ovenOutboundPort.isBaking());
+            assertFalse(ovenOutboundPort.isOn());
+            ovenOutboundPort.powerOn();
+            assertTrue(ovenOutboundPort.isOn());
+            ovenOutboundPort.getCurrentTemperature();
+            ovenOutboundPort.getTargetTemperature();
+            ovenOutboundPort.setTargetTemperature(107.7);
+            ovenOutboundPort.getTargetTemperature();
+            ovenOutboundPort.powerOff();
+            assertFalse(ovenOutboundPort.isOn());
         } catch (Exception e) {
             logMessage("... FAILED!");
             fail(e);
@@ -88,8 +89,8 @@ public class OvenUnitTester
 
     protected void runAllTests() {
         logMessage("Starting test suite...");
-        testIsBaking();
-        testStartStopBaking();
+        testIsOn();
+        testPowerOnOff();
         logMessage("All tests passed !");
     }
 

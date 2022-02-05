@@ -8,7 +8,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventInformationI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 
 /**
- * This class represent a switching off event for the oven
+ * This class represent a switching off event for the oven.
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
@@ -39,19 +39,12 @@ public class SwitchOffOven
     /** @see AbstractOvenEvent#executeOn(AtomicModel) */
     @Override
     public void executeOn(AtomicModel model) {
-        if(model instanceof  OvenElectricityModel) {
-            OvenElectricityModel m = (OvenElectricityModel) model;
-            if (m.getState() == OvenElectricityModel.State.ON) {
-                m.setState(OvenElectricityModel.State.OFF);
-                m.toggleConsumptionHasChanged();
-            }
-        } else if (model instanceof OvenTemperatureModel) {
-            OvenTemperatureModel m = (OvenTemperatureModel) model;
-            if (m.getState() == OvenTemperatureModel.State.ON) {
-                m.setState(OvenTemperatureModel.State.OFF);
-                m.setGoalTemperature(OvenTemperatureModel.ROOM_TEMPERATURE);
-            }
-        } else assert false;
+        assert model instanceof OvenElectricityModel;
+        OvenElectricityModel m = (OvenElectricityModel) model;
+        if (m.getState() != OvenElectricityModel.State.OFF) {
+            m.setState(OvenElectricityModel.State.OFF);
+            m.toggleConsumptionHasChanged();
+        }
     }
 
 }

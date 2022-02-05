@@ -46,34 +46,40 @@ public class OvenOutboundPort
     // ========== Override methods ==========
 
 
-    /** @see OvenCI#isBaking() */
+    /** @see OvenCI#isOn() */
     @Override
-    public boolean isBaking() throws Exception {
-        return ((OvenCI) getConnector()).isBaking();
+    public boolean isOn() throws Exception {
+        return ((OvenCI) getConnector()).isOn();
     }
 
-    /** @see OvenCI#startBaking() */
+    /** @see OvenCI#powerOn() */
     @Override
-    public void startBaking() throws Exception {
-        ((OvenCI) getConnector()).startBaking();
+    public void powerOn() throws Exception {
+        ((OvenCI) getConnector()).powerOn();
     }
 
-    /** @see OvenCI#stopBaking() */
+    /** @see OvenCI#powerOff() */
     @Override
-    public void stopBaking() throws Exception {
-        ((OvenCI) getConnector()).stopBaking();
+    public void powerOff() throws Exception {
+        ((OvenCI) getConnector()).powerOff();
     }
 
-    /** @see OvenCI#getTemperature() */
+    /** @see OvenCI#getCurrentTemperature() */
     @Override
-    public double getTemperature() throws Exception {
-        return ((OvenCI) getConnector()).getTemperature();
+    public double getCurrentTemperature() throws Exception {
+        return ((OvenCI) getConnector()).getCurrentTemperature();
     }
 
-    /** @see OvenCI#setTemperature(double) */
+    /** @see OvenCI#getTargetTemperature() */
     @Override
-    public void setTemperature(double temp) throws Exception {
-        ((OvenCI) getConnector()).setTemperature(temp);
+    public double getTargetTemperature() throws Exception {
+        return ((OvenCI) getConnector()).getTargetTemperature();
+    }
+
+    /** @see OvenCI#setTargetTemperature(double) */
+    @Override
+    public void setTargetTemperature(double targetTemp) throws Exception {
+        ((OvenCI) getConnector()).setTargetTemperature(targetTemp);
     }
 
 }

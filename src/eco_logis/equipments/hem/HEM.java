@@ -5,6 +5,8 @@ import eco_logis.equipments.electric_meter.ElectricMeter;
 import eco_logis.equipments.electric_meter.ElectricMeterOutboundPort;
 import eco_logis.equipments.hem.connectors.CryptoMinerConnector;
 import eco_logis.equipments.hem.connectors.ElectricMeterConnector;
+import eco_logis.equipments.hem.connectors.OvenConnector;
+import eco_logis.equipments.oven.Oven;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
@@ -22,7 +24,8 @@ import java.util.concurrent.TimeUnit;
  * @author Hugo GUERRIER
  */
 public class HEM
-        extends AbstractComponent {
+    extends AbstractComponent
+{
 
     // ========== Internal Enums and class ==========
 
@@ -40,26 +43,17 @@ public class HEM
     // ========== Attributes ==========
 
 
-    /**
-     * Period at which the HEM looks at the current consumption and makes
-     * energy management decisions
-     */
+    /** Period at which the HEM looks at the current consumption and makes
+     * energy management decisions */
     protected static final long MANAGEMENT_PERIOD = 1;
 
-    /**
-     * Time unit to interpret {@code MANAGEMENT_PERIOD}
-     */
-    protected static final TimeUnit MANAGEMENT_PERIOD_TIME_UNIT =
-            TimeUnit.SECONDS;
+    /** Time unit to interpret {@code MANAGEMENT_PERIOD} */
+    protected static final TimeUnit MANAGEMENT_PERIOD_TIME_UNIT = TimeUnit.SECONDS;
 
-    /**
-     * true if the component executes in a unit test mode, false otherwise
-     */
+    /** true if the component executes in a unit test mode, false otherwise */
     protected boolean executesAsUnitTest;
 
-    /**
-     * Future allowing to act upon the management task
-     */
+    /** Future allowing to act upon the management task */
     protected Future<?> managementTaskFuture;
 
     private static final List<SuspensionEquipmentOutboundPort> suspOPs = new LinkedList<>();
@@ -69,15 +63,14 @@ public class HEM
     private static final List<StorageEquipmentOutboundPort> storOPs = new LinkedList<>();
     private static final List<UnpredictableProductionEquipmentOutboundPort> unpredOPs = new LinkedList<>();
 
-    /**
-     * Outbound port to call the electric meter
-     */
+    /** Outbound port to call the electric meter */
     protected ElectricMeterOutboundPort elecMeterOP;
 
-    /**
-     * Outbound port to call the crypto miner
-     */
+    /** Outbound port to call the crypto miner */
     protected SuspensionEquipmentOutboundPort cryptoOP;
+
+    /** Outbound port to call the oven */
+    protected StandardEquipmentOutboundPort ovenOP;
 
 
     // ========== Constructors ==========
@@ -199,9 +192,7 @@ public class HEM
 
     // ========== Lifecycle methods ==========
 
-    /**
-     * @see fr.sorbonne_u.components.AbstractComponent#start()
-     */
+    /** @see fr.sorbonne_u.components.AbstractComponent#start() */
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
@@ -222,14 +213,19 @@ public class HEM
                     this.cryptoOP.getPortURI(),
                     CryptoMiner.INBOUND_PORT_URI,
                     CryptoMinerConnector.class.getCanonicalName());
+
+            this.ovenOP = new StandardEquipmentOutboundPort(this);
+            this.ovenOP.publishPort();
+            this.doPortConnection(
+                    this.ovenOP.getPortURI(),
+                    Oven.INBOUND_PORT_URI,
+                    OvenConnector.class.getCanonicalName());
         } catch (Exception e) {
             throw new ComponentStartException(e);
         }
     }
 
-    /**
-     * @see AbstractComponent#execute()
-     */
+    /** @see AbstractComponent#execute() */
     @Override
     public synchronized void execute() throws Exception {
         if (this.executesAsUnitTest) {
@@ -257,6 +253,15 @@ public class HEM
                     this.cryptoOP.switchOff() + "\n");
             this.traceMessage("Crypto miner is on? " +
                     this.cryptoOP.on() + "\n");
+
+            this.traceMessage("Oven is on? " +
+                    this.ovenOP.on() + "\n");
+            this.traceMessage("Oven is switched on? " +
+                    this.ovenOP.switchOn() + "\n");
+            this.traceMessage("Oven is switched off? " +
+                    this.ovenOP.switchOff() + "\n");
+            this.traceMessage("Oven is on? " +
+                    this.ovenOP.on() + "\n");
         } else {
             final HEM hem = this;
             this.managementTaskFuture =
@@ -294,6 +299,7 @@ public class HEM
 
         this.doPortDisconnection(this.elecMeterOP.getPortURI());
         this.doPortDisconnection(this.cryptoOP.getPortURI());
+        this.doPortDisconnection(this.ovenOP.getPortURI());
 
         super.finalise();
     }
@@ -313,6 +319,7 @@ public class HEM
             */
             this.elecMeterOP.unpublishPort();
             this.cryptoOP.unpublishPort();
+            this.ovenOP.unpublishPort();
 
         } catch (Exception e) {
             throw new ComponentShutdownException(e);

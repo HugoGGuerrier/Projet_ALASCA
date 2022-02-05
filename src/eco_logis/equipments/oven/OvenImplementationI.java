@@ -21,76 +21,88 @@ public interface OvenImplementationI
 {
 
     /**
-     * Turn on the oven, start baking
+     * Get if the oven is on
      *
      * <p><strong>Contract</strong></p>
      *
      * <pre>
-     * pre	{@code !isBaking()}
-     * post	{@code isBaking()}
+     * pre  true
+     * post true
      * </pre>
      *
+     * @return If the oven is on
      * @throws Exception TODO
      */
-    void startBaking() throws Exception;
+    boolean isOn() throws Exception;
 
     /**
-     * Turn off the oven, stop baking
+     * Power on the oven
      *
      * <p><strong>Contract</strong></p>
      *
      * <pre>
-     * pre	{@code isBaking()}
-     * post	{@code !isBaking()}
+     * pre  {@code !isOn()}
+     * post {@code isOn()}
      * </pre>
      *
      * @throws Exception TODO
      */
-    void stopBaking() throws Exception;
+    void powerOn() throws Exception;
 
     /**
-     * Get the current state of the oven (baking or not)
+     * Power off the oven
      *
      * <p><strong>Contract</strong></p>
      *
      * <pre>
-     * pre	true
-     * post	true
+     * pre  {@code isOn()}
+     * post {@code !isOn()}
      * </pre>
      *
-     * @return true if the oven is on/baking, false otherwise
      * @throws Exception TODO
      */
-    boolean isBaking() throws Exception;
+    void powerOff() throws Exception;
 
     /**
      * Get the oven temperature (Celsius degrees °C)
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
-     * pre	{@code isBaking()}
+     * pre	true
      * post	true
      * </pre>
      *
-     * @return the temperature (°C)
+     * @return the temperature of the oven (°C)
      * @throws Exception TODO
      */
-    double getTemperature() throws Exception;
+    double getCurrentTemperature() throws Exception;
+
+    /**
+     * Get the oven target temperature (Celsius degrees °C)
+     *
+     * <p><strong>Contract</strong></p>
+     * <pre>
+     * pre	true
+     * post	true
+     * </pre>
+     *
+     * @return the target temperature of the oven (°C)
+     * @throws Exception TODO
+     */
+    double getTargetTemperature() throws Exception;
 
     /**
      * Set the oven temperature to the given temperature (Celsius degrees °C)
      *
      * <p><strong>Contract</strong></p>
-     *
      * <pre>
      * pre	{@code isBaking()}
      * post	true
      * </pre>
      *
-     * @param temp the temperature (°C)
+     * @param targetTemp the target temperature of the oven (°C)
      * @throws Exception TODO
      */
-    void setTemperature(double temp) throws Exception;
+    void setTargetTemperature(double targetTemp) throws Exception;
 
 }

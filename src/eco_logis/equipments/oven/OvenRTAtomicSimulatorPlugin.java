@@ -48,6 +48,9 @@ public class OvenRTAtomicSimulatorPlugin
     /** Name used to pass the owner component reference as simulation parameter. */
     public static final String OWNER_REFERENCE_NAME = "OCRN";
 
+    /** Name for room temperature */
+    public static final String ROOM_TEMPERATURE = "room-temp";
+
 
     // ========== Class methods ==========
 

@@ -3,9 +3,7 @@ package eco_logis.equipments.oven.sil;
 import eco_logis.equipments.oven.Oven;
 import eco_logis.equipments.oven.OvenRTAtomicSimulatorPlugin;
 import eco_logis.equipments.oven.mil.OvenElectricityModel;
-import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
-import eco_logis.equipments.oven.mil.events.SwitchOffOven;
-import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.oven.mil.events.*;
 import fr.sorbonne_u.components.cyphy.plugins.devs.utils.StandardComponentLogger;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -50,10 +48,14 @@ import java.util.concurrent.TimeUnit;
  */
 @ModelExternalEvents(
         imported = {
+                HeatOven.class,
+                DoNotHeatOven.class,
                 SwitchOnOven.class,
                 SwitchOffOven.class
         },
         exported = {
+                HeatOven.class,
+                DoNotHeatOven.class,
                 SwitchOnOven.class,
                 SwitchOffOven.class
         }
@@ -74,8 +76,8 @@ public class OvenStateModel
     // ========== Attributes ==========
 
 
-    /** If the oven is currently on (baking) */
-    protected OvenElectricityModel.State isBaking;
+    /** The current state of the oven */
+    protected OvenElectricityModel.State currentState;
 
     /** Last received event or null if none */
     protected AbstractOvenEvent lastReceived;
@@ -130,7 +132,7 @@ public class OvenStateModel
         super.initialiseState(initialTime);
 
         this.lastReceived = null;
-        this.isBaking = OvenElectricityModel.State.OFF;
+        this.currentState = OvenElectricityModel.State.OFF;
 
         this.toggleDebugMode();
         this.logMessage("simulation begins.\n");

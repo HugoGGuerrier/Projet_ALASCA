@@ -11,6 +11,8 @@ import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
 import eco_logis.equipments.hem.mil.HEMCoupledModel;
 import eco_logis.equipments.oven.Oven;
 import eco_logis.equipments.oven.mil.OvenCoupledModel;
+import eco_logis.equipments.oven.mil.events.DoNotHeatOven;
+import eco_logis.equipments.oven.mil.events.HeatOven;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
@@ -205,7 +207,7 @@ public class HEM_SIL_Supervisor
                         },
                         TimeUnit.SECONDS,
                         CryptoMiner.REFLECTION_INBOUND_PORT_URI));
-        /* TODO
+
         // The oven simulation model held by the Oven component
         atomicModelDescriptors.put(
                 OvenCoupledModel.URI,
@@ -214,10 +216,11 @@ public class HEM_SIL_Supervisor
                         new Class[]{},
                         new Class[]{
                                 SwitchOnOven.class,
-                                SwitchOffOven.class},
+                                SwitchOffOven.class,
+                                HeatOven.class,
+                                DoNotHeatOven.class},
                         TimeUnit.SECONDS,
                         Oven.REFLECTION_INBOUND_PORT_URI));
-        */
 
 
         // The electric meter simulation model held by the ElectricMeter component
@@ -229,11 +232,12 @@ public class HEM_SIL_Supervisor
                                 SwitchOnCryptoMiner.class,
                                 SwitchOffCryptoMiner.class,
                                 MineOnCryptoMiner.class,
-                                MineOffCryptoMiner.class
-                                /* TODO
+                                MineOffCryptoMiner.class,
+
                                 SwitchOnOven.class,
                                 SwitchOffOven.class,
-                                 */
+                                HeatOven.class,
+                                DoNotHeatOven.class
                         },
                         new Class[]{},
                         TimeUnit.SECONDS,
@@ -241,7 +245,7 @@ public class HEM_SIL_Supervisor
 
         Set<String> submodels = new HashSet<String>();
         submodels.add(CryptoMinerCoupledModel.URI);
-        // TODO submodels.add(OvenCoupledModel.URI);
+        submodels.add(OvenCoupledModel.URI);
         submodels.add(ElectricMeterCoupledModel.URI);
 
         Map<EventSource, EventSink[]> connections = new HashMap<EventSource,EventSink[]>();
@@ -272,7 +276,7 @@ public class HEM_SIL_Supervisor
                 new EventSink[] {
                         new EventSink(ElectricMeterCoupledModel.URI, MineOffCryptoMiner.class)
                 });
-        /* TODO
+
         connections.put(
                 new EventSource(OvenCoupledModel.URI, SwitchOnOven.class),
                 new EventSink[] {
@@ -283,7 +287,17 @@ public class HEM_SIL_Supervisor
                 new EventSink[] {
                         new EventSink(ElectricMeterCoupledModel.URI, SwitchOffOven.class)
                 });
-         */
+        connections.put(
+                new EventSource(OvenCoupledModel.URI, HeatOven.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, HeatOven.class)
+                });
+        connections.put(
+                new EventSource(OvenCoupledModel.URI, DoNotHeatOven.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, DoNotHeatOven.class)
+                });
+
 
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
         coupledModelDescriptors.put(

@@ -38,12 +38,6 @@ public class OvenTemperatureSILModel
     extends OvenTemperatureModel
 {
 
-    // ========== Macros ==========
-
-
-    private static final long serialVersionUID = 1L;
-
-
     // ========== Attributes ==========
 
 

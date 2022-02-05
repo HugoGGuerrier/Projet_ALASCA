@@ -31,7 +31,7 @@ public class MineOffCryptoMiner
     /** @see AbstractCryptoMinerEvent#hasPriorityOver(EventI) */
     @Override
     public boolean hasPriorityOver(EventI e) {
-        // Only more prior switch of
+        // Only more prior switch off
         return !(e instanceof MineOnCryptoMiner || e instanceof SwitchOnCryptoMiner);
     }
 

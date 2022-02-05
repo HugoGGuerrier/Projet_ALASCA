@@ -2,6 +2,7 @@ package eco_logis.equipments.oven;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
+import fr.sorbonne_u.components.cyphy.hem2021e1.equipments.heater.HeaterImplementationI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
 /**
@@ -43,56 +44,59 @@ public class OvenInboundPort
     // ========== Override methods ==========
 
 
-    /** @see OvenCI#isBaking() */
+    /** @see OvenCI#isOn() */
     @Override
-    public boolean isBaking() throws Exception {
+    public boolean isOn() throws Exception {
         return this.getOwner().handleRequest(
-            o -> ((Oven) o).isBaking()
+            o -> ((Oven) o).isOn()
         );
     }
 
-    /** @see OvenCI#startBaking() */
+    /** @see OvenCI#powerOn() */
     @Override
-    public void startBaking() throws Exception {
+    public void powerOn() throws Exception {
         this.getOwner().handleRequest(
             o -> {
-                ((Oven) o).startBaking();
+                ((Oven) o).powerOn();
                 return null;
             }
         );
     }
 
-    /** @see OvenCI#stopBaking() */
+    /** @see OvenCI#powerOff() */
     @Override
-    public void stopBaking() throws Exception {
+    public void powerOff() throws Exception {
         this.getOwner().handleRequest(
             o -> {
-                ((Oven) o).stopBaking();
+                ((Oven) o).powerOff();
                 return null;
             }
         );
     }
 
-    /** @see OvenCI#getTemperature() */
+    /** @see OvenCI#getCurrentTemperature() */
     @Override
-    public double getTemperature() throws Exception {
+    public double getCurrentTemperature() throws Exception {
         return this.getOwner().handleRequest(
-            o -> ((Oven) o).getTemperature()
+                o -> ((Oven) o).getCurrentTemperature()
         );
     }
 
-    /** @see OvenCI#setTemperature(double) */
+    /** @see OvenCI#getTargetTemperature() */
     @Override
-    public void setTemperature(double temp) throws Exception {
+    public double getTargetTemperature() throws Exception {
+        return this.getOwner().handleRequest(
+                o -> ((Oven) o).getTargetTemperature()
+        );
+    }
+
+    /** @see OvenCI#setTargetTemperature(double) */
+    @Override
+    public void setTargetTemperature(double targetTemp) throws Exception {
         this.getOwner().handleRequest(
-            new AbstractComponent.AbstractService<Void>() {
-                @Override
-                public Void call() throws Exception {
-                ((OvenImplementationI)
-                    this.getServiceOwner()).setTemperature(temp);
-                return null;
+                o -> {	((HeaterImplementationI)o).setTargetTemperature(targetTemp);
+                    return null;
                 }
-            }
         );
     }
 

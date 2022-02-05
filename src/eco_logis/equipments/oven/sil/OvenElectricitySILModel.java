@@ -10,26 +10,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The class <code>OvenElectricitySILModel</code> extends the base
- * {@code OvenElectricityModel} to cater for its execution inside
- * the {@code Oven} component.
- *
- * <p><strong>Description</strong></p>
- * <p>
- * When executing MIL simulations, simulation models trace their actions by
- * printing messages using their own tracing service. When executed inside
- * components, it is better that the messages are printed using the component
- * trace service. To enable that, we use the {@code setSimulationRunParameters}
- * method to retrieve the reference on the component that is holding the
- * simulation model. Then, this reference can be used by a specific logger for
- * simulation models, {@code StandardComponentLogger}, that use the component
- * trace service rather than the standard simulation models tracing service.
- * </p>
- *
- * <p><strong>Invariant</strong></p>
- * <pre>
- * invariant	true
- * </pre>
+ * This class represent the SIL model for the electricity model in the oven
  *
  * @author Emilie SIAU
  * @author Hugo GUERRIER
@@ -37,12 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class OvenElectricitySILModel
     extends OvenElectricityModel
 {
-
-    // ========== Macros ==========
-
-
-    private static final long serialVersionUID = 1L;
-
 
     // ========== Attributes ==========
 

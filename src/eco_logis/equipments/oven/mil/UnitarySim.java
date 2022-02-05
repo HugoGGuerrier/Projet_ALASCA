@@ -1,5 +1,7 @@
 package eco_logis.equipments.oven.mil;
 
+import eco_logis.equipments.oven.mil.events.DoNotHeatOven;
+import eco_logis.equipments.oven.mil.events.HeatOven;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
@@ -95,6 +97,24 @@ public class UnitarySim {
                     new EventSink[] {
                             new EventSink(OvenElectricityModel.URI, SwitchOffOven.class),
                             new EventSink(OvenTemperatureModel.URI, SwitchOffOven.class)
+                    }
+            );
+
+            // Add the heat event connection
+            connections.put(
+                    new EventSource(OvenUserModel.URI, HeatOven.class),
+                    new EventSink[] {
+                            new EventSink(OvenElectricityModel.URI, HeatOven.class),
+                            new EventSink(OvenTemperatureModel.URI, HeatOven.class)
+                    }
+            );
+
+            // Add the do not heat event connection
+            connections.put(
+                    new EventSource(OvenUserModel.URI, DoNotHeatOven.class),
+                    new EventSink[] {
+                            new EventSink(OvenElectricityModel.URI, DoNotHeatOven.class),
+                            new EventSink(OvenTemperatureModel.URI, DoNotHeatOven.class)
                     }
             );
 

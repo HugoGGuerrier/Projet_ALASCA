@@ -1,8 +1,6 @@
 package eco_logis.equipments.oven.mil;
 
-import eco_logis.equipments.oven.mil.events.AbstractOvenEvent;
-import eco_logis.equipments.oven.mil.events.SwitchOffOven;
-import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.oven.mil.events.*;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -23,7 +21,10 @@ import java.util.concurrent.TimeUnit;
  */
 @ModelExternalEvents(imported = {
         SwitchOnOven.class,
-        SwitchOffOven.class})
+        SwitchOffOven.class,
+        HeatOven.class,
+        DoNotHeatOven.class
+})
 public class OvenElectricityModel
     extends AtomicHIOA
 {
@@ -33,17 +34,22 @@ public class OvenElectricityModel
 
     /** State of the oven */
     public enum State {
-        /** Oven is on and heating to its goal temperature */
+        /** Oven is on but not heating */
         ON,
-        /** Oven is off and getting to room temperature (does not consume electricity) */
+        /** Oven is on and heating */
+        HEATING,
+        /** Oven is off */
         OFF
     }
 
     /** URI for an instance model; works as long as only one instance is created. */
     public static final String URI = OvenElectricityModel.class.getSimpleName();
 
-    /** Energy consumption (in Watts) of the oven */
-    public static double AVERAGE_CONSUMPTION = 2000.0; // Watts
+    /** Energy consumption (in Watts) of the heating oven */
+    public static double HEATING_CONSUMPTION = 2000.0;
+
+    /** Energy consumption (in Watts) of the not heating oven */
+    public static double NOT_HEATING_CONSUMPTION = 50.0;
 
 
     // ========== Attributes ==========
@@ -53,7 +59,7 @@ public class OvenElectricityModel
     @ExportedVariable(type = Double.class)
     protected final Value<Double> currentConsumption = new Value<>(this, 0.0);
 
-    /** Current state (OFF,ON) of the oven */
+    /** Current state (OFF, ON, HEATING) of the oven */
     protected OvenElectricityModel.State currentState = OvenElectricityModel.State.OFF;
 
     /** True when the electricity consumption of the oven has changed
@@ -85,7 +91,7 @@ public class OvenElectricityModel
     }
 
 
-    // ========== Class methods ==========
+    // ========== Getters & setters ==========
 
 
     /**
@@ -94,6 +100,7 @@ public class OvenElectricityModel
      * @param s the new state
      */
     public void	setState(OvenElectricityModel.State s) {
+        if(this.currentState == s) this.consumptionHasChanged = true;
         this.currentState = s;
     }
 
@@ -105,6 +112,10 @@ public class OvenElectricityModel
     public OvenElectricityModel.State getState() {
         return this.currentState;
     }
+
+
+    // ========== Class methods ==========
+
 
     /**
      * Toggle the value of the state of the model telling whether the
@@ -120,11 +131,7 @@ public class OvenElectricityModel
      *
      */
     public void toggleConsumptionHasChanged() {
-        if (this.consumptionHasChanged) {
-            this.consumptionHasChanged = false;
-        } else {
-            this.consumptionHasChanged = true;
-        }
+        this.consumptionHasChanged = !this.consumptionHasChanged;
     }
 
 
@@ -162,14 +169,9 @@ public class OvenElectricityModel
     /** @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance() */
     @Override
     public Duration timeAdvance() {
-        /* To trigger an internal transition after an external transition, the
-        variable consumptionHasChanged is set to true, hence when it is true
-        return a zero delay otherwise return an infinite delay (no internal
-        transition expected) */
         if (this.consumptionHasChanged) {
-            // After triggering the internal transition, toggle the boolean to prepare for the next internal transition.
             this.toggleConsumptionHasChanged();
-            return new Duration(0.0, this.getSimulatedTimeUnit());
+            return Duration.zero(this.getSimulatedTimeUnit());
         } else {
             return Duration.INFINITY;
         }
@@ -183,11 +185,15 @@ public class OvenElectricityModel
 
         // Set the current electricity consumption from the current state
         switch (this.currentState) {
+            case ON :
+                this.currentConsumption.v = NOT_HEATING_CONSUMPTION;
+                break;
+            case HEATING :
+                this.currentConsumption.v = HEATING_CONSUMPTION;
+                break;
             case OFF :
                 this.currentConsumption.v = 0.0;
                 break;
-            case ON :
-                this.currentConsumption.v = AVERAGE_CONSUMPTION;
         }
         this.currentConsumption.time = this.getCurrentStateTime();
 

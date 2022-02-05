@@ -18,6 +18,8 @@ import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
 import eco_logis.equipments.oven.mil.OvenElectricityModel;
 import eco_logis.equipments.oven.mil.OvenTemperatureModel;
 import eco_logis.equipments.oven.mil.OvenUserModel;
+import eco_logis.equipments.oven.mil.events.DoNotHeatOven;
+import eco_logis.equipments.oven.mil.events.HeatOven;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import eco_logis.equipments.power_bank.mil.PowerBankElectricityModel;
@@ -324,6 +326,20 @@ public class RunHEMSim {
                     new EventSink[] {
                             new EventSink(OvenElectricityModel.URI, SwitchOffOven.class),
                             new EventSink(OvenTemperatureModel.URI, SwitchOffOven.class)
+                    }
+            );
+            connections.put(
+                    new EventSource(OvenUserModel.URI, HeatOven.class),
+                    new EventSink[] {
+                            new EventSink(OvenElectricityModel.URI, HeatOven.class),
+                            new EventSink(OvenTemperatureModel.URI, HeatOven.class)
+                    }
+            );
+            connections.put(
+                    new EventSource(OvenUserModel.URI, DoNotHeatOven.class),
+                    new EventSink[] {
+                            new EventSink(OvenElectricityModel.URI, DoNotHeatOven.class),
+                            new EventSink(OvenTemperatureModel.URI, DoNotHeatOven.class)
                     }
             );
 

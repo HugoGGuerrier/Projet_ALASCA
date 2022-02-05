@@ -1,5 +1,7 @@
 package eco_logis.equipments.oven.mil;
 
+import eco_logis.equipments.oven.mil.events.DoNotHeatOven;
+import eco_logis.equipments.oven.mil.events.HeatOven;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import fr.sorbonne_u.devs_simulation.es.events.ES_EventI;
@@ -21,7 +23,9 @@ import java.util.concurrent.TimeUnit;
  */
 @ModelExternalEvents(exported = {
         SwitchOnOven.class,
-        SwitchOffOven.class
+        SwitchOffOven.class,
+        HeatOven.class,
+        DoNotHeatOven.class
 })
 public class OvenUserModel
     extends AtomicES_Model
@@ -97,7 +101,7 @@ public class OvenUserModel
             nextEvent = new SwitchOffOven(nextTime);
         }
         else if(current instanceof SwitchOffOven) {
-            nextEvent = new SwitchOnOven(nextTime,150 + Math.random() * 100);
+            nextEvent = new SwitchOnOven(nextTime);
         }
 
         // Schedule the event to be executed by this model
@@ -126,7 +130,7 @@ public class OvenUserModel
         // Compute the time of occurrence for the first event
         Time t = this.computeTimeOfNextEvent(this.getCurrentStateTime());
         // Schedule the first event
-        this.scheduleEvent(new SwitchOnOven(t, 180));
+        this.scheduleEvent(new SwitchOnOven(t));
         // Re-initialisation of the time of occurrence of the next event required here after adding a new event in the schedule.
         this.nextTimeAdvance = this.timeAdvance();
         this.timeOfNextEvent =

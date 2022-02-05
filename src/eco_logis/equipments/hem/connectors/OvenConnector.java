@@ -22,20 +22,20 @@ public class OvenConnector
     /** @see StandardEquipmentOutboundPort#on() */
     @Override
     public boolean on() throws Exception {
-        return ((OvenCI) offering).isBaking();
+        return ((OvenCI) offering).isOn();
     }
 
     /** @see StandardEquipmentOutboundPort#switchOn() */
     @Override
     public boolean switchOn() throws Exception {
-        ((OvenCI) offering).startBaking();
+        ((OvenCI) offering).powerOn();
         return true;
     }
 
     /** @see StandardEquipmentOutboundPort#switchOff() */
     @Override
     public boolean switchOff() throws Exception {
-        ((OvenCI) offering).stopBaking();
+        ((OvenCI) offering).powerOff();
         return false;
     }
 

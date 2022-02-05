@@ -13,34 +13,40 @@ public class OvenTestConnector
         implements OvenCI
 {
 
-    /** @see OvenCI#isBaking() */
+    /** @see OvenCI#isOn() () */
     @Override
-    public boolean isBaking() throws Exception {
-        return ((OvenCI) offering).isBaking();
+    public boolean isOn() throws Exception {
+        return ((OvenCI) offering).isOn();
     }
 
-    /** @see OvenCI#startBaking() */
+    /** @see OvenCI#powerOn() */
     @Override
-    public void startBaking() throws Exception {
-        ((OvenCI) offering).startBaking();
+    public void powerOn() throws Exception {
+        ((OvenCI) offering).powerOn();
     }
 
-    /** @see OvenCI#stopBaking() */
+    /** @see OvenCI#powerOff() */
     @Override
-    public void stopBaking() throws Exception {
-        ((OvenCI) offering).stopBaking();
+    public void powerOff() throws Exception {
+        ((OvenCI) offering).powerOff();
     }
 
-    /** @see OvenCI#getTemperature() */
+    /** @see OvenCI#getCurrentTemperature() */
     @Override
-    public double getTemperature() throws Exception {
-        return ((OvenCI) offering).getTemperature();
+    public double getCurrentTemperature() throws Exception {
+        return ((OvenCI) offering).getCurrentTemperature();
     }
 
-    /** @see OvenCI#setTemperature(double) */
+    /** @see OvenCI#getTargetTemperature() */
     @Override
-    public void setTemperature(double temp) throws Exception {
-        ((OvenCI) offering).setTemperature(temp);
+    public double getTargetTemperature() throws Exception {
+        return ((OvenCI) offering).getTargetTemperature();
+    }
+
+    /** @see OvenCI#setTargetTemperature(double) */
+    @Override
+    public void setTargetTemperature(double targetTemp) throws Exception {
+        ((OvenCI) offering).setTargetTemperature(targetTemp);
     }
 
 }
