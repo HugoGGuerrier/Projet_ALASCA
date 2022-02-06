@@ -87,6 +87,18 @@ public class ElectricMeterElectricityModel
     }
 
 
+    // ========== Getters ==========
+
+
+    public Double getCurrentProduction()  {
+        return currentProduction.v;
+    }
+
+    public Double getCurrentConsumption() {
+        return currentConsumption.v;
+    }
+
+
     // ========== Class methods ==========
 
 

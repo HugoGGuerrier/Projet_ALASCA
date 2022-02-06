@@ -1,9 +1,13 @@
 package eco_logis;
 
 import eco_logis.equipments.crypto_miner.CryptoMiner;
+import eco_logis.equipments.dishwasher.Dishwasher;
 import eco_logis.equipments.electric_meter.ElectricMeter;
+import eco_logis.equipments.generator.Generator;
 import eco_logis.equipments.hem.HEM;
 import eco_logis.equipments.oven.Oven;
+import eco_logis.equipments.power_bank.PowerBank;
+import eco_logis.equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
@@ -63,16 +67,29 @@ public class CVM_SIL
     @Override
     public void deploy() throws Exception {
         AbstractComponent.createComponent(
-            CryptoMiner.class.getCanonicalName(),
-            // the first actual parameter tells the component to create
-            // a SIL simulation architecture for integration test and the
-            // second 'false' that it must *not* be executed as a unit test.
-            new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
+                CryptoMiner.class.getCanonicalName(),
+                new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
 
+        AbstractComponent.createComponent(
+                Dishwasher.class.getCanonicalName(),
+                new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
+
+        AbstractComponent.createComponent(
+                Generator.class.getCanonicalName(),
+                new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
+/*
         AbstractComponent.createComponent(
                 Oven.class.getCanonicalName(),
                 new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
-
+*/
+        AbstractComponent.createComponent(
+                PowerBank.class.getCanonicalName(),
+                new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
+/*
+        AbstractComponent.createComponent(
+                WindTurbine.class.getCanonicalName(),
+                new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
+*/
         AbstractComponent.createComponent(
                 ElectricMeter.class.getCanonicalName(),
                 new Object[]{HEM_SIL_Supervisor.SIM_ARCHITECTURE_URI, false});
@@ -96,7 +113,7 @@ public class CVM_SIL
         try {
             CVM_SIL cvm = new CVM_SIL();
             // Given some margin to the component application execution compared to the simulation duration
-            long d = (long) (SIMULATION_DURATION*1000.0/ACC_FACTOR);
+            long d = (long) (SIMULATION_DURATION * 1000.0 / ACC_FACTOR);
             cvm.startStandardLifeCycle(d + 5000L);
             Thread.sleep(10000L);
             System.exit(0);

@@ -47,7 +47,7 @@ public class SIL_Coordinator
         super(REFLECTION_INBOUND_PORT_URI, 1, 0);
         if (VERBOSE) {
             this.tracer.get().setTitle("Coordinator component");
-            this.tracer.get().setRelativePosition(0, 1);
+            this.tracer.get().setRelativePosition(1, 4);
             this.toggleTracing();
         }
     }

@@ -40,6 +40,9 @@ public class DishwasherElectricityModel
         /** The dishwasher is off */
         OFF,
 
+        /** The dishwasher is on and planned */
+        PLANNED,
+
         /** The dishwasher is currently running the full program */
         FULL,
 
@@ -59,6 +62,9 @@ public class DishwasherElectricityModel
 
     /** The URI of the dishwasher electricity model */
     public static final String URI = DishwasherElectricityModel.class.getSimpleName();
+
+    /** Consumption when the dishwasher is on and waits for the launching time */
+    private final static double PLANNED_CONSUMPTION = 60.0;
 
     /** Consumption of the full program */
     private final static double FULL_PROGRAM_CONSUMPTION = 1000.0;
@@ -180,6 +186,10 @@ public class DishwasherElectricityModel
         switch (currentState) {
             case OFF:
                 currentConsumption.v = 0.0;
+                break;
+
+            case PLANNED:
+                currentConsumption.v = PLANNED_CONSUMPTION;
                 break;
 
             case FULL:

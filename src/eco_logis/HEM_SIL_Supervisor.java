@@ -6,8 +6,15 @@ import eco_logis.equipments.crypto_miner.mil.events.MineOffCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
+import eco_logis.equipments.dishwasher.Dishwasher;
+import eco_logis.equipments.dishwasher.mil.DishwasherCoupledModel;
+import eco_logis.equipments.dishwasher.mil.events.*;
 import eco_logis.equipments.electric_meter.ElectricMeter;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
+import eco_logis.equipments.generator.Generator;
+import eco_logis.equipments.generator.mil.GeneratorCoupledModel;
+import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
+import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
 import eco_logis.equipments.hem.mil.HEMCoupledModel;
 import eco_logis.equipments.oven.Oven;
 import eco_logis.equipments.oven.mil.OvenCoupledModel;
@@ -15,6 +22,15 @@ import eco_logis.equipments.oven.mil.events.DoNotHeatOven;
 import eco_logis.equipments.oven.mil.events.HeatOven;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
+import eco_logis.equipments.power_bank.PowerBank;
+import eco_logis.equipments.power_bank.mil.PowerBankCoupledModel;
+import eco_logis.equipments.power_bank.mil.events.ChargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.DischargePowerBank;
+import eco_logis.equipments.power_bank.mil.events.StandbyPowerBank;
+import eco_logis.equipments.wind_turbine.WindTurbine;
+import eco_logis.equipments.wind_turbine.mil.WindTurbineCoupledModel;
+import eco_logis.equipments.wind_turbine.mil.events.BlockWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.UnblockWindTurbine;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.cyphy.plugins.devs.RTCoordinatorPlugin;
 import fr.sorbonne_u.components.cyphy.plugins.devs.SupervisorPlugin;
@@ -167,7 +183,7 @@ public class HEM_SIL_Supervisor
 
         if (VERBOSE) {
             this.tracer.get().setTitle("Supervisor component");
-            this.tracer.get().setRelativePosition(0, 0);
+            this.tracer.get().setRelativePosition(0, 4);
             this.toggleTracing();
         }
     }
@@ -207,6 +223,36 @@ public class HEM_SIL_Supervisor
                         },
                         TimeUnit.SECONDS,
                         CryptoMiner.REFLECTION_INBOUND_PORT_URI));
+
+        // The dishwasher simulation model held by the Dishwasher component
+        atomicModelDescriptors.put(
+                DishwasherCoupledModel.URI,
+                RTComponentAtomicModelDescriptor.create(
+                        DishwasherCoupledModel.URI,
+                        new Class[]{},
+                        new Class[]{
+                                SetEcoProgram.class,
+                                SetFastProgram.class,
+                                SetFullProgram.class,
+                                SetRinseProgram.class,
+                                SwitchOffDishwasher.class
+                        },
+                        TimeUnit.SECONDS,
+                        Dishwasher.REFLECTION_INBOUND_PORT_URI));
+
+        // The generator simulation model held by the Generator component
+        atomicModelDescriptors.put(
+                GeneratorCoupledModel.URI,
+                RTComponentAtomicModelDescriptor.create(
+                        GeneratorCoupledModel.URI,
+                        new Class[]{},
+                        new Class[]{
+                                SwitchOnGenerator.class,
+                                SwitchOffGenerator.class
+                        },
+                        TimeUnit.SECONDS,
+                        Generator.REFLECTION_INBOUND_PORT_URI));
+
 /*
         // The oven simulation model held by the Oven component
         atomicModelDescriptors.put(
@@ -223,21 +269,73 @@ public class HEM_SIL_Supervisor
                         Oven.REFLECTION_INBOUND_PORT_URI));
 */
 
+        // The power bank simulation model held by the PowerBank component
+        atomicModelDescriptors.put(
+                PowerBankCoupledModel.URI,
+                RTComponentAtomicModelDescriptor.create(
+                        PowerBankCoupledModel.URI,
+                        new Class[]{},
+                        new Class[]{
+                                ChargePowerBank.class,
+                                DischargePowerBank.class,
+                                StandbyPowerBank.class
+                        },
+                        TimeUnit.SECONDS,
+                        PowerBank.REFLECTION_INBOUND_PORT_URI));
+
+/*
+        // The wind turbine simulation model held by the WindTurbine component
+        atomicModelDescriptors.put(
+                WindTurbineCoupledModel.URI,
+                RTComponentAtomicModelDescriptor.create(
+                        WindTurbineCoupledModel.URI,
+                        new Class[]{},
+                        new Class[]{
+                                BlockWindTurbine.class,
+                                UnblockWindTurbine.class
+                        },
+                        TimeUnit.SECONDS,
+                        WindTurbine.REFLECTION_INBOUND_PORT_URI));
+*/
+
         // The electric meter simulation model held by the ElectricMeter component
         atomicModelDescriptors.put(
                 ElectricMeterCoupledModel.URI,
                 RTComponentAtomicModelDescriptor.create(
                         ElectricMeterCoupledModel.URI,
                         new Class[]{
+                                // CryptoMiner events
                                 SwitchOnCryptoMiner.class,
                                 SwitchOffCryptoMiner.class,
                                 MineOnCryptoMiner.class,
-                                MineOffCryptoMiner.class/*,
+                                MineOffCryptoMiner.class,
 
+                                // Dishwasher events
+                                SetEcoProgram.class,
+                                SetFastProgram.class,
+                                SetFullProgram.class,
+                                SetRinseProgram.class,
+                                SwitchOffDishwasher.class,
+
+                                // Generator events
+                                SwitchOnGenerator.class,
+                                SwitchOffGenerator.class,
+/*
+                                // Oven events
                                 SwitchOnOven.class,
                                 SwitchOffOven.class,
                                 HeatOven.class,
-                                DoNotHeatOven.class*/
+                                DoNotHeatOven.class,
+*/
+                                // PowerBank events
+                                ChargePowerBank.class,
+                                DischargePowerBank.class,
+                                StandbyPowerBank.class,
+/*
+                                // WindTurbine events
+                                BlockWindTurbine.class,
+                                UnblockWindTurbine.class
+*/
                         },
                         new Class[]{},
                         TimeUnit.SECONDS,
@@ -245,17 +343,16 @@ public class HEM_SIL_Supervisor
 
         Set<String> submodels = new HashSet<String>();
         submodels.add(CryptoMinerCoupledModel.URI);
+        submodels.add(DishwasherCoupledModel.URI);
+        submodels.add(GeneratorCoupledModel.URI);
         //submodels.add(OvenCoupledModel.URI);
+        submodels.add(PowerBankCoupledModel.URI);
+        //submodels.add(WindTurbineCoupledModel.URI);
         submodels.add(ElectricMeterCoupledModel.URI);
 
         Map<EventSource, EventSink[]> connections = new HashMap<EventSource,EventSink[]>();
 
-        /* In the component-based simulation architecture, electric consumption
-        simulation models of appliances must be co-located with the electric
-        meter simulation model to share continuous variables. Hence, events
-        coming from the appliances towards their electric consumption models
-        must pass from their components to the ElectricMeter component as
-        shown in the next connections. */
+        // --- Crypto miner events
         connections.put(
                 new EventSource(CryptoMinerCoupledModel.URI, SwitchOnCryptoMiner.class),
                 new EventSink[] {
@@ -276,7 +373,49 @@ public class HEM_SIL_Supervisor
                 new EventSink[] {
                         new EventSink(ElectricMeterCoupledModel.URI, MineOffCryptoMiner.class)
                 });
+
+        // --- Dishwasher events
+        connections.put(
+                new EventSource(DishwasherCoupledModel.URI, SetEcoProgram.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SetEcoProgram.class)
+                });
+        connections.put(
+                new EventSource(DishwasherCoupledModel.URI, SetFastProgram.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SetFastProgram.class)
+                });
+        connections.put(
+                new EventSource(DishwasherCoupledModel.URI, SetFullProgram.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SetFullProgram.class)
+                });
+        connections.put(
+                new EventSource(DishwasherCoupledModel.URI, SetRinseProgram.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SetRinseProgram.class)
+                });
+        connections.put(
+                new EventSource(DishwasherCoupledModel.URI, SwitchOffDishwasher.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SwitchOffDishwasher.class)
+                });
+
+
+        // --- Generator events
+        connections.put(
+                new EventSource(GeneratorCoupledModel.URI, SwitchOnGenerator.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SwitchOnGenerator.class)
+                });
+        connections.put(
+                new EventSource(GeneratorCoupledModel.URI, SwitchOffGenerator.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, SwitchOffGenerator.class)
+                });
+
 /*
+        // --- Oven events
         connections.put(
                 new EventSource(OvenCoupledModel.URI, SwitchOnOven.class),
                 new EventSink[] {
@@ -297,8 +436,39 @@ public class HEM_SIL_Supervisor
                 new EventSink[] {
                         new EventSink(ElectricMeterCoupledModel.URI, DoNotHeatOven.class)
                 });
-
 */
+
+        // --- Power bank events
+        connections.put(
+                new EventSource(PowerBankCoupledModel.URI, ChargePowerBank.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, ChargePowerBank.class)
+                });
+        connections.put(
+                new EventSource(PowerBankCoupledModel.URI, DischargePowerBank.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, DischargePowerBank.class)
+                });
+        connections.put(
+                new EventSource(PowerBankCoupledModel.URI, StandbyPowerBank.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, StandbyPowerBank.class)
+                });
+
+/*
+        // --- Wind turbine events
+        connections.put(
+                new EventSource(WindTurbineCoupledModel.URI, BlockWindTurbine.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, BlockWindTurbine.class)
+                });
+        connections.put(
+                new EventSource(WindTurbineCoupledModel.URI, UnblockWindTurbine.class),
+                new EventSink[] {
+                        new EventSink(ElectricMeterCoupledModel.URI, UnblockWindTurbine.class)
+                });
+*/
+
         Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
         coupledModelDescriptors.put(
                 HEMCoupledModel.URI,
@@ -344,10 +514,8 @@ public class HEM_SIL_Supervisor
     public synchronized void execute() throws Exception {
         this.sp.createSimulator();
         this.sp.setSimulationRunParameters(new HashMap<String, Object>());
-        long realTimeOfStart =
-                System.currentTimeMillis() + fr.sorbonne_u.components.cyphy.hem2021e3.CVM_SIL.DELAY_TO_START_SIMULATION;
-        this.sp.startRTSimulation(realTimeOfStart, 0.0,
-                fr.sorbonne_u.components.cyphy.hem2021e3.CVM_SIL.SIMULATION_DURATION);
+        long realTimeOfStart = System.currentTimeMillis() + fr.sorbonne_u.components.cyphy.hem2021e3.CVM_SIL.DELAY_TO_START_SIMULATION;
+        this.sp.startRTSimulation(realTimeOfStart, 0.0, fr.sorbonne_u.components.cyphy.hem2021e3.CVM_SIL.SIMULATION_DURATION);
     }
 
     /** @see fr.sorbonne_u.components.AbstractComponent#shutdown() */

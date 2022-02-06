@@ -37,7 +37,7 @@ public class CVMUnitTest
     public static void	main(String[] args) {
         try {
             CVMUnitTest cvm = new CVMUnitTest();
-            cvm.startStandardLifeCycle(30000L);
+            cvm.startStandardLifeCycle(45000L);
             Thread.sleep(5000L);
             System.exit(0);
         } catch (Exception e) {

@@ -111,14 +111,14 @@ public class DishwasherOutboundPort
 
     /** @see DishwasherCI#startWashing() */
     @Override
-    public void startWashing() throws Exception {
-        ((DishwasherCI) getConnector()).startWashing();
+    public boolean startWashing() throws Exception {
+        return ((DishwasherCI) getConnector()).startWashing();
     }
 
     /** @see DishwasherCI#stopWashing() */
     @Override
-    public void stopWashing() throws Exception {
-        ((DishwasherCI) getConnector()).stopWashing();
+    public boolean stopWashing() throws Exception {
+        return ((DishwasherCI) getConnector()).stopWashing();
     }
 
 }

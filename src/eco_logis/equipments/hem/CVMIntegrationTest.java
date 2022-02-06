@@ -32,6 +32,12 @@ public class CVMIntegrationTest
                 new Object[]{}
         );
 
+        // Create the dishwasher
+        AbstractComponent.createComponent(
+                Dishwasher.class.getCanonicalName(),
+                new Object[]{}
+        );
+
         // Create the generator
         AbstractComponent.createComponent(
                 Generator.class.getCanonicalName(),
@@ -53,12 +59,6 @@ public class CVMIntegrationTest
         // Create the wind turbine
         AbstractComponent.createComponent(
                 WindTurbine.class.getCanonicalName(),
-                new Object[]{}
-        );
-
-        // Create the dishwasher
-        AbstractComponent.createComponent(
-                Dishwasher.class.getCanonicalName(),
                 new Object[]{}
         );
 

@@ -7,6 +7,7 @@ import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
 import eco_logis.equipments.crypto_miner.sil.CryptoMinerElectricitySILModel;
 import eco_logis.equipments.dishwasher.DishwasherRTAtomicSimulatorPlugin;
+import eco_logis.equipments.dishwasher.mil.events.*;
 import eco_logis.equipments.dishwasher.sil.DishwasherElectricitySILModel;
 import eco_logis.equipments.electric_meter.mil.ElectricMeterElectricityModel;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
@@ -122,6 +123,9 @@ public class ElectricMeterRTAtomicSimulatorPlugin
     protected static final Class<WindTurbineElectricitySILModel> WIND_TURBINE_ELECTRICITY_MODEL_CLASS = WindTurbineElectricitySILModel.class;
 
 
+    public static final String CONS = "cons";
+    public static final String PROD = "prod";
+
     // ========== Class methods ==========
 
 
@@ -150,8 +154,8 @@ public class ElectricMeterRTAtomicSimulatorPlugin
         submodels.add(GENERATOR_FUEL_MODEL_URI);
         submodels.add(POWER_BANK_ELECTRICITY_MODEL_URI);
         submodels.add(POWER_BANK_CHARGE_MODEL_URI);
-        /* TODO
         submodels.add(DISHWASHER_ELECTRICITY_MODEL_URI);
+        /* TODO
         submodels.add(OVEN_ELECTRICITY_MODEL_URI);
         submodels.add(WIND_TURBINE_ELECTRICITY_MODEL_URI);
          */
@@ -227,7 +231,6 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                 )
         );
 
-        /* TODO
         atomicModelDescriptors.put(
                 DISHWASHER_ELECTRICITY_MODEL_URI,
                 RTAtomicHIOA_Descriptor.create(
@@ -236,7 +239,12 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                         TimeUnit.SECONDS,
                         null,
                         SimulationEngineCreationMode.ATOMIC_RT_ENGINE,
-                        accFactor));
+                        accFactor
+                )
+        );
+
+        /* TODO
+
 
         atomicModelDescriptors.put(
                 OVEN_ELECTRICITY_MODEL_URI,
@@ -318,7 +326,7 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                     }
             );
 
-            // -- Power bank evens
+            // -- Power bank events
 
             imported.put(
                     StandbyPowerBank.class,
@@ -341,6 +349,43 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                     new EventSink[] {
                             new EventSink(POWER_BANK_ELECTRICITY_MODEL_URI, DischargePowerBank.class),
                             new EventSink(POWER_BANK_CHARGE_MODEL_URI, DischargePowerBank.class)
+                    }
+            );
+
+            // --- Dishwasher events
+
+            imported.put(
+                    SetEcoProgram.class,
+                    new EventSink[] {
+                            new EventSink(DISHWASHER_ELECTRICITY_MODEL_URI, SetEcoProgram.class)
+                    }
+            );
+
+            imported.put(
+                    SetFastProgram.class,
+                    new EventSink[] {
+                            new EventSink(DISHWASHER_ELECTRICITY_MODEL_URI, SetFastProgram.class)
+                    }
+            );
+
+            imported.put(
+                    SetFullProgram.class,
+                    new EventSink[] {
+                            new EventSink(DISHWASHER_ELECTRICITY_MODEL_URI, SetFullProgram.class)
+                    }
+            );
+
+            imported.put(
+                    SetRinseProgram.class,
+                    new EventSink[] {
+                            new EventSink(DISHWASHER_ELECTRICITY_MODEL_URI, SetRinseProgram.class)
+                    }
+            );
+
+            imported.put(
+                    SwitchOffDishwasher.class,
+                    new EventSink[] {
+                            new EventSink(DISHWASHER_ELECTRICITY_MODEL_URI, SwitchOffDishwasher.class)
                     }
             );
         }
@@ -420,6 +465,19 @@ public class ElectricMeterRTAtomicSimulatorPlugin
                 }
         );
 
+        // --- Bindings for the dishwasher
+
+        bindings.put(
+                new VariableSource("currentConsumption",
+                        Double.class,
+                        DISHWASHER_ELECTRICITY_MODEL_URI),
+                new VariableSink[] {
+                        new VariableSink("currentDishwasherConsumption",
+                                Double.class,
+                                ElectricMeterElectricitySILModel.URI)
+                }
+        );
+
         /* TODO
         bindings.put(
                 new VariableSource("currentConsumption",
@@ -465,6 +523,20 @@ public class ElectricMeterRTAtomicSimulatorPlugin
 
     // ========== Override methods ==========
 
+    @Override
+    public Object getModelStateValue(String uri, String name) throws Exception {
+        assert uri.equals(ElectricMeterElectricitySILModel.URI);
+        assert name != null;
+
+        if(name.equals(PROD)) {
+            return ((ElectricMeterElectricitySILModel) getDescendentModel(uri)).getCurrentProduction();
+        } else if (name.equals(CONS)) {
+            return ((ElectricMeterElectricitySILModel) getDescendentModel(uri)).getCurrentConsumption();
+        }
+
+        return null;
+    }
+
 
     /** @see fr.sorbonne_u.components.cyphy.plugins.devs.AbstractSimulatorPlugin#setSimulationRunParameters(java.util.Map) */
     @Override
@@ -473,8 +545,9 @@ public class ElectricMeterRTAtomicSimulatorPlugin
         simParams.put(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
         simParams.put(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
         simParams.put(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
-        /*
         simParams.put(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
+        /*
+
         simParams.put(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
         simParams.put(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME, this.getOwner());
          */
@@ -485,8 +558,9 @@ public class ElectricMeterRTAtomicSimulatorPlugin
         simParams.remove(CryptoMinerRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         simParams.remove(GeneratorRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         simParams.remove(PowerBankRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
-        /*
         simParams.remove(DishwasherRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
+        /*
+
         simParams.remove(OvenRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         simParams.remove(WindTurbineRTAtomicSimulatorPlugin.OWNER_REFERENCE_NAME);
         */

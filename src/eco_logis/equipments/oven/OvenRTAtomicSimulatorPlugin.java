@@ -9,10 +9,12 @@ import eco_logis.equipments.oven.sil.OvenUserSILModel;
 import eco_logis.equipments.oven.sil.OvenElectricitySILModel;
 import eco_logis.equipments.oven.sil.OvenStateModel;
 import eco_logis.equipments.oven.sil.OvenTemperatureSILModel;
+import fr.sorbonne_u.components.cyphy.hem2021e3.equipments.heater.sil.HeaterTemperatureSILModel;
 import fr.sorbonne_u.components.cyphy.plugins.devs.RTAtomicSimulatorPlugin;
 import fr.sorbonne_u.devs_simulation.architectures.RTArchitecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.RTAtomicHIOA_Descriptor;
+import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.RTAtomicModelDescriptor;
@@ -97,7 +99,7 @@ public class OvenRTAtomicSimulatorPlugin
 
         atomicModelDescriptors.put(
                 OvenStateModel.URI,
-                RTAtomicModelDescriptor.create( // RTAtomicHIOA_Descriptor??
+                RTAtomicModelDescriptor.create(
                         OvenStateModel.class,
                         OvenStateModel.URI,
                         TimeUnit.SECONDS,
@@ -226,6 +228,24 @@ public class OvenRTAtomicSimulatorPlugin
 
         // Remove the value so that the reference may not exit the context of the component
         simParams.remove(OWNER_REFERENCE_NAME);
+    }
+
+
+    /** @see fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin#getModelStateValue(java.lang.String, java.lang.String) */
+    @Override
+    public Object getModelStateValue(
+            String modelURI,
+            String name
+    ) throws Exception {
+        assert modelURI != null && name != null;
+
+        assert modelURI.equals(OvenTemperatureSILModel.URI);
+
+        ModelDescriptionI m = this.simulator.getDescendentModel(modelURI);
+
+        assert m instanceof OvenTemperatureSILModel;
+
+        return ((OvenTemperatureSILModel)m).getCurrentTemperature();
     }
 
 }

@@ -201,7 +201,7 @@ public class RunHEMSim {
             );
 
 
-/*
+/*  TODO
             // Add the wind turbine
             atomicModelDescriptors.put(
                     WindTurbineElectricityModel.URI,
@@ -262,7 +262,7 @@ public class RunHEMSim {
             submodels.add(PowerBankElectricityModel.URI);
             submodels.add(PowerBankChargeModel.URI);
             submodels.add(PowerBankUserModel.URI);
-/*
+/*  TODO
             submodels.add(WindTurbineElectricityModel.URI);
             submodels.add(WindTurbineUserModel.URI);
             submodels.add(ExternalWindModel.URI);
@@ -406,7 +406,7 @@ public class RunHEMSim {
                     }
             );
 
-/*
+/*  TODO
             // Add the wind turbine events
             connections.put(
                     new EventSource(WindTurbineUserModel.URI, BlockWindTurbine.class),
@@ -432,7 +432,7 @@ public class RunHEMSim {
                             new VariableSink("currentFuelLevel", Double.class, GeneratorElectricityModel.URI)
                     }
             );
-/*
+/*  TODO
             // Bind the external wind speed level from the external wind model to the wind turbine electricity model
             bindings.put(
                     new VariableSource("externalWindSpeed", Double.class, ExternalWindModel.URI),
@@ -497,7 +497,7 @@ public class RunHEMSim {
                     }
             );
 
-/*
+/*  TODO
             // Bind the wind turbine production to the electric meter
             bindings.put(
                     new VariableSource("currentProduction", Double.class, WindTurbineElectricityModel.URI),

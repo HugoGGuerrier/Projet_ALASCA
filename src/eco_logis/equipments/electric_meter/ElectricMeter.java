@@ -5,7 +5,9 @@ import eco_logis.equipments.crypto_miner.mil.events.MineOffCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.MineOnCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.SwitchOffCryptoMiner;
 import eco_logis.equipments.crypto_miner.mil.events.SwitchOnCryptoMiner;
+import eco_logis.equipments.dishwasher.mil.events.*;
 import eco_logis.equipments.electric_meter.sil.ElectricMeterCoupledModel;
+import eco_logis.equipments.electric_meter.sil.ElectricMeterElectricitySILModel;
 import eco_logis.equipments.generator.mil.events.SwitchOffGenerator;
 import eco_logis.equipments.generator.mil.events.SwitchOnGenerator;
 import eco_logis.equipments.oven.mil.events.SwitchOffOven;
@@ -13,6 +15,8 @@ import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import eco_logis.equipments.power_bank.mil.events.ChargePowerBank;
 import eco_logis.equipments.power_bank.mil.events.DischargePowerBank;
 import eco_logis.equipments.power_bank.mil.events.StandbyPowerBank;
+import eco_logis.equipments.wind_turbine.mil.events.BlockWindTurbine;
+import eco_logis.equipments.wind_turbine.mil.events.UnblockWindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
@@ -274,7 +278,7 @@ public class ElectricMeter
         if (executesAsUnitTest) {
             simulatorPlugin.setSimulationRunParameters(new HashMap<>());
             long simStart = System.currentTimeMillis() + 1000L;
-            double endTime = 30.0 / ACC_FACTOR;
+            double endTime = 45.0 / ACC_FACTOR;
             simulatorPlugin.startRTSimulation(simStart, 0.0, endTime);
             traceMessage("real time of start = " + simStart + "\n");
 
@@ -500,6 +504,104 @@ public class ElectricMeter
                     TimeUnit.SECONDS
             );
 
+            // --- Add the dishwasher events
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.DISHWASHER_ELECTRICITY_MODEL_URI,
+                                        SetEcoProgram::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(31.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.DISHWASHER_ELECTRICITY_MODEL_URI,
+                                        SetFastProgram::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(33.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.DISHWASHER_ELECTRICITY_MODEL_URI,
+                                        SetFastProgram::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(36.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.DISHWASHER_ELECTRICITY_MODEL_URI,
+                                        SetRinseProgram::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(38.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+            scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.DISHWASHER_ELECTRICITY_MODEL_URI,
+                                        SwitchOffDishwasher::new
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(40.0/ACC_FACTOR),
+                    TimeUnit.SECONDS
+            );
+
+
             // --- Add the oven events
 
             /*
@@ -513,7 +615,7 @@ public class ElectricMeter
                                 sp.triggerExternalEvent(
                                         ElectricMeterRTAtomicSimulatorPlugin.
                                                 OVEN_ELECTRICITY_MODEL_URI,
-                                        t -> new SwitchOnOven(t, 200));
+                                        t -> new SwitchOnOven(t));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -542,6 +644,44 @@ public class ElectricMeter
                     TimeUnit.SECONDS);
             */
 
+            // --- Add the wind turbine events
+            this.scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractComponent.AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                // Trigger the BlockWindTurbine event
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.
+                                                WIND_TURBINE_ELECTRICITY_MODEL_URI,
+                                        t -> new BlockWindTurbine(t));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(2.0/ACC_FACTOR),
+                    TimeUnit.SECONDS);
+
+            this.scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractComponent.AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                // Trigger the UnblockWindTurbine event
+                                sp.triggerExternalEvent(
+                                        ElectricMeterRTAtomicSimulatorPlugin.
+                                                WIND_TURBINE_ELECTRICITY_MODEL_URI,
+                                        t -> new UnblockWindTurbine(t));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(10.0/ACC_FACTOR),
+                    TimeUnit.SECONDS);
         }
     }
 
@@ -562,8 +702,14 @@ public class ElectricMeter
         if (VERBOSE) {
             this.traceMessage("Electric meter returns its current consumption.\n");
         }
-        // TODO will need a computation.
-        return 0;
+        double consumption = 0;
+
+        if (this.isSILsimulated) {
+            consumption = (Double) this.simulatorPlugin.getModelStateValue(
+                    ElectricMeterElectricitySILModel.URI,
+                    ElectricMeterRTAtomicSimulatorPlugin.CONS);
+        }
+        return consumption;
     }
 
     /** @see ElectricMeterImplementationI#getCurrentProduction() */
@@ -572,8 +718,14 @@ public class ElectricMeter
         if (VERBOSE) {
             this.traceMessage("Electric meter returns its current production.\n");
         }
-        // TODO will need a computation.
-        return 0;
+        double prod = 0;
+
+        if (this.isSILsimulated) {
+            prod = (Double) this.simulatorPlugin.getModelStateValue(
+                    ElectricMeterElectricitySILModel.URI,
+                    ElectricMeterRTAtomicSimulatorPlugin.PROD);
+        }
+        return prod;
     }
 }
 // -----------------------------------------------------------------------------

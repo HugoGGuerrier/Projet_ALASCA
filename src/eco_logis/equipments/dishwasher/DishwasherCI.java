@@ -58,10 +58,10 @@ public interface DishwasherCI
 
     /** @see DishwasherImplementationI#startWashing() */
     @Override
-    void startWashing() throws Exception;
+    boolean startWashing() throws Exception;
 
     /** @see DishwasherImplementationI#stopWashing() */
     @Override
-    void stopWashing() throws Exception;
+    boolean stopWashing() throws Exception;
 
 }

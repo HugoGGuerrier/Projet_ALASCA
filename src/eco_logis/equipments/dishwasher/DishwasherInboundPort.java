@@ -131,23 +131,17 @@ public class DishwasherInboundPort
 
     /** @see DishwasherCI#startWashing() () */
     @Override
-    public void startWashing() throws Exception {
-        getOwner().handleRequest(
-                o -> {
-                    ((Dishwasher) o).startWashing();
-                    return null;
-                }
+    public boolean startWashing() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).startWashing()
         );
     }
 
     /** @see DishwasherCI#stopWashing() */
     @Override
-    public void stopWashing() throws Exception {
-        getOwner().handleRequest(
-                o -> {
-                    ((Dishwasher) o).stopWashing();
-                    return null;
-                }
+    public boolean stopWashing() throws Exception {
+        return getOwner().handleRequest(
+                o -> ((Dishwasher) o).stopWashing()
         );
     }
 

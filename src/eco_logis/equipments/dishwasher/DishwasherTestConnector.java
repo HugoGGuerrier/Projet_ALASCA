@@ -75,13 +75,13 @@ public class DishwasherTestConnector
 
     /** @see DishwasherCI#startWashing() */
     @Override
-    public void startWashing() throws Exception {
-        ((DishwasherCI) offering).startWashing();
+    public boolean startWashing() throws Exception {
+        return ((DishwasherCI) offering).startWashing();
     }
 
     /** @see DishwasherCI#stopWashing() */
     @Override
-    public void stopWashing() throws Exception {
-        ((DishwasherCI) offering).stopWashing();
+    public boolean stopWashing() throws Exception {
+        return ((DishwasherCI) offering).stopWashing();
     }
 }

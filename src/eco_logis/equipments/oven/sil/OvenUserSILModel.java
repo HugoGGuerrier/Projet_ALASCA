@@ -34,7 +34,7 @@ public class OvenUserSILModel
     public static final String STEP_MEAN_DURATION_RUNPNAME = URI + ":STEP_MEAN_DURATION";
 
     /** Time interval between event outputs */
-    protected static double STEP_MEAN_DURATION = 10.0;
+    protected static double STEP_MEAN_DURATION = 3.0;
 
     /** Last step in the test scenario */
     protected static final int LAST_STEP = 2;

@@ -1,12 +1,14 @@
 package eco_logis.equipments.hem;
 
 import eco_logis.equipments.crypto_miner.CryptoMiner;
+import eco_logis.equipments.dishwasher.Dishwasher;
 import eco_logis.equipments.electric_meter.ElectricMeter;
 import eco_logis.equipments.electric_meter.ElectricMeterOutboundPort;
-import eco_logis.equipments.hem.connectors.CryptoMinerConnector;
-import eco_logis.equipments.hem.connectors.ElectricMeterConnector;
-import eco_logis.equipments.hem.connectors.OvenConnector;
+import eco_logis.equipments.generator.Generator;
+import eco_logis.equipments.hem.connectors.*;
 import eco_logis.equipments.oven.Oven;
+import eco_logis.equipments.power_bank.PowerBank;
+import eco_logis.equipments.wind_turbine.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
@@ -69,8 +71,20 @@ public class HEM
     /** Outbound port to call the crypto miner */
     protected SuspensionEquipmentOutboundPort cryptoOP;
 
+    /** Outbound port to call the dishwasher */
+    protected PlanningEquipmentOutboundPort dishwasherOP;
+
+    /** Outbound port to call the generator */
+    protected ProductionEquipmentOutboundPort generatorOP;
+
     /** Outbound port to call the oven */
     protected StandardEquipmentOutboundPort ovenOP;
+
+    /** Outbound port to call the power bank */
+    protected StorageEquipmentOutboundPort powerBankOP;
+
+    /** Outbound port to call the wind turbine */
+    protected UnpredictableProductionEquipmentOutboundPort windTurbineOP;
 
 
     // ========== Constructors ==========
@@ -200,6 +214,7 @@ public class HEM
         this.traceMessage("Home Energy Manager starts.\n");
 
         try {
+            // Electric meter
             this.elecMeterOP = new ElectricMeterOutboundPort(this);
             this.elecMeterOP.publishPort();
             this.doPortConnection(
@@ -207,6 +222,7 @@ public class HEM
                     ElectricMeter.ELECTRIC_METER_INBOUND_PORT_URI,
                     ElectricMeterConnector.class.getCanonicalName());
 
+            // Crypto miner
             this.cryptoOP = new SuspensionEquipmentOutboundPort(this);
             this.cryptoOP.publishPort();
             this.doPortConnection(
@@ -214,12 +230,48 @@ public class HEM
                     CryptoMiner.INBOUND_PORT_URI,
                     CryptoMinerConnector.class.getCanonicalName());
 
+
+            // Dishwasher
+            this.dishwasherOP = new PlanningEquipmentOutboundPort(this);
+            this.dishwasherOP.publishPort();
+            this.doPortConnection(
+                    this.dishwasherOP.getPortURI(),
+                    Dishwasher.INBOUND_PORT_URI,
+                    DishwasherConnector.class.getCanonicalName());
+
+            // Generator
+            this.generatorOP = new ProductionEquipmentOutboundPort(this);
+            this.generatorOP.publishPort();
+            this.doPortConnection(
+                    this.generatorOP.getPortURI(),
+                    Generator.INBOUND_PORT_URI,
+                    GeneratorConnector.class.getCanonicalName());
+/*
+            // Oven
             this.ovenOP = new StandardEquipmentOutboundPort(this);
             this.ovenOP.publishPort();
             this.doPortConnection(
                     this.ovenOP.getPortURI(),
                     Oven.INBOUND_PORT_URI,
                     OvenConnector.class.getCanonicalName());
+*/
+
+            // Power bank
+            this.powerBankOP = new StorageEquipmentOutboundPort(this);
+            this.powerBankOP.publishPort();
+            this.doPortConnection(
+                    this.powerBankOP.getPortURI(),
+                    PowerBank.INBOUND_PORT_URI,
+                    PowerBankConnector.class.getCanonicalName());
+/*
+            // Wind turbine
+            this.windTurbineOP = new UnpredictableProductionEquipmentOutboundPort(this);
+            this.windTurbineOP.publishPort();
+            this.doPortConnection(
+                    this.windTurbineOP.getPortURI(),
+                    WindTurbine.INBOUND_PORT_URI,
+                    WindTurbineConnector.class.getCanonicalName());
+*/
         } catch (Exception e) {
             throw new ComponentStartException(e);
         }
@@ -228,13 +280,14 @@ public class HEM
     /** @see AbstractComponent#execute() */
     @Override
     public synchronized void execute() throws Exception {
-        if (this.executesAsUnitTest) {
-            // simplified integration testing.
+        if (this.executesAsUnitTest) {  // Simplified integration testing
+            // Electric meter
             this.traceMessage("Electric meter current consumption? " +
                     this.elecMeterOP.getCurrentConsumption() + "\n");
             this.traceMessage("Electric meter current production? " +
                     this.elecMeterOP.getCurrentProduction() + "\n");
 
+            // Crypto miner
             this.traceMessage("Crypto miner is on? " +
                     this.cryptoOP.on() + "\n");
             this.traceMessage("Crypto miner is switched on? " +
@@ -254,6 +307,25 @@ public class HEM
             this.traceMessage("Crypto miner is on? " +
                     this.cryptoOP.on() + "\n");
 
+            // Dishwasher
+            this.traceMessage("Dishwasher is on? " +
+                    this.dishwasherOP.on() + "\n");
+            // TODO : more and fix the switchOn method for dishwasher
+
+            // Generator
+            this.traceMessage("Generator is producing? " +
+                    this.generatorOP.isProducing() + "\n");
+            this.traceMessage("Generator starts producing? " +
+                    this.generatorOP.startProducing() + "\n");
+            this.traceMessage("Generator is producing? " +
+                    this.generatorOP.isProducing() + "\n");
+            this.traceMessage("Generator stops producing? " +
+                    this.generatorOP.stopProducing() + "\n");
+            this.traceMessage("Generator is producing? " +
+                    this.generatorOP.isProducing() + "\n");
+
+/*
+            // Oven
             this.traceMessage("Oven is on? " +
                     this.ovenOP.on() + "\n");
             this.traceMessage("Oven is switched on? " +
@@ -262,6 +334,32 @@ public class HEM
                     this.ovenOP.switchOff() + "\n");
             this.traceMessage("Oven is on? " +
                     this.ovenOP.on() + "\n");
+ */
+
+            // Power bank
+            this.traceMessage("Power bank is producing? " +
+                    this.powerBankOP.isProducing() + "\n");
+            this.traceMessage("Power bank is consuming? " +
+                    this.powerBankOP.isConsuming() + "\n");
+            this.traceMessage("Power bank starts consuming? " +
+                    this.powerBankOP.startConsuming() + "\n");
+            this.traceMessage("Power bank is consuming? " +
+                    this.powerBankOP.isConsuming() + "\n");
+            this.traceMessage("Power bank stops consuming? " +
+                    this.powerBankOP.stopConsuming() + "\n");
+            this.traceMessage("Power bank starts producing? " +
+                    this.powerBankOP.startProducing() + "\n");
+            this.traceMessage("Power bank is producing? " +
+                    this.powerBankOP.isProducing() + "\n");
+            this.traceMessage("Power bank stops producing? " +
+                    this.powerBankOP.stopProducing() + "\n");
+/*
+            // Wind turbine
+            this.traceMessage("Wind turbine is producing? " +
+                    this.windTurbineOP.isProducing() + "\n");
+            this.traceMessage("Wind turbine is forbidden? " +
+                    this.windTurbineOP.isForbidden() + "\n");
+*/
         } else {
             final HEM hem = this;
             this.managementTaskFuture =
@@ -299,7 +397,11 @@ public class HEM
 
         this.doPortDisconnection(this.elecMeterOP.getPortURI());
         this.doPortDisconnection(this.cryptoOP.getPortURI());
-        this.doPortDisconnection(this.ovenOP.getPortURI());
+        this.doPortDisconnection(this.dishwasherOP.getPortURI());
+        this.doPortDisconnection(this.generatorOP.getPortURI());
+        //this.doPortDisconnection(this.ovenOP.getPortURI());
+        this.doPortDisconnection(this.powerBankOP.getPortURI());
+        //this.doPortDisconnection(this.windTurbineOP.getPortURI());
 
         super.finalise();
     }
@@ -319,7 +421,11 @@ public class HEM
             */
             this.elecMeterOP.unpublishPort();
             this.cryptoOP.unpublishPort();
-            this.ovenOP.unpublishPort();
+            this.dishwasherOP.unpublishPort();
+            this.generatorOP.unpublishPort();
+            //this.ovenOP.unpublishPort();
+            this.powerBankOP.unpublishPort();
+            //this.windTurbineOP.unpublishPort();
 
         } catch (Exception e) {
             throw new ComponentShutdownException(e);

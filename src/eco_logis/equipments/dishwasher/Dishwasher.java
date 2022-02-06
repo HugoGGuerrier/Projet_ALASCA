@@ -462,7 +462,7 @@ public class Dishwasher
 
     /** @see DishwasherImplementationI#startWashing() */
     @Override
-    public void startWashing() throws Exception {
+    public boolean startWashing() throws Exception {
         if(VERBOSE) {
             logMessage("Dishwasher starts washing dishes");
         }
@@ -471,11 +471,13 @@ public class Dishwasher
         assert program != null;
 
         isWashing = true;
+
+        return true;
     }
 
     /** @see DishwasherImplementationI#stopWashing() */
     @Override
-    public void stopWashing() throws Exception {
+    public boolean stopWashing() throws Exception {
         if(VERBOSE) {
             logMessage("Dishwasher stops washing");
         }
@@ -488,6 +490,8 @@ public class Dishwasher
         isWashing = false;
         program = null;
         deadline = null;
+
+        return true;
     }
 
 }

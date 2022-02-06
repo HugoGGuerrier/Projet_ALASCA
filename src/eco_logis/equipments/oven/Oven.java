@@ -8,6 +8,7 @@ import eco_logis.equipments.oven.mil.events.SwitchOffOven;
 import eco_logis.equipments.oven.mil.events.SwitchOnOven;
 import eco_logis.equipments.oven.sil.OvenStateModel;
 import eco_logis.equipments.oven.sil.OvenTemperatureSILModel;
+import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.cyphy.hem2021e3.equipments.heater.ThermostatedHeater;
@@ -101,7 +102,7 @@ public class Oven
 
     // --- For control
 
-    protected static long PERIOD = 500;
+    protected static long PERIOD = 200;
     protected static TimeUnit CONTROL_TIME_UNIT = TimeUnit.MILLISECONDS;
     protected static double HYSTERESIS = 2.0;
 
@@ -232,6 +233,7 @@ public class Oven
         this.isSILSimulated = !simArchitectureURI.isEmpty();
         this.composesAsUnitTest = simArchitectureURI.equals(OvenRTAtomicSimulatorPlugin.UNIT_TEST_SIM_ARCHITECTURE_URI);
         this.accFactor = this.composesAsUnitTest ? ACC_FACTOR : CVM_SIL.ACC_FACTOR;
+        this.executesAsUnitTest = executesAsUnitTest;
 
         // Create the inbound port
         this.oip = new OvenInboundPort(ovenInboundPortURI, this);
@@ -275,7 +277,9 @@ public class Oven
                     if (Oven.VERBOSE) this.traceMessage("Oven decides to do nothing.\n");
                 }
 
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             this.scheduleTask(
                     o -> ((Oven) o).internalController(period, u),
@@ -364,12 +368,60 @@ public class Oven
     /** @see fr.sorbonne_u.components.AbstractComponent#execute() */
     @Override
     public synchronized void execute() throws Exception {
-        if (this.executesAsUnitTest) {
+        if (this.composesAsUnitTest &&  this.executesAsUnitTest) {
             this.simulatorPlugin.setSimulationRunParameters(new HashMap<>());
             long simStart = System.currentTimeMillis() + 1000L;
             double endTime = 10.0 / ACC_FACTOR;
             this.simulatorPlugin.startRTSimulation(simStart, 0.0, endTime);
             this.traceMessage("real time of start = " + simStart + "\n");
+        }
+        if (this.executesAsUnitTest) {
+            this.scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractComponent.AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                ((Oven)this.getTaskOwner()).powerOn();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(2.0/this.accFactor),
+                    TimeUnit.SECONDS);
+            this.scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractComponent.AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                double t = ((Oven)
+                                        this.getTaskOwner()).getCurrentTemperature();
+                                this.getTaskOwner().traceMessage(
+                                        "Current oven temperature: " +
+                                                t + "\n");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(7.0/this.accFactor),
+                    TimeUnit.SECONDS);
+            this.scheduleTask(
+                    AbstractComponent.STANDARD_SCHEDULABLE_HANDLER_URI,
+                    new AbstractComponent.AbstractTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                ((Oven)this.getTaskOwner()).powerOff();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    (long)(8.0/this.accFactor),
+                    TimeUnit.SECONDS);
         }
     }
 
@@ -423,6 +475,7 @@ public class Oven
         this.scheduleTask(
                 o -> ((Oven) o).internalController(accPeriod, CONTROL_TIME_UNIT),
                 accPeriod, CONTROL_TIME_UNIT);
+        this.internalController(accPeriod, CONTROL_TIME_UNIT);
 
     }
 

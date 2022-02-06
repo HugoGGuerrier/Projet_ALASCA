@@ -191,7 +191,7 @@ public interface DishwasherImplementationI
      *
      * @throws Exception TODO
      */
-    void startWashing() throws Exception;
+    boolean startWashing() throws Exception;
 
     /**
      * Stop the dishwasher now
@@ -205,6 +205,6 @@ public interface DishwasherImplementationI
      *
      * @throws Exception TODO
      */
-    void stopWashing() throws Exception;
+    boolean stopWashing() throws Exception;
 
 }
